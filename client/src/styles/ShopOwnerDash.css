@@ -1,0 +1,12 @@
+.shop-owner-dash {
+    padding: 3rem;
+    font-size: 1rem;
+}
+
+.shop-owner-dash h1 {
+    margin-bottom: 2rem;
+}
+
+.shop-owner-dash .add-btn {
+    text-align: right;
+}

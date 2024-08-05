@@ -1,0 +1,42 @@
+.counters-sec {
+    margin-bottom: 2rem;
+}
+
+.counters {
+    padding: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.counter {
+    padding: 1rem;
+    width: 13.1rem;
+    background-color: var(--white);
+    border-radius: var(--border-rad);
+}
+
+.counter-no {
+    padding: 0.5rem 1.5rem;
+    width: fit-content;
+    text-align: center;
+    font-size: 1em;
+    background-color: rgb(244, 244, 244);
+    border-radius: var(--border-rad);
+}
+
+.q-count {
+    margin: 1rem 0.6rem 1rem;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.q-count span {
+    font-size: 1em;
+}
+
+.counter button {
+    width: 100%;
+}

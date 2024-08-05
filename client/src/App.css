@@ -1,0 +1,93 @@
+:root {
+    --dark: #174a3b;
+    --medium: #01faaa;
+    --light: #cffeea;
+    --white: #ffffff;
+    --border-rad: 0.7rem;
+    --danger: #ffa7a7;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Jura", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    background-color: var(--light);
+}
+
+.btn {
+    background-color: var(--medium);
+    color: black;
+    border: none;
+    border-radius: var(--border-rad);
+    padding: 0.5rem 0.8rem;
+    font-size: 1em;
+    text-decoration: none;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.danger {
+    background-color: var(--danger);
+}
+
+.sub-head {
+    font-size: 1.5em;
+}
+
+#root {
+    margin-left: 16rem;
+}
+
+
+
+
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--dark);
+    height: 100vh;
+    width: 16rem;
+}
+
+.unq-logo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--white);
+    font-size: 1rem;
+    position: relative;
+}
+
+.unq-logo img {
+    width: 60%;
+}
+
+.logo-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.logo-name {
+    font-size: 2.2em;
+    margin-top: -10%;
+    margin-bottom: 0.5rem;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 0.9em;
+    opacity: 0.6;
+}
