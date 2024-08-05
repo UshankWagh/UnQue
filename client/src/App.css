@@ -32,6 +32,10 @@ body {
     border: none;
 }
 
+.danger {
+    background-color: var(--danger);
+}
+
 .sub-head {
     font-size: 1.5em;
 }
