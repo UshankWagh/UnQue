@@ -1,0 +1,225 @@
+:root {
+    --dark: #174a3b;
+    --medium: #01faaa;
+    --light: #cffeea;
+    --white: #ffffff;
+    --danger: #ffa7a7;
+    --border-rad: 0.7rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Jura", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    background-color: var(--light);
+}
+
+.btn {
+    background-color: var(--medium);
+    color: black;
+    border-radius: var(--border-rad);
+    padding: 0.5rem 0.8rem;
+    font-size: 1em;
+    text-decoration: none;
+    cursor: pointer;
+    width: fit-content;
+    border: none;
+}
+
+.sub-head {
+    font-size: 1.5em;
+}
+
+#root {
+    margin-left: 16rem;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--dark);
+    height: 100vh;
+    width: 16rem;
+}
+
+.navbar a {
+    color: white;
+}
+
+.unq-logo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--white);
+    font-size: 1rem;
+    position: relative;
+}
+
+.unq-logo img {
+    width: 60%;
+}
+
+.logo-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.logo-name {
+    font-size: 2.2em;
+    margin-top: -10%;
+    margin-bottom: 0.5rem;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 0.9em;
+    opacity: 0.6;
+}
+
+.popup-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.popup {
+    position: relative;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-rad);
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.popup-head {
+    font-size: 1.4em;
+}
+
+.popup-text {
+    opacity: 0.7;
+}
+
+.conf-btns {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    gap: 1rem;
+}
+
+.cancel-btn {
+    background-color: var(--danger);
+}
+
+.popup .cross {
+    cursor: pointer;
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.3em;
+    background-color: #e1e1e1;
+    /* color: white; */
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+}
+
+/* login & register */
+
+.auth {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    /* align-items: center; */
+    /* justify-content: center; */
+}
+
+.auth-container {
+    margin: auto;
+    /* margin: 20vh auto 2vh; */
+    padding: 3rem;
+    background-color: var(--white);
+    border-radius: var(--border-rad);
+    /* width: fit-content; */
+    /* height: auto; */
+    width: 30vw;
+}
+
+.register .auth-container {
+    margin-top: 10vh;
+}
+
+.auth-container h1 {
+    margin-bottom: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    /* gap: 3rem; */
+    flex-direction: column;
+}
+
+.inp {
+    margin: 0.7rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.inp label {
+    margin-bottom: 0.5rem;
+}
+
+.inp input {
+    padding: 0.7rem 1rem;
+    border-radius: var(--border-rad);
+    border-color: #cfcfcf;
+    border: 1px solid black;
+    outline: none;
+}
+
+.auth-submit {
+    margin-top: 1rem;
+}
+
+.forgot-password {
+    width: 100%;
+    text-align: right;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    /* color: var(--dark); */
+    opacity: 0.6;
+}
+
+.log-reg-text {
+    margin-top: 2rem;
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+.log-reg-text a {
+    color: var(--dark);
+}

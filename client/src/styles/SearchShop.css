@@ -1,0 +1,111 @@
+.search-shop {
+    padding: 3rem;
+    font-size: 1rem;
+}
+
+.search-bar {
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 0;
+    /* border-bottom: 1px solid grey; */
+}
+
+.dropdown {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.dropdown select {
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.7rem;
+    border: none;
+    color: grey;
+}
+
+.search-btn {
+    align-self: flex-end;
+    border: none;
+}
+
+/* shops */
+
+.shops {
+    margin: 2rem 0;
+}
+
+.shops-head {
+    font-size: 1.5em;
+    margin: 1rem 0 2rem;
+}
+
+.shop-list {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    flex-wrap: wrap;
+    gap: 2rem 1.2rem;
+    /* padding: 0.5rem; */
+}
+
+
+/* shop card */
+
+.shop-card {
+    padding: 1rem;
+    max-width: 21%;
+    width: auto;
+    background-color: var(--white);
+    border-radius: var(--border-rad);
+}
+
+.shop-image {
+    overflow: hidden;
+    border-radius: var(--border-rad);
+    height: 10%;
+}
+
+.shop-image img {
+    width: 100%;
+}
+
+.shop-card-body {
+    padding-top: 1rem;
+}
+
+.shop-name {
+    font-size: 1.2em;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.shop-address {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: gray;
+    font-size: 0.9em;
+}
+
+.shp-logo {
+    align-self: start;
+    font-size: 1.5em;
+    color: var(--dark);
+}
+
+.shop-card-body .btns {
+    width: 100%;
+}
+
+.view-btn {
+    text-decoration: none;
+    display: block;
+    margin: 1rem 0 0;
+}
