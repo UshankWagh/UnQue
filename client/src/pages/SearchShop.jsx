@@ -8,8 +8,8 @@ const SearchShop = () => {
         <div className='search-shop'>
             <h1>Search Shop</h1>
             <div className="search-bar">
-                <DropDown />
-                <DropDown />
+                <DropDown label="City" values={["Valsad", "Vadodara", "Surat", "Ahemdabad"]} />
+                <DropDown label="Area" values={["Area1", "Area1", "Area1", "Area1"]} />
                 <button className='btn search-btn'>Search</button>
             </div>
             <div className="shops">

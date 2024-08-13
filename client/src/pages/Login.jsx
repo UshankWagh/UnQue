@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import DropDown from '../components/DropDown'
 
 const Login = () => {
     return (
@@ -7,6 +8,9 @@ const Login = () => {
             <div className="auth-container">
                 <h1>Login</h1>
                 <div className="auth-form">
+                    <div className="inp">
+                        <DropDown label="User" values={["Customer", "Employee", "Shopowner"]} />
+                    </div>
                     <div className="inp">
                         <label htmlFor="username">Username</label>
                         <input type="text" placeholder='Enter Username' name="username" id="username" />

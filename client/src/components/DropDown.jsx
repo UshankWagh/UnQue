@@ -1,11 +1,13 @@
 import React from 'react'
 
-const DropDown = () => {
+const DropDown = ({ label, values }) => {
     return (
         <div className='dropdown'>
-            <label htmlFor="selc">Select</label>
+            <label htmlFor="selc">{label}</label>
             <select id='selc'>
-                <option value="">Select</option>
+                {values.map(val => {
+                    return <option value="val">{val}</option>
+                })}
             </select>
         </div>
     )

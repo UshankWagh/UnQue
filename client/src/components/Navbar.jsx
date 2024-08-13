@@ -1,5 +1,5 @@
 import React from 'react'
-import unqLogo from '../assets/unq_logo.png';
+import unqLogo from '../assets/images/unq_logo.png';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {

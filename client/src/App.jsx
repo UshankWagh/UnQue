@@ -11,7 +11,6 @@ import Queues from './pages/Queues';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import EmployeeDash from './pages/EmployeeDash';
-import Navbar from './components/Navbar';
 import ShopOwnerDash from './pages/ShopOwnerDash';
 import Profile from './pages/Profile';
 

@@ -1,8 +1,10 @@
 import React from 'react'
-import shop from "../assets/shop.png"
+import shop from "../assets/images/shop.png"
 import { FaShop } from "react-icons/fa6";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { Link } from 'react-router-dom';
+import { FaRegCircleUser } from "react-icons/fa6";
+import { RiUser3Fill } from "react-icons/ri";
 
 const ShopCard = () => {
     return (
@@ -16,6 +18,12 @@ const ShopCard = () => {
                         <FaShop />
                     </div> */}
                     <div className="shp-text s-name">Shop Name</div>
+                </div>
+                <div className="shop-address">
+                    <div className="shp-logo">
+                        <RiUser3Fill />
+                    </div>
+                    <div className="shp-text s-address">Raj Solanki</div>
                 </div>
                 <div className="shop-address">
                     <div className="shp-logo">

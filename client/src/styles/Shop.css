@@ -1,36 +1,8 @@
-.queues {
+.shop {
     padding: 3rem;
     font-size: 1rem;
 }
 
-.queues-head {
-    margin: 3rem 0 1rem;
-}
-
-/* shop table */
-
-.queue-table {
-    /* background-color: #fff; */
-    border: 1px solid #ebebeb;
-    width: 100%;
-}
-
-.queue-table th {
-    background-color: #ebebeb;
-    background-color: var(--dark);
-    color: var(--white);
-    text-align: left;
-}
-
-.queue-table th,
-.queue-table td {
-    border: 1px solid #717171;
-    border-left: none;
-    border-right: none;
-    padding: 0.8rem 1.5rem;
-}
-
-.view-shop-btn {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.9em;
+.shop h1 {
+    margin-bottom: 2rem;
 }

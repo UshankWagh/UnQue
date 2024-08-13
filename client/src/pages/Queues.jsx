@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/Shop.css'
+import '../styles/Queues.css'
 import QueueTable from '../components/QueueTable'
 
 const Queues = () => {

@@ -113,6 +113,7 @@ body {
     justify-content: center;
     flex-direction: column;
     gap: 1rem;
+    box-shadow: 1px 5px 10rem rgba(0, 0, 0, 0.21);
 }
 
 .popup-head {
@@ -192,6 +193,11 @@ body {
     flex-direction: column;
 }
 
+.inp .dropdown select {
+    border: 1px solid black;
+    padding: 0.7rem 1rem;
+}
+
 .inp label {
     margin-bottom: 0.5rem;
 }
@@ -226,4 +232,15 @@ body {
 
 .log-reg-text a {
     color: var(--dark);
+}
+
+.name-input {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+}
+
+.name-input .inp {
+    width: 50%;
 }
