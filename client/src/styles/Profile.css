@@ -6,3 +6,94 @@
 .profile h1 {
     margin-bottom: 2rem;
 }
+
+.profile-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.profile-left {
+    flex-basis: 20%;
+}
+
+.profile-left .basic-dets {
+    background-color: var(--white);
+    border-radius: var(--border-rad);
+    padding: 2rem;
+}
+
+.basic-dets .profile-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.basic-dets .profile-img img {
+    margin-bottom: 2rem;
+    border-radius: 100%;
+    border: 5px solid rgb(159, 159, 159);
+    width: 6rem;
+    height: 6rem;
+}
+
+.basic-dets .dets p {
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.basic-dets .dets .uname {
+    font-weight: 100;
+}
+
+.profile-right {
+    flex-basis: 70%;
+    width: 70%;
+}
+
+.profile-right .profile-dets {
+    position: relative;
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: var(--border-rad);
+}
+
+.profile-right .profile-dets .edit-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    background-color: rgb(239, 239, 239);
+    cursor: pointer;
+}
+
+.profile-right .profile-dets .head {
+    margin-bottom: 2rem;
+    font-size: 1.5em;
+}
+
+.profile-right .profile-dets .dets-img {
+    margin-bottom: 2rem;
+    border-radius: var(--border-rad);
+    overflow: hidden;
+    max-height: 15rem;
+}
+
+.profile-right .profile-dets .dets-img img {
+    width: 100%;
+}
+
+.profile-right .profile-dets .inp {
+    margin-bottom: 1.4rem;
+}
+
+.profile-right .profile-dets .inp .restrict-edit {
+    background-color: rgb(239, 239, 239);
+    color: black;
+    border: none;
+}
