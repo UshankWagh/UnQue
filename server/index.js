@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
+import unqDB from './config/db.js';
 // import path from "path";
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+unqDB;
 
 // routes
 // app.use("/get", getRoutes);
@@ -26,6 +28,6 @@ app.use(bodyParser.json());
 
 
 
-app.listen(process.env.SERVER_PORT || 5000, () => {
-    console.log("server on port 3000");
+app.listen(process.env.SERVER_PORT || 5500, () => {
+    console.log("server on port 5500");
 });

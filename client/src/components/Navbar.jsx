@@ -1,5 +1,6 @@
 import React from 'react'
 import unqLogo from '../assets/images/unq_logo.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     return (
@@ -10,6 +11,15 @@ const Navbar = () => {
                     <div className="logo-name">UnQue</div>
                     <div className="tagline">"Skip the Queue with <br /> UnQue"</div>
                 </div>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
+                <Link to="/search-shop">Search Shop</Link>
+                <Link to="/shop">Shop</Link>
+                <Link to="/queues">Queues</Link>
+                <Link to="/employee-dash">Emp dash</Link>
+                <Link to="/counter">Counters</Link>
+                <Link to="/shop-owner-dash">Shop Dash</Link>
+                <Link to="/profile">Profile</Link>
             </div>
         </nav>
     )
