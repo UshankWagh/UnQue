@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/Profile.css'
 import profile_img from '../assets/images/profile_img.png'
 import { MdModeEdit } from "react-icons/md";
 import { MdEditOff } from "react-icons/md";
 import shop_img from '../assets/images/shop_img.png'
+import DropDown from '../components/DropDown';
+import axios from "axios"
 
 const InputTag = ({ label, name, type, placeholder, value, classes }) => {
     return (
@@ -15,6 +17,45 @@ const InputTag = ({ label, name, type, placeholder, value, classes }) => {
 }
 
 const Profile = () => {
+
+    let username = "Ushank04"
+
+    // let role = "customer"
+    // let id = "66b91038976f6aa9f7766492"
+
+    let role = "shopowner"
+    let id = "66b911492cc0c1620b918462"
+
+    // let role = "employee"
+    // let id = "66b915712cc0c1620b918466"
+
+    const [profileDets, setProfileDets] = useState({});
+    const [editable, setEditable] = useState(false);
+
+    useEffect(() => {
+
+        const loadData = async () => {
+            const resp = await axios.get(`http://localhost:5000/profile/get-details/${role}/${id}`)
+
+            if (resp.data.success) {
+                setProfileDets(resp.data.profileDets);
+            }
+            else {
+                alert(resp.data.message)
+            }
+        }
+
+        loadData()
+
+    }, [])
+
+    const updateDets = () => {
+
+    }
+
+    console.log(profileDets);
+
+
     return (
         <div className='profile'>
             <h1>Customer Profile</h1>
@@ -25,32 +66,117 @@ const Profile = () => {
                             <img src={profile_img} alt="" />
                         </div>
                         <div className="dets">
-                            <p>Ushank Wagh</p>
-                            <p className='uname'>@ Ushank04</p>
+                            <p>{profileDets.firstName} {profileDets.lastName}</p>
+                            <p className='uname'>@ {profileDets.firstName}077</p>
                         </div>
                     </div>
                 </div>
                 <div className="profile-right">
                     <div className="profile-dets">
-                        <button className='edit-btn'>
-                            <MdModeEdit />
-                            {/* <MdEditOff /> */}
-                        </button>
                         <p className="head">Personal Details</p>
-                        <div className="dets-img">
-                            <img src={shop_img} alt="" />
+                        <div className='edit-btn' onClick={() => { setEditable(!editable) }}>
+                            {
+                                editable ? <MdEditOff /> : <MdModeEdit />
+                            }
                         </div>
+
+
+
+                        {/* common */}
+
                         <div className="group-input">
-                            <InputTag label={"First Name"} name={"firstname"} type={"text"} placeholder={"Enter First Name"} value={"Ushannk"} classes={"restrict-edit"} />
-                            <InputTag label={"Last Name"} name={"firstname"} type={"text"} placeholder={"Enter Last Name"} value={"Wagh"} classes={"restrict-edit"} />
+                            <div className="inp">
+                                <label htmlFor="first-name">First Name: </label>
+                                <input type="text" value={profileDets.firstName} onChange={(e) => updateDets("firstName", e.target.value)} placeholder='Enter First Name' className={editable ? "" : "restrict-edit"} name="first-name" id="first-name" />
+                            </div>
+                            <div className="inp">
+                                <label htmlFor="last-name">Last Name</label>
+                                <input type="text" value={profileDets.lastName} onChange={(e) => updateDets("lastName", e.target.value)} placeholder='Enter Last Name' className={editable ? "" : "restrict-edit"} name="last-name" id="last-name" />
+                            </div>
                         </div>
-                        <InputTag label={"Email"} name={"email"} type={"text"} placeholder={"Enter new Email"} value={"email"} classes={"3"} />
-                        <InputTag label={"Phone Number"} name={"phoneno"} type={"text"} placeholder={" Enter Phone Number"} value={"phoneno"} classes={"restrict-edit"} />
-                        <div className="group-input">
-                            <InputTag label={"state"} name={"state"} type={"text"} placeholder={"state"} value={"state"} classes={"restrict-edit"} />
-                            <InputTag label={"city"} name={""} type={""} placeholder={""} value={""} classes={"restrict-edit"} />
-                            <InputTag label={"area"} name={""} type={""} placeholder={""} value={""} classes={"restrict-edit"} />
-                        </div>
+
+                        {/* customer */}
+                        {role == "customer" ?
+                            <>
+                                <div className="inp">
+                                    <label htmlFor="phoneNo">PhoneNo</label>
+                                    <div className="extra">
+                                        <label htmlFor="notifyMe">Notify Me</label>
+                                        <input type="checkbox" value={profileDets.phone.notifyMe} onChange={(e) => updateDets("phoneNo", e.target.value)} className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                    </div>
+                                    <input type="number" value={profileDets.phone.phoneNo} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                </div>
+                                <div className="inp">
+                                    <label htmlFor="email">Email</label>
+                                    <div className="extra">
+                                        <label htmlFor="notifyMe">Notify Me</label>
+                                        <input type="checkbox" value={profileDets.email.notifyMe} onChange={(e) => updateDets("phoneNo", e.target.value)} className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                    </div>
+                                    <input type="email" value={profileDets.email.emailId} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} name="email" id="email" />
+                                </div>
+                            </>
+                            :
+                            <>
+                                <div className="inp">
+                                    <label htmlFor="phoneNo">PhoneNo</label>
+                                    <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                </div>
+                                <div className="inp">
+                                    <label htmlFor="email">Email</label>
+                                    <input type="email" value={profileDets.email} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} name="email" id="email" />
+                                </div>
+
+                            </>
+                        }
+
+
+                        {/* shoponwer */}
+                        {role == "shopowner" ? <>
+                            <div className="dets-img">
+                                <img src={shop_img} alt="" />
+                            </div>
+                            <div className="inp">
+                                <label htmlFor="shop-name">Shop Name</label>
+                                <input type="text" value={profileDets.shop.shopName} onChange={(e) => updateDets("shopName", e.target.value)} placeholder='Enter Shop Name' className={editable ? "" : "restrict-edit"} name="shop-name" id="shop-name" />
+                            </div>
+                        </>
+                            :
+
+                            editable ?
+                                <>
+
+                                    <div className="group-input">
+
+                                        <div className="inp">
+                                            <DropDown onSelect={(val) => updateDets("state", val)} label="State" values={["Customer", "Employee", "Shopowner"]} />
+                                        </div>
+                                        <div className="inp">
+                                            <DropDown onSelect={(val) => updateDets("city", val)} label="City" values={["Customer", "Employee", "Shopowner"]} />
+                                        </div>
+                                        <div className="inp">
+                                            <DropDown onSelect={(val) => updateDets("area", val)} label="Area" values={["Customer", "Employee", "Shopowner"]} />
+                                        </div>
+                                    </div>
+                                    <button className="btn">
+                                        Update
+                                    </button>
+                                </>
+                                :
+                                <div className="group-input">
+                                    <div className="inp">
+                                        <label htmlFor="state">State</label>
+                                        <input type="text" value={role == "shopowner" ? profileDets.state : profileDets.shop.state} onChange={() => { }} className="restrict-edit" name="state" id="state" />
+                                    </div>
+                                    <div className="inp">
+                                        <label htmlFor="city">City</label>
+                                        <input type="text" value={role == "shopowner" ? profileDets.city : profileDets.shop.city} onChange={() => { }} className="restrict-edit" name="city" id="city" />
+                                    </div>
+                                    <div className="inp">
+                                        <label htmlFor="area">Area</label>
+                                        <input type="text" value={role == "shopowner" ? profileDets.area : profileDets.shop.area} onChange={() => { }} className="restrict-edit" name="area" id="area" />
+                                    </div>
+                                </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -59,3 +185,17 @@ const Profile = () => {
 }
 
 export default Profile
+
+
+
+{/* <div className="group-input">
+    <InputTag label={"First Name"} name={"firstName"} type={"text"} placeholder={"Enter First Name"} value={"Ushannk"} classes={"restrict-edit"} />
+    <InputTag label={"Last Name"} name={"firstName"} type={"text"} placeholder={"Enter Last Name"} value={"Wagh"} classes={"restrict-edit"} />
+    </div>
+    <InputTag label={"Email"} name={"email"} type={"text"} placeholder={"Enter new Email"} value={"email"} classes={"3"} />
+    <InputTag label={"Phone Number"} name={"phoneNo"} type={"text"} placeholder={" Enter Phone Number"} value={"phoneno"} classes={"restrict-edit"} />
+    <div className="group-input">
+    <InputTag label={"state"} name={"state"} type={"text"} placeholder={"state"} value={"state"} classes={"restrict-edit"} />
+    <InputTag label={"city"} name={""} type={""} placeholder={""} value={""} classes={"restrict-edit"} />
+    <InputTag label={"area"} name={""} type={""} placeholder={""} value={""} classes={"restrict-edit"} />
+</div> */}

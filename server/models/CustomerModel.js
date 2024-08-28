@@ -71,4 +71,4 @@ const CustomerSchema = new Schema({
     ],
 });
 
-module.exports = mongoose.model('Customer', CustomerSchema);
+export default mongoose.model('Customer', CustomerSchema);

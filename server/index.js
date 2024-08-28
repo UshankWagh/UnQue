@@ -3,6 +3,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import unqDB from './config/db.js';
+import counterRoutes from './routes/CounterRoutes.js'
+import shopRoutes from './routes/ShopRoutes.js'
+import profileRoutes from './routes/ProfileRoutes.js'
 // import path from "path";
 
 const app = express();
@@ -17,6 +20,10 @@ unqDB;
 
 // routes
 // app.use("/get", getRoutes);
+
+app.use("/counters", counterRoutes);
+app.use("/shops", shopRoutes);
+app.use("/profile", profileRoutes);
 
 
 // const __dirname = path.resolve();

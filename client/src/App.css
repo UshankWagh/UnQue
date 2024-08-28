@@ -235,13 +235,13 @@ body {
     color: var(--dark);
 }
 
-.name-input {
+.group-input {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 2rem;
 }
 
-.name-input .inp {
+.group-input .inp {
     width: 50%;
 }

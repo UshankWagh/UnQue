@@ -1,12 +1,12 @@
 import React from 'react'
 
-const DropDown = ({ label, values }) => {
+const DropDown = ({ label, values, onSelect }) => {
     return (
         <div className='dropdown'>
             <label htmlFor="selc">{label}</label>
-            <select id='selc'>
-                {values.map(val => {
-                    return <option value="val">{val}</option>
+            <select id='selc' onChange={(e) => { onSelect(e.target.value) }}>
+                {values?.map(val => {
+                    return <option value={val._id || val}>{val.name || val}</option>
                 })}
             </select>
         </div>

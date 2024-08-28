@@ -2,6 +2,7 @@
     position: relative;
     margin-bottom: 3.5rem;
     height: 13rem;
+    border-radius: var(--border-rad);
     overflow: hidden;
 }
 

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../styles/ShopCounter.css'
+import { useSearchParams } from "react-router-dom";
 
 const Ticket = ({ ticket }) => {
     return (
@@ -10,10 +11,20 @@ const Ticket = ({ ticket }) => {
 }
 
 const ShopCounter = () => {
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const shopId = searchParams.get("shopId")
+    const counter = searchParams.get("counterNo")
+
+    // useEffect(() => {
+
+    // }, [])
+
     return (
         <div className='shop-counter'>
+
             <div className="head">
-                <h1>Counter <span>1</span></h1>
+                <h1>Counter <span>{counter}</span></h1>
                 <button className='btn'>Open</button>
             </div>
             <p className='queue-head'>Queue</p>

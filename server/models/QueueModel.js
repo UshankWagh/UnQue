@@ -38,4 +38,4 @@ const QueueSchema = new Schema({
     ],
 });
 
-module.exports = mongoose.model('Queue', QueueSchema);
+export default mongoose.model('queues', QueueSchema);

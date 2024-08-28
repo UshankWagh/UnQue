@@ -1,5 +1,16 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 const Schema = mongoose.Schema;
+
+/*
+
+fname
+lname
+state
+city
+area
+shop
+
+*/
 
 const EmployeeSchema = new Schema({
     avatar: {
@@ -30,6 +41,4 @@ const EmployeeSchema = new Schema({
     }
 });
 
-const Employee = mongoose.model('Employee', EmployeeSchema);
-
-module.exports = Employee;
+export default mongoose.model('employee', EmployeeSchema);

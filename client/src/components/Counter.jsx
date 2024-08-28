@@ -14,7 +14,7 @@ const Counter = ({ no, queueCount, btn }) => {
                 </div>
 
             </div>
-            <button className={`btn ${btn.type}`} onClick={() => { btn.onClickHandler() }} >{btn.text}</button>
+            <button className={`btn ${btn.type}`} onClick={() => { btn.onClickHandler(no) }} >{btn.text}</button>
         </div>
     )
 }
