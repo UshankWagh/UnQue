@@ -1,5 +1,5 @@
 import express from "express"
-import { addCounterController, getCounterQueueController, deleteCounterController, getCounterController } from "../controllers/CounterControllers.js";
+import { addCounterController, getCounterQueueController, deleteCounterController, getCounterController } from "../controllers/counterControllers.js";
 
 const router = express.Router()
 
