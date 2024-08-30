@@ -5,9 +5,6 @@ const Schema = mongoose.Schema;
 
 fname
 lname
-state
-city
-area
 shop
 
 */
@@ -16,7 +13,11 @@ const EmployeeSchema = new Schema({
     avatar: {
         type: String
     },
-    name: {
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
         type: String,
         required: true
     },
@@ -34,9 +35,9 @@ const EmployeeSchema = new Schema({
         type: String,
         required: true
     },
-    shopId: {
+    shopownerId: {
         type: Schema.Types.ObjectId,
-        ref: 'ShopOwner',
+        ref: 'shopowners',
         required: true
     }
 });

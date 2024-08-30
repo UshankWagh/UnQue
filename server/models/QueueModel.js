@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
+// ticket string
+
 const QueueSchema = new Schema({
     shopownerId: {
         type: mongoose.Schema.Types.ObjectId,

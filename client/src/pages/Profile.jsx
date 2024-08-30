@@ -49,8 +49,19 @@ const Profile = () => {
 
     }, [])
 
-    const updateDets = () => {
+    const updateDets = (key, value) => {
+        setProfileDets(p => ({ ...p, [key]: value }))
+    }
 
+    const handleUpdateProfileDetails = async () => {
+        const resp = await axios.get(`http://localhost:5000/profile/update-details/${role}/${id}`)
+
+        if (resp.data.success) {
+            alert(resp.data.message)
+        }
+        else {
+            alert(resp.data.message)
+        }
     }
 
     console.log(profileDets);
@@ -87,11 +98,11 @@ const Profile = () => {
                         <div className="group-input">
                             <div className="inp">
                                 <label htmlFor="first-name">First Name: </label>
-                                <input type="text" value={profileDets.firstName} onChange={(e) => updateDets("firstName", e.target.value)} placeholder='Enter First Name' className={editable ? "" : "restrict-edit"} name="first-name" id="first-name" />
+                                <input type="text" value={profileDets.firstName} onChange={(e) => updateDets("firstName", e.target.value)} placeholder='Enter First Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="first-name" id="first-name" />
                             </div>
                             <div className="inp">
                                 <label htmlFor="last-name">Last Name</label>
-                                <input type="text" value={profileDets.lastName} onChange={(e) => updateDets("lastName", e.target.value)} placeholder='Enter Last Name' className={editable ? "" : "restrict-edit"} name="last-name" id="last-name" />
+                                <input type="text" value={profileDets.lastName} onChange={(e) => updateDets("lastName", e.target.value)} placeholder='Enter Last Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="last-name" id="last-name" />
                             </div>
                         </div>
 
@@ -102,28 +113,28 @@ const Profile = () => {
                                     <label htmlFor="phoneNo">PhoneNo</label>
                                     <div className="extra">
                                         <label htmlFor="notifyMe">Notify Me</label>
-                                        <input type="checkbox" value={profileDets.phone.notifyMe} onChange={(e) => updateDets("phoneNo", e.target.value)} className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                        <input type="checkbox" value={profileDets.phone.notifyMe} onChange={(e) => updateDets("email", e.target.value)} className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
                                     </div>
-                                    <input type="number" value={profileDets.phone.phoneNo} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                    <input type="number" value={profileDets.phone.phoneNo} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
                                 </div>
                                 <div className="inp">
                                     <label htmlFor="email">Email</label>
                                     <div className="extra">
                                         <label htmlFor="notifyMe">Notify Me</label>
-                                        <input type="checkbox" value={profileDets.email.notifyMe} onChange={(e) => updateDets("phoneNo", e.target.value)} className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                        <input type="checkbox" value={profileDets.email.notifyMe} onChange={(e) => updateDets("email", e.target.value)} className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
                                     </div>
-                                    <input type="email" value={profileDets.email.emailId} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} name="email" id="email" />
+                                    <input type="email" value={profileDets.email.emailId} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" />
                                 </div>
                             </>
                             :
                             <>
                                 <div className="inp">
                                     <label htmlFor="phoneNo">PhoneNo</label>
-                                    <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} name="phoneNo" id="phoneNo" />
+                                    <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter Phone Number' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
                                 </div>
                                 <div className="inp">
                                     <label htmlFor="email">Email</label>
-                                    <input type="email" value={profileDets.email} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} name="email" id="email" />
+                                    <input type="email" value={profileDets.email} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" />
                                 </div>
 
                             </>
@@ -131,17 +142,20 @@ const Profile = () => {
 
 
                         {/* shoponwer */}
-                        {role == "shopowner" ? <>
-                            <div className="dets-img">
-                                <img src={shop_img} alt="" />
+                        {role == "shopowner" && <>
+                            <div className="inp">
+                                <label htmlFor="shop-img">Shop Image</label>
+                                <div className="dets-img inp">
+                                    <img src={shop_img} alt="" />
+                                </div>
                             </div>
                             <div className="inp">
                                 <label htmlFor="shop-name">Shop Name</label>
-                                <input type="text" value={profileDets.shop.shopName} onChange={(e) => updateDets("shopName", e.target.value)} placeholder='Enter Shop Name' className={editable ? "" : "restrict-edit"} name="shop-name" id="shop-name" />
+                                <input type="text" value={profileDets.shop?.shopName} onChange={(e) => updateDets("shopName", e.target.value)} placeholder='Enter Shop Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="shop-name" id="shop-name" />
                             </div>
                         </>
-                            :
-
+                        }
+                        {
                             editable ?
                                 <>
 
@@ -157,7 +171,7 @@ const Profile = () => {
                                             <DropDown onSelect={(val) => updateDets("area", val)} label="Area" values={["Customer", "Employee", "Shopowner"]} />
                                         </div>
                                     </div>
-                                    <button className="btn">
+                                    <button className="btn" onClick={handleUpdateProfileDetails}>
                                         Update
                                     </button>
                                 </>
@@ -165,15 +179,15 @@ const Profile = () => {
                                 <div className="group-input">
                                     <div className="inp">
                                         <label htmlFor="state">State</label>
-                                        <input type="text" value={role == "shopowner" ? profileDets.state : profileDets.shop.state} onChange={() => { }} className="restrict-edit" name="state" id="state" />
+                                        <input type="text" value={role == "shopowner" ? profileDets.state : profileDets.shop.state} onChange={() => { }} className="restrict-edit" disabled={!editable} name="state" id="state" />
                                     </div>
                                     <div className="inp">
                                         <label htmlFor="city">City</label>
-                                        <input type="text" value={role == "shopowner" ? profileDets.city : profileDets.shop.city} onChange={() => { }} className="restrict-edit" name="city" id="city" />
+                                        <input type="text" value={role == "shopowner" ? profileDets.city : profileDets.shop.city} onChange={() => { }} className="restrict-edit" disabled={!editable} name="city" id="city" />
                                     </div>
                                     <div className="inp">
                                         <label htmlFor="area">Area</label>
-                                        <input type="text" value={role == "shopowner" ? profileDets.area : profileDets.shop.area} onChange={() => { }} className="restrict-edit" name="area" id="area" />
+                                        <input type="text" value={role == "shopowner" ? profileDets.area : profileDets.shop.area} onChange={() => { }} className="restrict-edit" disabled={!editable} name="area" id="area" />
                                     </div>
                                 </div>
                         }

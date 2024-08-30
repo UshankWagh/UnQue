@@ -33,6 +33,8 @@ export const getProfileDetailsController = async (req, res) => {
                     message: "ShopOwner not found"
                 });
             }
+            console.log("sh", shopOwner);
+
             profileDets = shopOwner
 
         }
@@ -56,9 +58,90 @@ export const getProfileDetailsController = async (req, res) => {
             });
         }
 
+        console.log(role, id, profileDets);
+
+
         res.status(200).send({
             success: true,
             profileDets
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            error
+        });
+    }
+
+}
+
+export const updateProfileDetailsController = async (req, res) => {
+
+    try {
+
+        const { role, id } = req.params;
+
+        let profileDets = req.body.profileDets;
+
+
+        if (role == "customer") {
+
+
+
+            // check
+            // profileDets
+            // format
+
+
+
+            const customer = await Customer.findByIdAndUpdate(id, profileDets);
+
+            if (!customer) {
+                return res.status(200).send({
+                    success: false,
+                    message: "Customer not found"
+                });
+            }
+
+        }
+        else if (role == "shopowner") {
+
+            const shopOwner = await ShopOwner.findByIdAndUpdate(id, profileDets);
+
+            if (!shopOwner) {
+                return res.status(200).send({
+                    success: false,
+                    message: "ShopOwner not found"
+                });
+            }
+
+        }
+        else if (role == "employee") {
+
+            const employee = await Employee.findByIdAndUpdate(id, profileDets);
+
+            if (!employee) {
+                return res.status(200).send({
+                    success: false,
+                    message: "Employee not found"
+                });
+            }
+
+        }
+        else {
+            return res.status(200).send({
+                success: false,
+                message: "No such user role"
+            });
+        }
+
+        console.log(role, id, profileDets);
+
+
+        res.status(200).send({
+            success: true,
+            message: "Profile Updated Successfully"
         });
 
     } catch (error) {

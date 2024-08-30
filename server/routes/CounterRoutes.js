@@ -1,16 +1,18 @@
 import express from "express"
-import { getAddCounterController, getDeleteCounterController, getShopCounterController } from "../controllers/CounterControllers.js";
+import { addCounterController, getCounterQueueController, deleteCounterController, getCounterController } from "../controllers/CounterControllers.js";
 
 const router = express.Router()
 
 
 // router.get("/all-shop-counters/:shopId", getShopCountersController);
 
-router.get("/:shopId/:counterNo", getShopCounterController);
+// router.get("/get/:shopId/:counterNo", getCounterController);
 
-router.patch("/add-counter/:shopId/:counterNo", getAddCounterController);
+router.get("/get-queue/:shopId/:counterNo", getCounterQueueController);
 
-router.patch("/delete-counter/:shopId/:counterNo", getDeleteCounterController);
+router.patch("/add-counter/:shopId/:counterNo", addCounterController);
+
+router.patch("/delete-counter/:shopId/:counterNo", deleteCounterController);
 
 
 export default router;
