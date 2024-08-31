@@ -9,9 +9,9 @@ const StateSchema = new Schema({
     cities: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'City',
+            ref: 'city',
         }
     ],
 });
 
-module.exports = mongoose.model('State', StateSchema);
+export default mongoose.model('states', StateSchema);

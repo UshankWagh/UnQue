@@ -1,4 +1,5 @@
-import ShopOwner from "../models/ShopOwnerModel.js"
+import ShopOwner from "../models/ShopOwnerModel.js";
+import Customer from "../models/CustomerModel.js";
 
 // export const getShopCountersController = async (req, res) => {
 
@@ -126,6 +127,30 @@ export const getCounterQueueController = async (req, res) => {
         res.status(500).send({
             success: false,
             message: "error in get counter queue",
+            error
+        })
+    }
+}
+
+export const getJoinedQsController = async (req, res) => {
+
+    const { customerid } = req.params;
+    // console.log("cid", customerid);
+
+    try {
+        const customer = await Customer.findById(customerid, { "queues.queue": 1 });
+        console.log(customer);
+
+        res.status(200).send({
+            success: true,
+            message: "customer found",
+            joinedQs: customer.queues
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "error in get joined qs",
             error
         })
     }

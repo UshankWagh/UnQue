@@ -37,7 +37,7 @@ const EmployeeSchema = new Schema({
     },
     shopownerId: {
         type: Schema.Types.ObjectId,
-        ref: 'shopowners',
+        ref: 'shopowner',
         required: true
     }
 });

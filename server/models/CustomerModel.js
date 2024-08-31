@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import Queue from "./QueueModel.js";
+
 const Schema = mongoose.Schema;
 
 const CustomerSchema = new Schema({
@@ -59,16 +61,16 @@ const CustomerSchema = new Schema({
     queues: [
         {
             ticket: {
-                type: String,
+                type: Number,
                 required: true,
             },
-            queId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Queue',
+            queue: {
+                type: Schema.Types.ObjectId,
+                ref: 'queue',
                 required: true,
             },
         },
     ],
 });
 
-export default mongoose.model('Customer', CustomerSchema);
+export default mongoose.model('customer', CustomerSchema);

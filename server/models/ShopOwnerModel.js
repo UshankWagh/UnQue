@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import Queue from "./QueueModel.js";
 const Schema = mongoose.Schema;
 
 /*
@@ -64,14 +65,14 @@ const ShopOwnerSchema = new Schema({
                 },
                 queue: {
                     type: Schema.Types.ObjectId,
-                    ref: 'queues'
+                    ref: 'queue'
                 }
             }
         ],
         employees: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Employee'
+                ref: 'employee'
             }
         ]
     }

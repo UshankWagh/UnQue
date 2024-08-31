@@ -102,6 +102,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2;
 }
 
 .popup {
@@ -115,6 +116,7 @@ body {
     flex-direction: column;
     gap: 1rem;
     box-shadow: 1px 5px 10rem rgba(0, 0, 0, 0.21);
+    z-index: 99;
 }
 
 .popup-head {

@@ -9,42 +9,11 @@
 
 /* shop table */
 
-.queue-table {
-    /* background-color: #fff; */
-    border: 1px solid #ebebeb;
-    width: 100%;
-}
-
-.queue-table th {
-    background-color: #ebebeb;
-    background-color: transparent;
-    /* color: var(--white); */
-    text-align: left;
-}
-
-.queue-table th,
-.queue-table td {
-    border: 1px solid #717171;
-    border: none;
-    border-left: none;
-    border-right: none;
-    padding: 0.8rem 1.5rem;
-}
-
-.queue-table td {
-    background-color: #fff;
-}
-
-.queue-table tr {
-    margin: 1rem;
-}
-
 .view-shop-btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.9em;
     background-color: var(--light);
 }
-
 
 /* delete */
 
