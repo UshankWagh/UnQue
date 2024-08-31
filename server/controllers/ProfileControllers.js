@@ -136,8 +136,6 @@ export const updateProfileDetailsController = async (req, res) => {
             });
         }
 
-        console.log(role, id, profileDets);
-
 
         res.status(200).send({
             success: true,

@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-// ticket string
-
 const QueueSchema = new Schema({
     shopownerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shopowner',
+        ref: 'shopowner',
         required: true,
     },
     shopName: {
@@ -26,18 +24,18 @@ const QueueSchema = new Schema({
         default: 0,
     },
     firstTicket: {
-        type: String,
+        type: Number,
         default: 0,
     },
     lastTicket: {
-        type: String,
+        type: Number,
         default: 0,
     },
     cancelledTickets: [
         {
-            type: String,
+            type: Number,
         }
     ],
 });
 
-export default mongoose.model('queues', QueueSchema);
+export default mongoose.model('queue', QueueSchema);
