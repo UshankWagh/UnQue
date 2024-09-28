@@ -28,10 +28,34 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+// socket
+
+io.on("connection", (socket) => {
+    console.log("User Connected", socket.id);
+
+    socket.on("join-room", (queueId) => {
+        socket.join(queueId);
+        console.log(`${socket.id} joined queueId ${queueId}`);
+    });
+
+    socket.on("change-counter-status", ({ queueId, status }) => {
+        console.log(`O / C ${status}`);
+        socket.to(queueId).emit("counter-status-changed", { queueId, status })
+    });
+
+    socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
+        console.log("cancel ticket", queueId, type, ticket);
+
+        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
+    })
+});
+
+
+
 unqDB;
 
 // routes
-// app.use("/get", getRoutes);
 
 app.use("/counters", counterRoutes);
 app.use("/shops", shopRoutes);
@@ -47,6 +71,6 @@ app.use("/profile", profileRoutes);
 
 
 
-app.listen(process.env.SERVER_PORT || 5500, () => {
-    console.log("server on port 5500");
+server.listen(process.env.SERVER_PORT || 5500, () => {
+    console.log("server on port 5000");
 });

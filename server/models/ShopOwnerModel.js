@@ -12,6 +12,8 @@ lname
 email
 */
 
+// pno
+
 const ShopOwnerSchema = new Schema({
     firstName: {
         type: String,

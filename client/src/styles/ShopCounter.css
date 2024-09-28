@@ -45,7 +45,7 @@
     background-color: var(--dark);
     /* border-radius: 10px; */
     width: 20rem;
-    height: 23.3rem;
+    height: 21.8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -64,11 +64,14 @@
 }
 
 .shop-counter-container .queue .que-count {
+    position: absolute;
+    top: 7%;
+    right: 10%;
     font-size: 1.5em;
     color: var(--white);
 }
 
-.queue-head {
+.shop-counter .queue-head {
     margin-bottom: 1.5rem;
     font-size: 1.5em;
     color: black;

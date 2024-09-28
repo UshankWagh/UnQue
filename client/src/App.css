@@ -4,6 +4,7 @@
     --light: #cffeea;
     --white: #ffffff;
     --danger: #ffa7a7;
+    --disable: #b3b3b3;
     --border-rad: 0.7rem;
 }
 
@@ -35,6 +36,10 @@ body {
 
 .danger {
     background-color: var(--danger);
+}
+
+.btn-disabled {
+    background-color: var(--disable);
 }
 
 .sub-head {

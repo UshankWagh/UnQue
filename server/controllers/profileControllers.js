@@ -58,7 +58,7 @@ export const getProfileDetailsController = async (req, res) => {
             });
         }
 
-        console.log(role, id, profileDets);
+        // console.log(role, id, profileDets);
 
 
         res.status(200).send({
