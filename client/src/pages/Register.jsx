@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import DropDown from '../components/DropDown'
 import axios from 'axios';
 
@@ -11,6 +11,8 @@ const Register = () => {
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
     const [areas, setAreas] = useState([]);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const getShops = async () => {
@@ -46,6 +48,13 @@ const Register = () => {
     async function handleSubmit() {
         const registerRes = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/sign-up`, { ...registerDets });
         localStorage.setItem("auth", JSON.stringify(registerRes.data.auth));
+        navigate("/customer/search-shop");
+        if (registerRes.data.auth.role == "customer") {
+            navigate("/customer/search-shop");
+        }
+        else if (registerRes.data.auth.role == "shopowner") {
+            navigate("/shopowner/shop-owner-dash");
+        }
     }
 
     return (

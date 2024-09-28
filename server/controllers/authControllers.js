@@ -137,12 +137,16 @@ export const loginUser = async (req, res) => {
     try {
         let login = false
         const { role } = req.body;
+        console.log("rl", role);
+
         if (role == "customer") {
             login = await Customer.findOne({
                 username: req.body.username,
             });
         }
         else if (role == "shopowner") {
+            console.log("shpc", req.body.username);
+
             login = await ShopOwner.findOne({
                 username: req.body.username,
             });

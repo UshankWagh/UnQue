@@ -1,0 +1,53 @@
+SERVER:
+npm i socket.io
+
+index.js
+import { Server } from "socket.io";
+import { createServer } from "http";
+
+const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
+io.on("connection", (socket) => {
+console.log("User Connected", socket.id);
+});
+
+
+CLIENT:
+npm i socket.io-client
+
+[page].jsx
+import React, { useEffect, useMemo, useState } from "react";
+import { io } from "socket.io-client";
+
+const App = () => {
+  const socket = useMemo(
+    () =>
+      io("http://localhost:5000", {
+        withCredentials: true,
+      }),
+    []
+  );
+
+const [socketID, setSocketId] = useState("");
+
+useEffect(() => {
+    socket.on("connect", () => {
+      setSocketId(socket.id);
+      console.log("connected", socket.id);
+    });

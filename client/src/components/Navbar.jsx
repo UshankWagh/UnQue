@@ -13,13 +13,13 @@ const Navbar = () => {
                 </div>
                 <Link to="/login">Login</Link>
                 <Link to="/register">Register</Link>
-                <Link to="/search-shop">Search Shop</Link>
-                <Link to="/shop?shopid=66b911492cc0c1620b918462">Shop</Link>
-                <Link to="/queues">Queues</Link>
-                <Link to="/employee-dash">Emp dash</Link>
-                <Link to="/counter">Counters</Link>
-                <Link to="/shop-owner-dash">Shop Dash</Link>
-                <Link to="/profile">Profile</Link>
+                <Link to="/customer/search-shop">Search Shop</Link>
+                <Link to="/customer/shop?shopid=66b911492cc0c1620b918462">Shop</Link>
+                <Link to="/customer/queues">Queues</Link>
+                <Link to="/employee/employee-dash">Emp dash</Link>
+                <Link to="/shopowner/counter">Counters</Link>
+                <Link to="/shopowner/shop-owner-dash">Shop Dash</Link>
+                <Link to="/role/profile">Profile</Link>
             </div>
         </nav>
     )

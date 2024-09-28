@@ -1,5 +1,5 @@
 import express from "express"
-import { addCounterController, getCounterQueueController, deleteCounterController, getCounterController, getJoinedQsController } from "../controllers/counterControllers.js";
+import { addCounterController, getCounterQueueController, deleteCounterController, getCounterController, getJoinedQsController, JoinQueueController, cancelTicketController } from "../controllers/counterControllers.js";
 
 const router = express.Router()
 
@@ -14,6 +14,10 @@ router.patch("/add-counter/:shopId/:counterNo", addCounterController);
 
 router.patch("/delete-counter/:shopId/:counterNo", deleteCounterController);
 
-router.get("/get-joined-qs/:customerid", getJoinedQsController);
+router.get("/get-joined-qs/:filter/:customerid", getJoinedQsController);
+
+router.post("/join-queue", JoinQueueController);
+
+router.post("/cancel-ticket", cancelTicketController);
 
 export default router;

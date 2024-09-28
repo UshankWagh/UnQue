@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from "react";
+import { io } from "socket.io-client";
 import PopUp from '../components/PopUp'
 import '../styles/Shop.css';
 import shop_img from '../assets/images/shop_img.png'
@@ -9,109 +10,188 @@ import axios from 'axios';
 
 const Shop = () => {
 
-    const [shop, setShop] = useState(
-        // {
-        //     "shop": {
-        //         "shopImg": "https://example.com/shops/shop6.jpg",
-        //         "shopName": "Evergreen Grocery",
-        //         "address": "202 Fresh Lane, Shelbyville",
-        //         "counters": [
-        //             {
-        //                 "_id": "66cf67b839118c95dc8bda48",
-        //                 "queue": {
-        //                     "_id": "66b9157e976f6aa9f7766497",
-        //                     "shopownerId": "66b911492cc0c1620b918462",
-        //                     "shopName": "Evergreen Grocery",
-        //                     "counterNo": 1,
-        //                     "isOpen": true,
-        //                     "queueCount": 5,
-        //                     "firstTicket": "A101",
-        //                     "lastTicket": "A105",
-        //                     "cancelledTickets": [
-        //                         "A102",
-        //                         "A104"
-        //                     ]
-        //                 },
-        //                 "counterNo": 1
-        //             },
-        //             {
-        //                 "_id": "66cf67b839118c95dc8bda49",
-        //                 "queue": {
-        //                     "_id": "66b9159e976f6aa9f7766498",
-        //                     "shopownerId": "66b911492cc0c1620b918462",
-        //                     "shopName": "Evergreen Grocery",
-        //                     "counterNo": 2,
-        //                     "isOpen": false,
-        //                     "queueCount": 3,
-        //                     "firstTicket": "B201",
-        //                     "lastTicket": "B203",
-        //                     "cancelledTickets": [
-        //                         "B202"
-        //                     ]
-        //                 },
-        //                 "counterNo": 2
-        //             }
-        //         ],
-        //         "area": "Downtown",
-        //         "city": "Los Angeles",
-        //         "state": "California"
-        //     },
-        //     "_id": "66b911492cc0c1620b918462",
-        //     "ownerName": "David Green",
-        //     "avatar": "https://example.com/avatars/davidgreen.jpg"
-        // }
+    const socket = useMemo(
+        () =>
+            io("http://localhost:5000", {
+                withCredentials: true,
+            }),
+        []
     );
-    const [counterNo, setCounterNo] = useState();
-    const [joinedQs, setJoinedQs] = useState([
-        "66b9159e976f6aa9f7766498"
-    ])
+
+    const [socketID, setSocketId] = useState("");
+    const [shop, setShop] = useState();
+    const [popupDets, setPopupDets] = useState({
+        title: "",
+        desc: "",
+        isOpen: false,
+        counterNo: 0
+    });
+    const [alreadyJoinedQ, setAlreadyJoinedQ] = useState("");
+    const [auth, setAuth] = useState(JSON.parse(localStorage.getItem("auth")));
 
     const navigate = useNavigate()
-
     const [searchParams, setSearchParams] = useSearchParams();
+
+
+
     useEffect(() => {
+        socket.on("connect", () => {
+            setSocketId(socket.id);
+            console.log("connected", socket.id);
+        });
+        socket.on("joined-queue", ({ queueId, queueCount }) => {
+            console.log("someone joined ", queueId, "qi qc", queueCount);
+            updateQueueCount(queueId, queueCount);
+        });
+        socket.on("cancelled-ticket", ({ queueId, queueCount }) => {
+            console.log("on canceled ticket", queueId, queueCount);
+            updateQueueCount(queueId, queueCount);
+        });
+        socket.on("counter-status-changed", ({ queueId, status }) => {
+            console.log(`O / C ${status} ${queueId}`);
+            setShop((prvShop) => {
+                prvShop.shop.counters.map((counter, ind) => {
+                    // console.log("qids", counter.queue._id, queueId);
+                    if (counter.queue?._id == queueId) {
+                        // console.log("qcnts", counter.queue.queueCount, queueCount);
+                        prvShop.shop.counters[ind].queue.isOpen = status
+                        // counter.queue.queueCount = queueCount;
+                    }
+                    return;
+                })
+                // console.log("prvS", prvShop);
+                return { ...prvShop };
+            });
+        });
+
         const getShop = async () => {
+
             const shopId = searchParams.get("shopid");
             const shopRes = await axios.get(`http://localhost:5000/shops/get-shop/${shopId}`);
-            const joinedQsRes = await axios.get(`http://localhost:5000/counters/get-joined-qs/${"66b91038976f6aa9f7766492"}`);
-            console.log(shopRes.data.shop, joinedQsRes);
-            setJoinedQs(joinedQsRes.data.joinedQs);
+            const joinedQsRes = await axios.get(`http://localhost:5000/counters/get-joined-qs/ids/${auth.id}`);
+            // console.log(shopId, shopRes);
+            let joinedQs = joinedQsRes.data.joinedQs;
+            let counters = shopRes.data.shop.shop.counters;
             setShop(shopRes.data.shop);
+            for (let queue of joinedQs) {
+                for (let counter of counters) {
+                    if (queue.queue == counter.queue._id) {
+                        setAlreadyJoinedQ(queue.queue);
+                        return
+                    }
+                }
+            }
         }
         getShop();
     }, []);
 
-    console.log(shop);
+    // console.log("auth", auth);
 
-    const handleJoinQueue = (join) => {
-        if (join) {
-            setCounterNo(0)
-            // inc qCount and ticket by 1 in queue
-            // store ticket and queueid in customer
-            navigate("/queues")
+    const updateQueueCount = (queueId, queueCount) => {
+        setShop((prvShop) => {
+            prvShop.shop.counters.map((counter, ind) => {
+                // console.log("qids", counter.queue._id, queueId);
+                if (counter.queue?._id == queueId) {
+                    // console.log("qcnts", counter.queue.queueCount, queueCount);
+                    prvShop.shop.counters[ind].queue.queueCount = queueCount;
+                }
+                return;
+            })
+            // console.log("prvS", prvShop);
+            return { ...prvShop };
+        });
+    }
+
+    const handleJoinQueue = (confirmed) => {
+        const counter = shop.shop.counters.filter(counter => counter.counterNo == popupDets.counterNo)[0];
+        if (confirmed && popupDets.action == "Join") {
+            joinQueue(counter);
             console.log("joined queue");
         }
-        else {
-            setCounterNo(0);
+        else if (confirmed && popupDets.action == "Cancel") {
+            cancelTicket(counter);
+            setAlreadyJoinedQ(0);
+            console.log("canceled queue");
+        }
+        setPopupDets({
+            title: "",
+            desc: "",
+            isOpen: false,
+            counterNo: 0
+        });
+    }
+
+    const joinQueue = async (counter) => {
+        // console.log(counter.queue);
+
+        const joinQRes = await axios.post("http://localhost:5000/counters/join-queue", {
+            queueId: counter.queue._id,
+            customerId: "66b91038976f6aa9f7766492"
+        })
+        if (joinQRes.data.success) {
+            socket.emit("join-queue", { ...joinQRes.data.queue, queueId: counter.queue._id });
+            navigate("/queues");
+        }
+        // console.log("jqres", joinQRes, counter.queue._id);
+    }
+
+    const cancelTicket = async (counter) => {
+        // console.log(counter.queue);
+
+        const cancelTRes = await axios.post("http://localhost:5000/counters/cancel-ticket", {
+            queueId: counter.queue._id,
+            customerId: "66b91038976f6aa9f7766492"
+        });
+        console.log("ctkt", cancelTRes.data);
+        if (cancelTRes.data.success) {
+            const { queueCount, canceledTicket, ticketType } = cancelTRes.data;
+            updateQueueCount(counter.queue._id, queueCount);
+            socket.emit("cancel-ticket", { queueId: counter.queue._id, queueCount: queueCount, type: ticketType, ticket: canceledTicket });
+            console.log("canceled");
+            // setJoinedQs(jqs => {
+            //     return jqs.filter(q => q != counter.queue._id);
+            // })
+        }
+        // console.log(joinQRes);
+    }
+
+    const handleCounterAction = (action, counterNo) => {
+        if (action == "Join") {
+            setPopupDets({
+                isOpen: true,
+                action,
+                title: "Confirmation",
+                desc: `Are you sure to join queue of Counter No. ${counterNo}`,
+                counterNo
+            });
+        }
+        else if (action == "Cancel") {
+            setPopupDets({
+                isOpen: true,
+                action,
+                title: "Confirmation",
+                desc: `Are you sure to cancel your queue ticket of Counter No. ${counterNo}`,
+                counterNo
+            });
         }
     }
 
+    // console.log(shop);
+
     return (
         <div className="shop">
-            {counterNo > 0 && <PopUp title="Confirmation" desc={`Are you sure to join queue of Counter No. ${counterNo}`} confirmation={handleJoinQueue} />}
+            {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleJoinQueue} />}
             <h1>Shop</h1>
-            <ShopImage shopName={"Phoneix Foods"} shop_img={shop_img} />
+            <ShopImage shopName={shop?.shop?.shopName} ownerName={`${shop?.firstName} ${shop?.lastName}`} address={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop_img || shop?.shop?.shopImg}`} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
                 {shop && shop.shop.counters.map((counter) => {
-                    const qid = counter.queue._id;
-                    let text = "Join";
-                    console.log("qid", qid);
-                    if (joinedQs.includes(qid)) {
-                        text = "Cancel";
-                        console.log("Joined");
-                    }
-                    return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue.queueCount} btn={{ text, type: "btn", onClickHandler: () => setCounterNo(counter.counterNo) }} />
+                    let text = counter.queue?._id == alreadyJoinedQ ? "Cancel" : "Join";
+                    console.log(alreadyJoinedQ, text, counter.queue?.isOpen)
+                    let isDisabled = (alreadyJoinedQ && text == "Join") || !counter.queue?.isOpen ? true : false;
+                    let type = text == "Join" ? "btn" : "danger";
+                    socket.emit("join-room", counter.queue._id);
+                    return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue?.queueCount} isOpen={counter.queue?.isOpen} btn={{ text, isDisabled, type, onClickHandler: () => handleCounterAction(text, counter.counterNo) }} />
                 })}
             </div>
         </div>

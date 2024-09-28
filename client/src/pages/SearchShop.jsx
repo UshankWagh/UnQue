@@ -75,7 +75,7 @@ const SearchShop = () => {
                 <div className="shop-list">
                     {/* <ShopCard /> */}
                     {shops.length > 0 ? shops.map((shop) => {
-                        return <ShopCard key={shop._id} ownerName={shop.ownerName} id={shop._id} {...shop.shop} />
+                        return <ShopCard key={shop._id} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
                     }) : "No Shops"}
                 </div>
             </div>

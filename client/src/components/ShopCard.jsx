@@ -33,7 +33,7 @@ const ShopCard = ({ ownerName, shopName, shopImg, address, id, state, city, area
                     <div className="shp-text s-address">{address}</div>
                 </div>
                 <div className="btns">
-                    <Link to={`/shop?shopid=${id}`} className="btn view-btn">
+                    <Link to={`/customer/shop?shopid=${id}`} className="btn view-btn">
                         View Details
                     </Link>
                 </div>

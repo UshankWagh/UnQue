@@ -3,9 +3,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from "dotenv";
 import unqDB from './config/db.js';
-import counterRoutes from './routes/CounterRoutes.js'
-import shopRoutes from './routes/ShopRoutes.js'
-import profileRoutes from './routes/ProfileRoutes.js'
+import counterRoutes from './routes/counterRoutes.js'
+import shopRoutes from './routes/shopRoutes.js'
+import profileRoutes from './routes/profileRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import { Server } from "socket.io";
 import { createServer } from "http";
 // import path from "path";
@@ -29,10 +30,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 unqDB;
+io.on("connection", (socket) => {
+    console.log("User Connected", socket.id);
+
+    socket.on("join-room", (queueId) => {
+        socket.join(queueId);
+        console.log(`${socket.id} joined room ${queueId}`);
+    });
+
+    socket.on("join-queue", ({ queueCount, lastTicket, queueId }) => {
+        socket.to(queueId).emit("joined-queue", { queueId, queueCount, lastTicket });
+        console.log(queueId, queueCount, lastTicket);
+        console.log("user joined queue:", queueId);
+    });
+
+    socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
+        console.log("cancel ticket", queueId, type, ticket);
+        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
+    })
+});
 
 // routes
 // app.use("/get", getRoutes);
 
+app.use("/auth", authRoutes);
 app.use("/counters", counterRoutes);
 app.use("/shops", shopRoutes);
 app.use("/profile", profileRoutes);
@@ -47,6 +68,6 @@ app.use("/profile", profileRoutes);
 
 
 
-app.listen(process.env.SERVER_PORT || 5500, () => {
+server.listen(process.env.SERVER_PORT || 5500, () => {
     console.log("server on port 5500");
 });

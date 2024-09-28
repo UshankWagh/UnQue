@@ -68,7 +68,7 @@
     color: var(--white);
 }
 
-.queue-head {
+.shop-counter .queue-head {
     margin-bottom: 1.5rem;
     font-size: 1.5em;
     color: black;
