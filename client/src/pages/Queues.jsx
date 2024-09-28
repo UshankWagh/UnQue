@@ -70,7 +70,7 @@ const Queues = () => {
                 <div className="queue-val">{ticket}</div>
                 <div className="queue-val">{qPosition}</div>
                 <div className="queue-val">{queueCount}</div>
-                <div className="queue-val"><Link to={`/shop?shopid=${shopownerId}`} className='btn view-shop-btn'>View Shop</Link></div>
+                <div className="queue-val"><Link to={`/customer/shop?shopid=${shopownerId}`} className='btn view-shop-btn'>View Shop</Link></div>
             </div>
         )
     }

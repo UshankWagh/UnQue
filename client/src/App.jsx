@@ -33,11 +33,11 @@ function App() {
           <Route path='profile' element=<Profile /> />
         </Route>
         <Route path='/employee/' element=<PrivateRoute role="employee" />>
+          <Route path='counter' element=<ShopCounter /> />
           <Route path='employee-dash' element=<EmployeeDash /> />
           <Route path='profile' element=<Profile /> />
         </Route>
         <Route path='/shopowner/' element=<PrivateRoute role="shopowner" />>
-          <Route path='counter' element=<ShopCounter /> />
           <Route path='shop-owner-dash' element=<ShopOwnerDash /> />
           <Route path='profile' element=<Profile /> />
         </Route>

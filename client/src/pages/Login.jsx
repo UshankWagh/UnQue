@@ -34,6 +34,9 @@ const Login = () => {
             else if (loginRes.data.auth.role == "shopowner") {
                 navigate("/shopowner/shop-owner-dash");
             }
+            else if (loginRes.data.auth.role == "employee") {
+                navigate("/employee/employee-dash");
+            }
         }
         else {
             console.log(loginRes.status, loginRes.data);
@@ -56,7 +59,7 @@ const Login = () => {
                         <label htmlFor="password">Password</label>
                         <input type="password" onChange={(e) => updData("password", e.target.value)} placeholder='Enter Password' name="password" id="password" />
                     </div>
-                    <div className='forgot-password'>Forgot Password?</div>
+                    {/* <div className='forgot-password'>Forgot Password?</div> */}
                     <button className="auth-submit btn" onClick={handleSubmit}>
                         Login
                     </button>

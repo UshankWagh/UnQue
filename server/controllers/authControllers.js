@@ -1,6 +1,7 @@
 // import user from "../../models/user";
 import Customer from "../models/CustomerModel.js";
 import ShopOwner from "../models/ShopOwnerModel.js";
+import Employee from "../models/EmployeeModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import validator from "validator";
@@ -151,9 +152,16 @@ export const loginUser = async (req, res) => {
                 username: req.body.username,
             });
         }
+        else if (role == "employee") {
+            console.log("empc", req.body.username);
+
+            login = await Employee.findOne({
+                username: req.body.username,
+            });
+        }
 
         if (!login) {
-            res.status(200).json({
+            res.status(404).json({
                 message: "Username not found",
             });
             return;
@@ -166,7 +174,7 @@ export const loginUser = async (req, res) => {
         const validPassword = req.body.password == login.password ? true : false;
 
         if (!validPassword) {
-            res.status(200).json({
+            res.status(400).json({
                 message: "Invalid password",
             });
             return;

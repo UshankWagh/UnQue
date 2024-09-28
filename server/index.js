@@ -29,6 +29,31 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+// socket
+
+io.on("connection", (socket) => {
+    console.log("User Connected", socket.id);
+
+    socket.on("join-room", (queueId) => {
+        socket.join(queueId);
+        console.log(`${socket.id} joined queueId ${queueId}`);
+    });
+
+    socket.on("change-counter-status", ({ queueId, status }) => {
+        console.log(`O / C ${status}`);
+        socket.to(queueId).emit("counter-status-changed", { queueId, status })
+    });
+
+    socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
+        console.log("cancel ticket", queueId, type, ticket);
+
+        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
+    })
+});
+
+
+
 unqDB;
 io.on("connection", (socket) => {
     console.log("User Connected", socket.id);
@@ -51,7 +76,6 @@ io.on("connection", (socket) => {
 });
 
 // routes
-// app.use("/get", getRoutes);
 
 app.use("/auth", authRoutes);
 app.use("/counters", counterRoutes);

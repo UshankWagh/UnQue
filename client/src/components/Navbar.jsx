@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import unqLogo from '../assets/images/unq_logo.png';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+    const [auth, setAuth] = useState();
+
+    useEffect(() => {
+        setAuth(localStorage.getItem("auth") != "undefined" ? JSON.parse(localStorage.getItem("auth")) : "");
+    }, []);
+
     return (
         <nav className='navbar'>
             <div className="unq-logo">
@@ -17,9 +23,9 @@ const Navbar = () => {
                 <Link to="/customer/shop?shopid=66b911492cc0c1620b918462">Shop</Link>
                 <Link to="/customer/queues">Queues</Link>
                 <Link to="/employee/employee-dash">Emp dash</Link>
-                <Link to="/shopowner/counter">Counters</Link>
+                <Link to="/employee/counter">Counters</Link>
                 <Link to="/shopowner/shop-owner-dash">Shop Dash</Link>
-                <Link to="/role/profile">Profile</Link>
+                <Link to={`/${auth?.role}/profile`}>Profile</Link>
             </div>
         </nav>
     )
