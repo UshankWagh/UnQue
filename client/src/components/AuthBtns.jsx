@@ -2,30 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { SlLogin } from "react-icons/sl";
 import { IoMdPower } from "react-icons/io";
 import { SlNote } from "react-icons/sl";
-import { useNavigate, Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-const AuthBtns = () => {
-    const [auth, setAuth] = useState();
-    const navigate = useNavigate()
+const AuthBtns = ({ auth, handleLogout }) => {
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        setAuth(localStorage.getItem("auth") != "undefined" ? JSON.parse(localStorage.getItem("auth")) : "");
-    }, []);
-
-    const handleLogout = () => {
-        localStorage.removeItem("auth");
-        setAuth(undefined);
+    const logoutUser = () => {
+        handleLogout();
         navigate("/login");
     }
     return (
         <div className="auth-btns">
             {auth ?
                 <>
-                    <div onClick={handleLogout} className="sign-in-btn auth-btn">
+                    <div onClick={logoutUser} className="sign-in-btn auth-btn">
                         <IoMdPower />
                         <span className="auth-text">Sign Out</span>
                     </div>
-                    <Link to={`/${auth.role}/profile`} className="profile-logo">{auth.name[0]}</Link>
+                    <Link to={`/${{ ...auth }.role}/profile`} className="profile-logo">{{ ...auth }.name[0].toUpperCase()}</Link>
                     {/* <Link to={`/${auth.role}/profile`} className="profile-logo">J</Link> */}
                 </>
                 : <>

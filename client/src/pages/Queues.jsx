@@ -4,11 +4,11 @@ import '../styles/Queues.css'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Queues = () => {
+const Queues = ({ auth }) => {
 
     const socket = useMemo(
         () =>
-            io("http://localhost:5000", {
+            io(`${import.meta.env.VITE_SERVER_URL}`, {
                 withCredentials: true,
             }),
         []
@@ -16,7 +16,6 @@ const Queues = () => {
 
     const [socketID, setSocketId] = useState("");
     const [joinedQs, setJoinedQs] = useState([]);
-    const [auth, setAuth] = useState(JSON.parse(localStorage.getItem("auth")));
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -33,7 +32,7 @@ const Queues = () => {
         });
 
         const getJoinedQs = async () => {
-            const joinedQsRes = await axios.get(`http://localhost:5000/counters/get-joined-qs/all/${auth.id}`);
+            const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/all/${auth.id}`);
             setJoinedQs(joinedQsRes.data.joinedQs);
         }
         getJoinedQs();
@@ -52,12 +51,16 @@ const Queues = () => {
     }
 
     const getQPosition = (firstTicket, ticket, cancelledTickets) => {
+        console.log("ftc", firstTicket, ticket, cancelledTickets);
+
         let canceledNo = 0;
         for (let i = 0; i < cancelledTickets.length; i++) {
-            if (cancelledTickets[i] < ticket) {
+            if (cancelledTickets[i] < ticket && cancelledTickets[i] > firstTicket) {
                 canceledNo += 1;
             }
         }
+        console.log("tfc", ticket, firstTicket, canceledNo);
+
         const qPos = (ticket - firstTicket + 1) - canceledNo;
         return qPos;
     }

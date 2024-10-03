@@ -41,14 +41,14 @@
     box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.163);
 }
 
-.queue-val,
-.queue-head {
+.queue-box .queue-val,
+.queue-th .queue-head {
     width: 20%;
     border-right: 1px solid rgba(0, 0, 0, 0.25);
     padding: 0 1rem;
 }
 
-.queue-val:last-child,
-.queue-head:last-child {
+.queue-box .queue-val:last-child,
+.queue-th .queue-head:last-child {
     border-right: none;
 }

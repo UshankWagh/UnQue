@@ -20,23 +20,24 @@ export const registerUser = async (req, res) => {
         const { firstName, lastName, role, email, username, password, state, city, area } = req.body;
         let customerDets = undefined;
         let shopOwnerDets = undefined;
+        let message = "";
 
         let isEmptyField = false;
         let exists = false;
 
         if (role == "customer") {
-            const { phoneNo } = req.body;
+            const { phoneNo, phoneNotify, emailNotify } = req.body;
             isEmptyField = !firstName || !lastName || !email || !phoneNo || !state || !city || !area || !username || !password;
             exists = await Customer.findOne({ username });
             customerDets = {
                 firstName,
                 lastName,
                 email: {
-                    notifyMe: true,
+                    notifyMe: emailNotify,
                     emailId: email
                 },
                 phone: {
-                    notifyMe: true,
+                    notifyMe: phoneNotify,
                     phoneNo
                 },
                 state,
@@ -71,20 +72,29 @@ export const registerUser = async (req, res) => {
         }
 
         if (isEmptyField) {
-            throw Error("Please fill all the fields");
+            message = "Please fill all the required fields";
         }
-        if (!validator.isEmail(email.emailId || email)) {
-            throw Error("Email is not valid");
+        else if (!validator.isEmail(email.emailId || email)) {
+            message = "Email is not valid";
         }
-        if (!validator.isStrongPassword(password)) {
-            throw Error("Password is not strong enough");
+        else if (!validator.isStrongPassword(password)) {
+            message = "Password is not strong enough";
         }
-        if (exists) {
-            throw Error("Username already exists");
+        else if (exists) {
+            message = "Username already exists";
+        }
+
+        if (message != "") {
+            return res.status(200).send({
+                success: false,
+                message
+            })
         }
 
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        // UNCOMMENT BELLOW LINE TO ENCRYPT PASSWORD BEFORE STORING AND REMOVE THE NEXT LINE.
+        // const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = password;
 
         let newUser = undefined
 
@@ -104,31 +114,33 @@ export const registerUser = async (req, res) => {
         const newentry = await newUser.save();
         const token = createToken(newentry._id);
 
-        res.status(201).json({
+        res.status(200).send({
             auth: {
                 role,
                 id: newentry._id,
                 name: `${newentry.firstName} ${newentry.lastName}`,
                 username: newentry.username,
                 token: token,
-            }
+            },
+            success: true
         });
 
     } catch (error) {
         // Check if it's a validation error
         if (error instanceof Error) {
             console.log(error);
-            res.status(400).json({
+            res.status(400).send({
                 status: "400 Bad Request",
                 message: error.message,
+                success: false
             });
         } else {
             // Handle internal server errors
             console.error("Internal Server Error:", error);
-
-            res.status(500).json({
+            res.status(500).send({
                 status: "500 Internal Server Error",
                 message: "500 Internal Server Error, User not created",
+                success: false
             });
         }
     }
@@ -137,66 +149,72 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         let login = false
-        const { role } = req.body;
-        console.log("rl", role);
+        let message = ""
+        const { role, username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(200).send({
+                message: "Username or Password field is Empty",
+                success: false
+            });
+        }
 
         if (role == "customer") {
             login = await Customer.findOne({
-                username: req.body.username,
+                username: username,
             });
         }
         else if (role == "shopowner") {
-            console.log("shpc", req.body.username);
-
             login = await ShopOwner.findOne({
-                username: req.body.username,
+                username: username,
             });
         }
         else if (role == "employee") {
-            console.log("empc", req.body.username);
-
             login = await Employee.findOne({
-                username: req.body.username,
+                username: username,
             });
         }
 
         if (!login) {
-            res.status(404).json({
+            return res.status(200).send({
                 message: "Username not found",
+                success: false
             });
-            return;
         }
 
+        // UNCOMMENT BELLOW LINE TO CHECK ENCRYPTED PASSWORD
         // const validPassword = await bcrypt.compare(
-        //     req.body.password,
+        //     password,
         //     login.password
         // );
-        const validPassword = req.body.password == login.password ? true : false;
+        const validPassword = password == login.password;
 
         if (!validPassword) {
-            res.status(400).json({
-                message: "Invalid password",
+            return res.status(200).send({
+                message: "Password Incorrect",
+                success: false
             });
-            return;
         }
 
         const token = createToken(login._id);
 
-        res.status(200).json({
+        res.status(200).send({
             auth: {
                 role,
                 id: login._id,
                 name: `${login.firstName} ${login.lastName}`,
                 username: login.username,
                 token: token,
-            }
+            },
+            success: true
         });
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        res.status(500).send({
             status: "500 Internal Server Error",
             message: "500 Internal Server Error, User not logged in",
+            success: false
         });
     }
 };

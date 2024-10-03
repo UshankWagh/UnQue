@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import DropDown from '../components/DropDown'
 import axios from 'axios';
 
-const Register = () => {
+const Register = ({ handleLogin }) => {
 
     const [registerDets, setRegisterDets] = useState({
         role: "customer"
@@ -15,25 +15,33 @@ const Register = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const getShops = async () => {
+        const getStates = async () => {
             const response = await axios.get("http://localhost:5000/shops/get-states");
-            // console.log(response);
             setStates(response.data.states);
         }
-        getShops();
+        getStates();
     }, []);
 
-    // LEFT TO IMPLEMENT : get states cities areas
-
     const getCities = async (stateId) => {
-        const response = await axios.get(`http://localhost:5000/shops/get-cities/${stateId}`);
-        setCities(response.data.cities);
+        if (stateId != "-Select-") {
+            const response = await axios.get(`http://localhost:5000/shops/get-cities/${stateId}`);
+            updData("state", response.data.state)
+            setCities(response.data.cities);
+        }
+        else {
+            setCities([])
+        }
     }
 
     const getAreas = async (cityId) => {
-        const city = cities.filter((city) => city._id == cityId)[0];
-        const areasArr = city.areas;
-        setAreas(areasArr);
+        if (cityId != "-Select-") {
+            const city = cities.filter((city) => city._id == cityId)[0];
+            updData("city", city.name)
+            setAreas(city.areas);
+        }
+        else {
+            setAreas([])
+        }
     }
 
     function updData(field, value) {
@@ -43,24 +51,28 @@ const Register = () => {
         })
     }
 
-    console.log(registerDets);
-
     async function handleSubmit() {
         const registerRes = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/sign-up`, { ...registerDets });
-        localStorage.setItem("auth", JSON.stringify(registerRes.data.auth));
-        navigate("/customer/search-shop");
-        if (registerRes.data.auth.role == "customer") {
+        if (registerRes.data.success) {
+            // localStorage.setItem("auth", JSON.stringify(registerRes.data.auth));
+            handleLogin(registerRes.data.auth);
             navigate("/customer/search-shop");
+            if (registerRes.data.auth.role == "customer") {
+                navigate("/customer/search-shop");
+            }
+            else if (registerRes.data.auth.role == "shopowner") {
+                navigate("/shopowner/shop-owner-dash");
+            }
         }
-        else if (registerRes.data.auth.role == "shopowner") {
-            navigate("/shopowner/shop-owner-dash");
+        else {
+            alert("Error:", registerRes.data.message);
         }
     }
 
     return (
         <div className='auth register'>
             <div className="auth-container">
-                <h1>Register</h1>
+                <h1>Register as {registerDets.role[0].toUpperCase() + registerDets.role.slice(1)}</h1>
                 <div className="auth-form">
                     <div className="inp">
                         <DropDown label="User" onSelect={(val) => { setRegisterDets({}); updData("role", val) }} values={["customer", "shopowner"]} />
@@ -75,14 +87,6 @@ const Register = () => {
                             <input type="text" onChange={(e) => updData("lastName", e.target.value)} placeholder='Enter Last Name' name="last-name" id="last-name" />
                         </div>
                     </div>
-                    {/* customer */}
-                    {registerDets.role == "customer" && <>
-                        <div className="inp">
-                            <label htmlFor="phoneNo">PhoneNo</label>
-                            <input type="number" onChange={(e) => updData("phoneNo", e.target.value)} placeholder='Enter PhoneNo' name="phoneNo" id="phoneNo" />
-                        </div>
-                    </>}
-
                     {/* shoponwer */}
                     {registerDets.role == "shopowner" && <>
                         <div className="inp">
@@ -96,15 +100,17 @@ const Register = () => {
                     </>}
 
                     {/* common */}
-                    <div className="name-input">
+                    <div className="location-input">
                         <div className="inp">
-                            <DropDown onSelect={(val) => updData("state", val)} label="State" values={["Customer", "Employee", "Shopowner"]} />
+                            <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
                         </div>
                         <div className="inp">
-                            <DropDown onSelect={(val) => updData("city", val)} label="City" values={["Customer", "Employee", "Shopowner"]} />
+                            <DropDown label="City" values={["-Select-", ...cities]} onSelect={getAreas} />
                         </div>
                         <div className="inp">
-                            <DropDown onSelect={(val) => updData("area", val)} label="Area" values={["Customer", "Employee", "Shopowner"]} />
+                            <DropDown label="Area" values={["-Select-", ...areas]} onSelect={(area) => {
+                                updData("area", area);
+                            }} />
                         </div>
                     </div>
                     <div className="inp">
@@ -115,9 +121,25 @@ const Register = () => {
                         <label htmlFor="password">Password</label>
                         <input type="password" onChange={(e) => updData("password", e.target.value)} placeholder='Enter Password' name="password" id="password" />
                     </div>
-                    <div className="inp">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" onChange={(e) => updData("email", e.target.value)} placeholder='Enter Email' name="email" id="email" />
+                    <div className="contact-input">
+                        <div className="inp">
+                            <label htmlFor="phoneNo">PhoneNo</label>
+                            <input type="number" onChange={(e) => updData("phoneNo", e.target.value)} placeholder='Enter PhoneNo' name="phoneNo" id="phoneNo" />
+                        </div>
+                        <div className="inp checkbox-inp">
+                            <label htmlFor="phone-notify">Get notification on phone:</label>
+                            <input type="checkbox" onChange={(e) => updData("phoneNotify", e.target.checked)} name="phone-notify" id="phone-notify" />
+                        </div>
+                    </div>
+                    <div className="contact-input">
+                        <div className="inp">
+                            <label htmlFor="email">Email</label>
+                            <input type="email" onChange={(e) => updData("email", e.target.value)} placeholder='Enter Email' name="email" id="email" />
+                        </div>
+                        <div className="inp checkbox-inp">
+                            <label htmlFor="email-notify">Get notification on email:</label>
+                            <input type="checkbox" onChange={(e) => updData("emailNotify", e.target.checked)} name="email-notify" id="phone-notify" />
+                        </div>
                     </div>
                     <button className="auth-submit btn" onClick={handleSubmit}>
                         Register

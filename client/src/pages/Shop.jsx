@@ -8,11 +8,11 @@ import ShopImage from '../components/ShopImage'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import axios from 'axios';
 
-const Shop = () => {
+const Shop = ({ auth }) => {
 
     const socket = useMemo(
         () =>
-            io("http://localhost:5000", {
+            io(`${import.meta.env.VITE_SERVER_URL}`, {
                 withCredentials: true,
             }),
         []
@@ -27,7 +27,6 @@ const Shop = () => {
         counterNo: 0
     });
     const [alreadyJoinedQ, setAlreadyJoinedQ] = useState("");
-    const [auth, setAuth] = useState(JSON.parse(localStorage.getItem("auth")));
 
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams();
@@ -67,8 +66,8 @@ const Shop = () => {
         const getShop = async () => {
 
             const shopId = searchParams.get("shopid");
-            const shopRes = await axios.get(`http://localhost:5000/shops/get-shop/${shopId}`);
-            const joinedQsRes = await axios.get(`http://localhost:5000/counters/get-joined-qs/ids/${auth.id}`);
+            const shopRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-shop/${shopId}`);
+            const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/ids/${auth.id}`);
             // console.log(shopId, shopRes);
             let joinedQs = joinedQsRes.data.joinedQs;
             let counters = shopRes.data.shop.shop.counters;
@@ -124,13 +123,15 @@ const Shop = () => {
     const joinQueue = async (counter) => {
         // console.log(counter.queue);
 
-        const joinQRes = await axios.post("http://localhost:5000/counters/join-queue", {
+        const joinQRes = await axios.post(`${import.meta.env.VITE_SERVER_URL}/counters/join-queue`, {
             queueId: counter.queue._id,
-            customerId: "66b91038976f6aa9f7766492"
-        })
+            customerId: auth.id
+        });
+        console.log("jqr", joinQRes.data);
+
         if (joinQRes.data.success) {
             socket.emit("join-queue", { ...joinQRes.data.queue, queueId: counter.queue._id });
-            navigate("/queues");
+            navigate("/customer/queues");
         }
         // console.log("jqres", joinQRes, counter.queue._id);
     }
@@ -138,7 +139,7 @@ const Shop = () => {
     const cancelTicket = async (counter) => {
         // console.log(counter.queue);
 
-        const cancelTRes = await axios.post("http://localhost:5000/counters/cancel-ticket", {
+        const cancelTRes = await axios.post(`${import.meta.env.VITE_SERVER_URL}/counters/cancel-ticket`, {
             queueId: counter.queue._id,
             customerId: "66b91038976f6aa9f7766492"
         });

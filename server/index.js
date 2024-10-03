@@ -47,7 +47,6 @@ io.on("connection", (socket) => {
 
     socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
         console.log("cancel ticket", queueId, type, ticket);
-
         socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
     })
 });

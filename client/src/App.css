@@ -22,6 +22,24 @@ body {
     background-color: var(--light);
 }
 
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10rem;
+}
+
+.loader h1 {
+    margin-bottom: 1rem;
+}
+
+.loader .btn {
+    margin-top: 2.5rem;
+    background-color: #fff;
+    text-decoration: underline;
+}
+
 .btn {
     background-color: var(--medium);
     color: black;
@@ -57,12 +75,12 @@ body {
     background-color: var(--dark);
     height: 100vh;
     width: 16rem;
+    padding: 0 2rem;
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
-    margin-bottom: 1rem;
 }
 
 .unq-logo {
@@ -77,7 +95,7 @@ body {
 }
 
 .unq-logo img {
-    width: 60%;
+    width: 85%;
 }
 
 .logo-text {
@@ -99,6 +117,23 @@ body {
     font-size: 0.9em;
     opacity: 0.6;
 }
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    /* padding: 0 1rem; */
+}
+
+.nav-link {
+    padding: 0.7rem 1rem;
+}
+
+.nav-link:hover {
+    background-color: #00000021;
+}
+
 
 .auth-btns {
     display: flex;
@@ -220,6 +255,17 @@ body {
     /* justify-content: center; */
 }
 
+.auth .alert-msg {
+    color: red;
+    font-size: 1em;
+    margin-top: 2rem;
+}
+
+.auth .error-msg {
+    color: red;
+    font-size: 0.9em;
+}
+
 .auth-container {
     margin: auto;
     /* margin: 20vh auto 2vh; */
@@ -256,6 +302,7 @@ body {
 .inp .dropdown select {
     border: 1px solid black;
     padding: 0.7rem 1rem;
+    color: black;
 }
 
 .inp label {
@@ -303,4 +350,33 @@ body {
 
 .group-input .inp {
     width: 50%;
+}
+
+.location-input,
+.name-input,
+.contact-input {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+}
+
+.name-input .inp {
+    width: 49%;
+}
+
+/* .contact-input .inp {
+    flex-direction: row;
+    align-items: center;
+} */
+
+.inp.checkbox-inp {
+    font-size: 0.8em;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: 1rem;
+    flex-direction: row;
+}
+
+.inp.checkbox-inp label {
+    width: 70%;
 }

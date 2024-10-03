@@ -13,16 +13,16 @@ const SearchShop = () => {
     const [shops, setShops] = useState([]);
 
     useEffect(() => {
-        const getShops = async () => {
-            const response = await axios.get("http://localhost:5000/shops/get-states");
+        const getStates = async () => {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-states`);
             // console.log(response);
             setStates(response.data.states);
         }
-        getShops();
+        getStates();
     }, []);
 
     const getCities = async (stateId) => {
-        const response = await axios.get(`http://localhost:5000/shops/get-cities/${stateId}`);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-cities/${stateId}`);
         setLocation(prvLoc => {
             prvLoc.state = response.data.state;
             return { ...prvLoc };
@@ -46,7 +46,7 @@ const SearchShop = () => {
         console.log("lc", location);
 
         if (location.state && location.city && location.area) {
-            const response = await axios.get(`http://localhost:5000/shops/get-shops/${location.state}/${location.city}/${location.area}`);
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-shops/${location.state}/${location.city}/${location.area}`);
             console.log(response.data.shops);
             setShops(response.data.shops);
         }
