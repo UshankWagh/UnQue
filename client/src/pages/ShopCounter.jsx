@@ -19,13 +19,14 @@ const ShopCounter = () => {
     const counterNo = searchParams.get("counterNo")
 
 
-    const [firstTicket, setFirstTicket] = useState(null);
-    const [lastTicket, setLastTicket] = useState(null);
-    const [cancelledTickets, setCancelledTickets] = useState([]);
-    const [queue, setQueue] = useState([107, 106, 105, 103, 101]);
+    // const [firstTicket, setFirstTicket] = useState(null);
+    // const [lastTicket, setLastTicket] = useState(null);
+    // const [cancelledTickets, setCancelledTickets] = useState([]);
+    const [queue, setQueue] = useState([]);
     const [queueId, setQueueId] = useState("");
     const [queueCount, setQueueCount] = useState(0);
     const [isOpen, setIsOpen] = useState(true);
+    const [auth, setAuth] = useState(JSON.parse(localStorage.getItem("auth")));
 
     const [socketID, setSocketId] = useState("");
 
@@ -45,13 +46,17 @@ const ShopCounter = () => {
             console.log("connected", socket.id);
         });
 
-        socket.on("joined-queue", ({ qCount, lTicket }) => {
-            console.log(qCount, lTicket);
-            setQueueCount(qCount)
-            setLastTicket(lTicket)
+        socket.on("joined-queue", ({ queueId, queueCount, lastTicket }) => {
+            console.log(queueCount, lastTicket);
+            setQueueCount(queueCount)
+            setQueue(p => {
+                p.push(lastTicket)
+                return [...p]
+            })
+            // setLastTicket(lTicket)
         });
 
-        socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
+        socket.on("cancelled-ticket", ({ _, queueCount, type, ticket }) => {
             console.log(queueCount, type, ticket);
 
             setQueueCount(queueCount)
@@ -64,26 +69,27 @@ const ShopCounter = () => {
 
 
             // Test  --------**
+            // But Not Required
 
-            switch (type) {
-                case "f-ticket":
-                    setFirstTicket(queue.slice(-2)[0])
-                    break;
+            // switch (type) {
+            //     case "f-ticket":
+            //         setFirstTicket(queue.slice(-2)[0])
+            //         break;
 
-                case "m-ticket":
-                    setCancelledTickets(p => {
-                        p.push(ticket)
-                        return { ...p }
-                    })
-                    break;
+            //     case "m-ticket":
+            //         setCancelledTickets(p => {
+            //             p.push(ticket)
+            //             return { ...p }
+            //         })
+            //         break;
 
-                case "l-ticket":
-                    setLastTicket(queue[1])
-                    break;
+            //     case "l-ticket":
+            //         setLastTicket(queue[1])
+            //         break;
 
-                default:
-                    break;
-            }
+            //     default:
+            //         break;
+            // }
 
         });
 
@@ -97,9 +103,9 @@ const ShopCounter = () => {
             console.log(queue);
             setIsOpen(queue.isOpen);
             setQueueCount(queue.queueCount)
-            setFirstTicket(queue.firstTicket)
-            setLastTicket(queue.lastTicket)
-            setCancelledTickets(queue.cancelledTickets)
+            // setFirstTicket(queue.firstTicket)
+            // setLastTicket(queue.lastTicket)
+            // setCancelledTickets(queue.cancelledTickets)
             setQueueId(queue._id)
 
             socket.emit("join-room", queue._id);
@@ -113,22 +119,24 @@ const ShopCounter = () => {
 
     const createQueue = (firstTicket, lastTicket, cancelledTickets) => {
         let que = []
-        for (let ticket = lastTicket; ticket > firstTicket - 1; ticket--) if (!(cancelledTickets.includes(ticket))) que.push(ticket)
+        if (firstTicket > 100) {
+            for (let ticket = lastTicket; ticket >= firstTicket; ticket--) if (!(cancelledTickets.includes(ticket))) que.push(ticket)
+        }
         return que
     }
 
     const handleOpenClose = async () => {
         setIsOpen(!isOpen)
 
-        // const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/open-close-queue`, { queueId, isOpen: !isOpen })
+        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/open-close-queue`, { queueId, isOpen: !isOpen })
 
-        // if (resp.data.success) {
-        socket.emit("change-counter-status", { queueId, status: !isOpen })
-        // }
-        // else {
-        //     alert(resp.data.message)
-        //     setIsOpen(isOpen)
-        // }
+        if (resp.data.success) {
+            socket.emit("change-counter-status", { queueId, status: !isOpen })
+        }
+        else {
+            alert(resp.data.message)
+            setIsOpen(isOpen)
+        }
 
     }
 
@@ -137,7 +145,6 @@ const ShopCounter = () => {
 
         let ticket
 
-        setFirstTicket(queue.slice(-2)[0])
         setQueue(p => {
             ticket = p.pop()
             console.log(p);
@@ -146,21 +153,21 @@ const ShopCounter = () => {
         setQueueCount(p => p - 1)
 
 
-        // let reqBody = {
-        //     queueId,
-        //     ticket: !(queueCount - 1) ? queue[0] - 1 : queue[queue.length - 2],
-        //     isLastTicket: !(queueCount - 1)
-        // }
-        // const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
+        let reqBody = {
+            queueId,
+            ticket: !(queueCount - 1) ? queue[0] - 1 : queue[queue.length - 2],
+            isLastTicket: !(queueCount - 1)
+        }
+        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
 
-        // if (resp.data.success) {
-        socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket: queue.slice(-1)[0] })
-        // }
-        // else {
-        //     alert(resp.data.message)
-        //     setQueue(queue)
-        //     setQueueCount(queueCount)
-        // }
+        if (resp.data.success) {
+            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket: queue.slice(-1)[0] })
+        }
+        else {
+            alert(resp.data.message)
+            setQueue(queue)
+            setQueueCount(queueCount)
+        }
     }
 
     console.log(queue);

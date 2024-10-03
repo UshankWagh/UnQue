@@ -35,13 +35,14 @@ const Profile = () => {
 
     const [profileDets, setProfileDets] = useState({});
     const [editable, setEditable] = useState(false);
-    const [auth, setAuth] = useState();
+    const [states, setStates] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [auth, setAuth] = useState(JSON.parse(localStorage.getItem("auth")));
 
     useEffect(() => {
-        const auth = localStorage.getItem("auth") != "undefined" ? JSON.parse(localStorage.getItem("auth")) : "";
-        setAuth(auth);
         const loadData = async () => {
-            const resp = await axios.get(`http://localhost:5000/profile/get-details/${auth?.role}/${auth?.id}`)
+            const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/profile/get-details/${auth?.role}/${auth?.id}`)
 
             if (resp.data.success) {
                 setProfileDets(resp.data.profileDets);
@@ -53,12 +54,50 @@ const Profile = () => {
 
         loadData()
 
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        const getStates = async () => {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-states`);
+            // console.log(response);
+            setStates(response.data.states);
+        }
+        if (editable) getStates();
+    }, [editable]);
+
+    const getCities = async (stateId) => {
+        if (stateId != "-Select-") {
+            updateDets("city", "")
+            updateDets("area", "")
+            setAreas([])
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-cities/${stateId}`);
+            updateDets("state", response.data.state)
+            setCities(response.data.cities);
+        }
+        else {
+            setCities([])
+        }
+    }
+
+    const getAreas = async (cityId) => {
+        if (cityId != "-Select-") {
+            const city = cities.filter((city) => city._id == cityId)[0];
+            const areasArr = city.areas;
+            updateDets("city", city.name)
+            updateDets("area", "")
+            setAreas(areasArr);
+        }
+        else {
+            setAreas([])
+        }
+    }
 
     const updateDets = (key, value) => {
         setProfileDets(p => {
             if (typeof key != "string") {
                 p[key[0]][key[1]] = value
+                console.log(p);
+
                 return { ...p }
             }
             return { ...p, [key]: value }
@@ -66,7 +105,13 @@ const Profile = () => {
     }
 
     const handleUpdateProfileDetails = async () => {
-        const resp = await axios.get(`http://localhost:5000/profile/update-details/${role}/${id}`)
+
+        // if state ci ar   empty
+
+        console.log(profileDets);
+
+
+        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/profile/update-details/${auth.role}/${auth.id}`, { profileDets })
 
         if (resp.data.success) {
             alert(resp.data.message)
@@ -76,12 +121,12 @@ const Profile = () => {
         }
     }
 
-    console.log(profileDets);
+    // console.log(profileDets);
 
 
     return (
         <div className='profile'>
-            <h1>Customer Profile</h1>
+            <h1>{auth.role == "shopowner" ? "Shop Owner" : auth.role == "employee" ? "Employee" : "Customer"} Profile</h1>
             <div className="profile-container">
                 <div className="profile-left">
                     <div className="basic-dets">
@@ -90,7 +135,7 @@ const Profile = () => {
                         </div>
                         <div className="dets">
                             <p>{profileDets.firstName} {profileDets.lastName}</p>
-                            <p className='uname'>@ {profileDets.firstName}077</p>
+                            <p className='uname'>@ {auth.username}</p>
                         </div>
                     </div>
                 </div>
@@ -110,11 +155,11 @@ const Profile = () => {
                         <div className="group-input">
                             <div className="inp">
                                 <label htmlFor="first-name">First Name: </label>
-                                <input type="text" value={profileDets.firstName} onChange={(e) => updateDets("firstName", e.target.value)} placeholder='Enter First Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="first-name" id="first-name" />
+                                <input type="text" value={profileDets.firstName} onChange={(e) => updateDets("firstName", e.target.value)} placeholder='Enter First Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="first-name" id="first-name" required />
                             </div>
                             <div className="inp">
                                 <label htmlFor="last-name">Last Name</label>
-                                <input type="text" value={profileDets.lastName} onChange={(e) => updateDets("lastName", e.target.value)} placeholder='Enter Last Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="last-name" id="last-name" />
+                                <input type="text" value={profileDets.lastName} onChange={(e) => updateDets("lastName", e.target.value)} placeholder='Enter Last Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="last-name" id="last-name" required />
                             </div>
                         </div>
 
@@ -132,30 +177,30 @@ const Profile = () => {
                                     <label htmlFor="phoneNo">PhoneNo</label>
                                     <div className="extra">
                                         <label htmlFor="notifyMe">Notify Me</label>
-                                        <input type="checkbox" checked={profileDets.phone?.notifyMe} onChange={(e) => updateDets(["phone", "notifyMe"], e.target.value)} className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
+                                        <input type="checkbox" checked={profileDets.phone?.notifyMe} onChange={(e) => updateDets(["phone", "notifyMe"], !profileDets.phone?.notifyMe)} className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
                                     </div>
-                                    <input type="number" value={profileDets.phone?.phoneNo} onChange={(e) => updateDets(["phone", "phoneNo"], e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
+                                    <input type="number" value={profileDets.phone?.phoneNo} onChange={(e) => updateDets(["phone", "phoneNo"], e.target.value)} placeholder='Enter PhoneNo' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" required />
                                 </div>
                                 <div className="inp">
                                     <label htmlFor="email">Email</label>
                                     <div className="extra">
                                         <label htmlFor="notifyMe">Notify Me</label>
-                                        <input type="checkbox" checked={profileDets.email?.notifyMe} onChange={(e) => updateDets(["email", "notifyMe"], e.target.value)} className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
+                                        <input type="checkbox" checked={profileDets.email?.notifyMe} onChange={(e) => updateDets(["email", "notifyMe"], !profileDets.email?.notifyMe)} className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
                                     </div>
-                                    <input type="email" value={profileDets.email?.emailId} onChange={(e) => updateDets(["email", "emailId"], e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" />
+                                    <input type="email" value={profileDets.email?.emailId} onChange={(e) => updateDets(["email", "emailId"], e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" required />
                                 </div>
                             </>
                             :
                             <>
-                                {/* {!(role == "shopowner") &&  */}
+                                {/* {!(auth.role == "shopowner") && */}
                                 <div className="inp">
                                     <label htmlFor="phoneNo">PhoneNo</label>
-                                    <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter Phone Number' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" />
+                                    <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter Phone Number' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" required />
                                 </div>
                                 {/* } */}
                                 <div className="inp">
                                     <label htmlFor="email">Email</label>
-                                    <input type="email" value={profileDets.email} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" />
+                                    <input type="email" value={profileDets.email} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" required />
                                 </div>
 
                             </>
@@ -172,7 +217,7 @@ const Profile = () => {
                             </div>
                             <div className="inp">
                                 <label htmlFor="shop-name">Shop Name</label>
-                                <input type="text" value={profileDets.shop?.shopName} onChange={(e) => updateDets("shopName", e.target.value)} placeholder='Enter Shop Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="shop-name" id="shop-name" />
+                                <input type="text" value={profileDets.shop?.shopName} onChange={(e) => updateDets("shopName", e.target.value)} placeholder='Enter Shop Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="shop-name" id="shop-name" required />
                             </div>
                         </>
                         }
@@ -183,13 +228,16 @@ const Profile = () => {
                                     <div className="group-input">
 
                                         <div className="inp">
-                                            <DropDown onSelect={(val) => updateDets("state", val)} label="State" values={["Customer", "Employee", "Shopowner"]} />
+                                            <DropDown onSelect={getCities} label="State" values={["-Select-", ...states]} />
                                         </div>
                                         <div className="inp">
-                                            <DropDown onSelect={(val) => updateDets("city", val)} label="City" values={["Customer", "Employee", "Shopowner"]} />
+                                            <DropDown onSelect={getAreas} label="City" values={["-Select-", ...cities]} />
                                         </div>
                                         <div className="inp">
-                                            <DropDown onSelect={(val) => updateDets("area", val)} label="Area" values={["Customer", "Employee", "Shopowner"]} />
+                                            <DropDown onSelect={(val) => {
+                                                if (val != "-Select-") updateDets("area", val)
+                                                else updateDets("area", "")
+                                            }} label="Area" values={["-Select-", ...areas]} />
                                         </div>
                                     </div>
                                     <button className="btn" onClick={handleUpdateProfileDetails}>

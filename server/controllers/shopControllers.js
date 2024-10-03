@@ -1,4 +1,5 @@
 import ShopOwner from "../models/ShopOwnerModel.js"
+import Employee from "../models/EmployeeModel.js"
 import State from "../models/StateModel.js";
 import City from "../models/CityModel.js";
 
@@ -6,9 +7,14 @@ export const getShopDetailsController = async (req, res) => {
 
     try {
 
-        const { shopId } = req.params
+        let { role, id } = req.params
 
-        const shopOwner = await ShopOwner.findById(shopId).populate("shop.counters.queue")
+        if (role == "employee") {
+            const employee = await Employee.findById(id)
+            id = employee.shopownerId
+        }
+
+        const shopOwner = await ShopOwner.findById(id).populate("shop.counters.queue")
 
         // .populate("shop.employees");
 
@@ -17,6 +23,8 @@ export const getShopDetailsController = async (req, res) => {
         if (shop) {
             return res.status(200).send({
                 success: true,
+                shopId: shopOwner._id,
+                shopOwnerName: shopOwner.firstName + " " + shopOwner.lastName,
                 shop
             })
         }

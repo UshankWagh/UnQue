@@ -65,8 +65,8 @@ export const addCounterController = async (req, res) => {
             counterNo,
             isOpen: false,
             queueCount: 0,
-            firstTicket: 101,
-            lastTicket: 101,
+            firstTicket: 100,
+            lastTicket: 100,
             cancelledTickets: []
         });
 

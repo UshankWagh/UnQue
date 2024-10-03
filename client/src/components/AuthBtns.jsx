@@ -12,6 +12,8 @@ const AuthBtns = () => {
         setAuth(localStorage.getItem("auth") != "undefined" ? JSON.parse(localStorage.getItem("auth")) : "");
     }, []);
 
+    console.log(auth);
+
     const handleLogout = () => {
         localStorage.removeItem("auth");
         setAuth(undefined);

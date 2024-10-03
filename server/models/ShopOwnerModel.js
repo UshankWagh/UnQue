@@ -3,16 +3,10 @@ import Queue from "./QueueModel.js";
 const Schema = mongoose.Schema;
 
 /*
-state
-area
-city
 
-fname
-lname
-email
+pno
+
 */
-
-// pno
 
 const ShopOwnerSchema = new Schema({
     firstName: {

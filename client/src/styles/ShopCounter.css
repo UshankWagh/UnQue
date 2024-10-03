@@ -28,6 +28,7 @@
 } */
 
 .shop-counter .head {
+    padding-right: 15rem;
     display: flex;
     justify-content: space-between;
 }
