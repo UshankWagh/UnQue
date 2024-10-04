@@ -3,7 +3,7 @@ import { getCitiesController, getShopController, getShopDetailsController, getSh
 
 const router = express.Router()
 
-router.get("/shop-dets/:shopId", getShopDetailsController);
+router.get("/shop-dets/:role/:id", getShopDetailsController);
 router.get("/get-states", getStatesController);
 router.get("/get-cities/:stateid", getCitiesController);
 router.get("/get-shops/:state/:city/:area", getShopsController);

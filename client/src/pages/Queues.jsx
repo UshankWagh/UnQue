@@ -30,6 +30,56 @@ const Queues = ({ auth }) => {
             console.log("on canceled ticket", queueId, queueCount);
             updateQueueCount(queueId, queueCount);
         });
+        socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
+            console.log(queueId, queueCount, type, ticket);
+            // LEFT TO IMPLEMENT CANCELLED TICKET BELLOW \/
+            // joinedQs.map((joinedQ, ind) => {
+            //     console.log(joinedQ.queue._id, queueId, joinedQ.ticket, ticket);
+            //     if (joinedQ.queue._id == queueId && joinedQ.ticket == ticket) {
+            //         joinedQs.splice(ind, 1);
+            //     }
+            // })
+            // switch (type) {
+            //     case "f-ticket":
+            //         setJoinedQs(prvJQs => {
+            //             prvJQs.map(jQ => {
+            //                 if (jQ.queue._id == queueId) {
+            //                     jQ.queue.firstTicket = ticket
+            //                     jQ.queue.queueCount = queueCount
+            //                 }
+            //             })
+            //             return [...prvJQs]
+            //         })
+            //         break;
+
+            //     case "m-ticket":
+            //         setJoinedQs(prvJQs => {
+            //             prvJQs.map(jQ => {
+            //                 if (jQ.queue._id == queueId) {
+            //                     jQ.queue.cancelledTickets.push(ticket);
+            //                 }
+            //             })
+            //             return [...prvJQs]
+            //         })
+            //         break;
+
+            //     case "l-ticket":
+            //         setJoinedQs(prvJQs => {
+            //             prvJQs.map(jQ => {
+            //                 if (jQ.queue._id == queueId) {
+            //                     jQ.queue.lastTicket = ticket
+            //                     jQ.queue.queueCount = queueCount
+            //                 }
+            //             })
+            //             return [...prvJQs]
+            //         })
+            //         break;
+
+            //     default:
+            //         break;
+            // }
+
+        });
 
         const getJoinedQs = async () => {
             const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/all/${auth.id}`);
@@ -100,7 +150,7 @@ const Queues = ({ auth }) => {
                     const qPosition = getQPosition(firstTicket, ticket, cancelledTickets);
                     socket.emit("join-room", _id);
                     {/* console.log("pp", qPosition, firstTicket, joinedQ.queue.lastTicket, cancelledTickets) */ }
-                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} />
+                    return queueCount ? <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} /> : null
                 }) : "No Queues Joined"}
             </div>
         </div>

@@ -7,8 +7,10 @@ import '../styles/ShopOwnerDash.css'
 import axios from 'axios'
 import { io } from 'socket.io-client'
 
-const ShopOwnerDash = () => {
+const ShopOwnerDash = ({ auth }) => {
 
+    const [shopOwnerName, setShopOwnerName] = useState("");
+    const [shopAddress, setShopAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopImg, setShopImg] = useState("");
     const [shopCounters, setShopCounters] = useState([]);
@@ -20,8 +22,6 @@ const ShopOwnerDash = () => {
         counterNo: 0
     });
 
-    const shopOwnerId = "66b911492cc0c1620b918462"
-
     const socket = useMemo(
         () =>
             io(`${import.meta.env.VITE_SERVER_URL}`, {
@@ -31,8 +31,10 @@ const ShopOwnerDash = () => {
     );
 
     useEffect(() => {
+        console.log(auth);
+
         const loadData = async () => {
-            const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/shop-dets/${shopOwnerId}`);
+            const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/shop-dets/shopowner/${auth.id}`);
 
             if (resp.data.success) {
                 const shop = resp.data.shop
@@ -40,6 +42,8 @@ const ShopOwnerDash = () => {
                 setShopImg(shop.shopImg)
                 setShopCounters(shop.counters)
                 setShopEmployees(shop.employees)
+                setShopOwnerName(resp.data.shopOwnerName)
+                setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
             }
         }
 
@@ -54,6 +58,20 @@ const ShopOwnerDash = () => {
                 for (let i = 0; i < p.length; i++) {
                     if (p[i].queue._id == queueId) {
                         p[i].queue.isOpen = status
+                    }
+                }
+                return [...p]
+            })
+        });
+
+        socket.on("joined-queue", ({ queueId, queueCount, lastTicket }) => {
+            console.log(queueCount, lastTicket);
+
+            setShopCounters(p => {
+                for (let i = 0; i < p.length; i++) {
+                    if (p[i].queue._id == queueId) {
+                        p[i].queue.queueCount = queueCount
+                        p[i].queue.lastTicket = lastTicket
                     }
                 }
                 return [...p]
@@ -78,20 +96,23 @@ const ShopOwnerDash = () => {
     }, [])
 
     const addCounter = async () => {
-        let counterNo = shopCounters.slice(-1)[0].counterNo + 1
-        console.log(counterNo);
+        let counter = shopCounters.slice(-1)[0]
+        let counterNo = counter.counterNo + 1
 
-        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/add-counter/${shopName}/${shopOwnerId}/${counterNo}`);
+        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/add-counter/${shopName}/${auth.id}/${counterNo}`);
+
         if (resp.data.success) {
+
             setShopCounters(p => {
                 p.push({
                     counterNo,
                     queue: resp.data.queue
                 })
                 return [...p]
-            })
+            });
+
             socket.emit("join-room", resp.data.queue._id);
-            alert(resp.data.message)
+            socket.emit("add-or-delete-counter", { queueId: counter.queue._id, type: "add", counter: { counterNo, queue: resp.data.queue } })
         }
         else {
             alert(resp.data.error)
@@ -99,13 +120,16 @@ const ShopOwnerDash = () => {
     }
 
     const deleteCounter = async (counterNo) => {
-        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/delete-counter/${shopOwnerId}/${counterNo}`);
+        let delCounter = shopCounters.find((counter) => counter.counterNo == counterNo)
+
+        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/delete-counter/${auth.id}/${counterNo}`);
+
         if (resp.data.success) {
             setShopCounters(p => {
                 p = p.filter(counter => counter.counterNo != counterNo)
                 return [...p]
             })
-            alert(resp.data.message)
+            socket.emit("add-or-delete-counter", { queueId: delCounter.queue._id, type: "delete", counter: { counterNo: delCounter.counterNo } })
         }
         else {
             alert(resp.data.error)
@@ -157,13 +181,13 @@ const ShopOwnerDash = () => {
         });
     }
 
-    // console.log(shopCounters);
+    console.log(shopOwnerName, shopAddress);
 
     return (
         <div className='shop-owner-dash'>
             {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleConfirmation} />}
             <h1>Shop Owner Dashboard</h1>
-            <ShopImage shopName={shopName} shop_img={shop_img} />
+            <ShopImage shop_img={shop_img} shopName={shopName} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
             <div className="counters-sec">
                 <div className='sub-head'>Counters</div>
                 <div className="add-btn">
@@ -179,9 +203,27 @@ const ShopOwnerDash = () => {
                 </div>
             </div>
 
-            <div className="employees-sec">
+            {/* <div className="employees-sec">
                 <div className='sub-head'>Employees</div>
-            </div>
+                <div className='queues'>
+                    <h1>Queues</h1>
+                    <div className="queues-list">
+                        <div className="sub-head queues-head">Currently joined Queues </div>
+                        <div className="queue-th">
+                            <div className="queue-head">Shop Name</div>
+                            <div className="queue-head">Counter No.</div>
+                            <div className="queue-head">Ticket</div>
+                            <div className="queue-head">Your Position</div>
+                            <div className="queue-head">Queue Count</div>
+                            <div className="queue-head">Action</div>
+                        </div>
+                        {joinedQs.map(({ shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets }) => {
+                        {joinedQs.length ? joinedQs.map((joinedQ) => {
+                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} />
+                }) : "No Queues Joined"}
+                    </div>
+                </div>
+            </div> */}
 
 
         </div>

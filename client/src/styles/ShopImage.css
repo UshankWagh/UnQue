@@ -16,16 +16,19 @@
     z-index: 1;
 }
 
-.shop-dets .shop-desc p {
+.shop-dets .shop-desc .name {
     color: white;
     padding: 1rem 4rem 1rem 2rem;
     border-radius: 0 0 4rem 0;
     background-color: rgba(0, 0, 0, 0.559);
     width: fit-content;
+    font-size: 1.5em;
 }
 
-.shop-dets .shop-desc .name {
-    font-size: 1.5em;
+.shop-dets .shop-desc .oth-dets {
+    margin-top: 15px;
+    font-size: 0.6em;
+    color: rgb(163, 163, 163);
 }
 
 .shop-dets img {

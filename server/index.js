@@ -32,27 +32,6 @@ app.use(bodyParser.json());
 
 // socket
 
-io.on("connection", (socket) => {
-    console.log("User Connected", socket.id);
-
-    socket.on("join-room", (queueId) => {
-        socket.join(queueId);
-        console.log(`${socket.id} joined queueId ${queueId}`);
-    });
-
-    socket.on("change-counter-status", ({ queueId, status }) => {
-        console.log(`O / C ${status}`);
-        socket.to(queueId).emit("counter-status-changed", { queueId, status })
-    });
-
-    socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
-        console.log("cancel ticket", queueId, type, ticket);
-        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
-    })
-});
-
-
-
 unqDB;
 io.on("connection", (socket) => {
     console.log("User Connected", socket.id);
@@ -68,10 +47,21 @@ io.on("connection", (socket) => {
         console.log("user joined queue:", queueId);
     });
 
+    socket.on("change-counter-status", ({ queueId, status }) => {
+        console.log(`O / C ${status}`);
+        socket.to(queueId).emit("counter-status-changed", { queueId, status })
+    });
+
     socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
         console.log("cancel ticket", queueId, type, ticket);
         socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
-    })
+    });
+
+    socket.on("add-or-delete-counter", ({ queueId, type, counter }) => {
+        console.log(queueId, type, counter);
+        socket.to(queueId).emit("added-or-deleted-counter", { type, counter })
+    });
+
 });
 
 // routes

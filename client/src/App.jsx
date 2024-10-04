@@ -44,22 +44,24 @@ function App() {
       <Routes>
         <Route path='/login' element=<Login handleLogin={handleLogin} /> />
         <Route path='/register' element=<Register handleLogin={handleLogin} /> />
-        <Route path='/customer/search-shop' element=<SearchShop auth={auth} /> />
-        <Route path='/customer/' element=<PrivateRoute role="customer" />>
-          <Route path='shop' element=<Shop auth={auth} /> />
-          <Route path='queues' element=<Queues auth={auth} /> />
-          <Route path='profile' element=<Profile auth={auth} /> />
-        </Route>
-        <Route path='/employee/' element=<PrivateRoute role="employee" />>
-          <Route path='counter' element=<ShopCounter auth={auth} /> />
-          <Route path='employee-dash' element=<EmployeeDash auth={auth} /> />
-          <Route path='profile' element=<Profile auth={auth} /> />
-        </Route>
-        <Route path='/shopowner/' element=<PrivateRoute role="shopowner" />>
-          <Route path='shop-owner-dash' element=<ShopOwnerDash auth={auth} /> />
-          <Route path='profile' element=<Profile auth={auth} /> />
-        </Route>
-        <Route path='*' element=<Loader title="404 Error" msg={"Page Not Found"} redirectURL="/login" redirectText="Go to Sign In?" /> />
+        {auth && <>
+          <Route path='/customer/search-shop' element=<SearchShop auth={auth} /> />
+          <Route path='/customer/' element=<PrivateRoute role="customer" />>
+            <Route path='shop' element=<Shop auth={auth} /> />
+            <Route path='queues' element=<Queues auth={auth} /> />
+            <Route path='profile' element=<Profile auth={auth} /> />
+          </Route>
+          <Route path='/employee/' element=<PrivateRoute role="employee" />>
+            <Route path='counter' element=<ShopCounter auth={auth} /> />
+            <Route path='employee-dash' element=<EmployeeDash auth={auth} /> />
+            <Route path='profile' element=<Profile auth={auth} /> />
+          </Route>
+          <Route path='/shopowner/' element=<PrivateRoute role="shopowner" />>
+            <Route path='shop-owner-dash' element=<ShopOwnerDash auth={auth} /> />
+            <Route path='profile' element=<Profile auth={auth} /> />
+          </Route>
+          <Route path='*' element=<Loader title="404 Error" msg={"Page Not Found"} redirectURL="/login" redirectText="Go to Sign In?" /> />
+        </>}
       </Routes>
     </Router>
   )

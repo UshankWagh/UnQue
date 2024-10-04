@@ -3,13 +3,12 @@ const Schema = mongoose.Schema;
 
 /*
 
-fname
-lname
-shop
+pno
+state
+city
+area
 
 */
-
-// pno
 
 const EmployeeSchema = new Schema({
     avatar: {

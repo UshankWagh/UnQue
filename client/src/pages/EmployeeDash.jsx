@@ -7,8 +7,11 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { io } from "socket.io-client";
 
-const EmployeeDash = () => {
+const EmployeeDash = ({ auth }) => {
 
+    const [shopId, setShopId] = useState("");
+    const [shopOwnerName, setShopOwnerName] = useState("");
+    const [shopAddress, setShopAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopImg, setShopImg] = useState("");
     const [shopCounters, setShopCounters] = useState([]);
@@ -26,13 +29,16 @@ const EmployeeDash = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/shop-dets/66b911492cc0c1620b918462`);
+            const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/shop-dets/employee/${auth.id}`);
 
             if (resp.data.success) {
                 const shop = resp.data.shop
                 setShopName(shop.shopName)
                 setShopImg(shop.shopImg)
                 setShopCounters(shop.counters)
+                setShopId(resp.data.shopId)
+                setShopOwnerName(resp.data.shopOwnerName)
+                setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
             }
         }
 
@@ -57,6 +63,20 @@ const EmployeeDash = () => {
             })
         });
 
+        socket.on("joined-queue", ({ queueId, queueCount, lastTicket }) => {
+            console.log(queueCount, lastTicket);
+
+            setShopCounters(p => {
+                for (let i = 0; i < p.length; i++) {
+                    if (p[i].queue._id == queueId) {
+                        p[i].queue.queueCount = queueCount
+                        p[i].queue.lastTicket = lastTicket
+                    }
+                }
+                return [...p]
+            })
+        });
+
         socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
             console.log(queueId, queueCount, type, ticket);
 
@@ -71,11 +91,33 @@ const EmployeeDash = () => {
 
         });
 
+        socket.on("added-or-deleted-counter", ({ type, counter }) => {
+
+            switch (type) {
+                case "add":
+                    setShopCounters(p => {
+                        p.push(counter)
+                        return [...p]
+                    })
+                    break;
+
+                case "delete":
+                    setShopCounters(p => {
+                        p = p.filter(c => c.counterNo != counter.counterNo)
+                        return [...p]
+                    })
+                    break;
+
+                default:
+                    break;
+            }
+        })
+
     }, [])
 
 
     const handleRedirect = (no) => {
-        navigate(`/employee/counter?shopId=66b911492cc0c1620b918462&counterNo=${no}`)
+        navigate(`/employee/counter?shopId=${shopId}&counterNo=${no}`)
     }
 
 
@@ -85,7 +127,7 @@ const EmployeeDash = () => {
             <h1>Employee Dashboard</h1>
 
             {/* Image is static */}
-            <ShopImage shopName={shopName} shop_img={shop_img} />
+            <ShopImage shopName={shopName} shop_img={shop_img} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
                 {

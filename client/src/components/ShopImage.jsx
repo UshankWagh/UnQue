@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/ShopImage.css'
 
-const ShopImage = ({ shopName, ownerName, address, shop_img }) => {
+const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img }) => {
     return (
 
 
@@ -16,9 +16,13 @@ const ShopImage = ({ shopName, ownerName, address, shop_img }) => {
             
             */}
             <div className="shop-desc">
-                <p className='name'>{shopName}</p>
-                {ownerName}<br />
-                {address}
+                <div className='name'>
+                    {shopName}<br />
+                    <div className="oth-dets">
+                        {shopAddress}<br />
+                        {shopOwnerName}
+                    </div>
+                </div>
             </div>
             <img src={shop_img} alt="" />
         </div>

@@ -18,6 +18,7 @@ const Navbar = ({ auth }) => {
                         <Link className='nav-link' to="/customer/search-shop">Search Shop</Link>
                     </>}
                     {auth?.role == "customer" && <>
+                        <Link className='nav-link' to="/customer/search-shop">Search Shop</Link>
                         <Link className='nav-link' to="/customer/queues">Queues</Link>
                     </>}
                     {auth?.role == "shopowner" && <>

@@ -17,6 +17,7 @@ const Shop = ({ auth }) => {
             }),
         []
     );
+    // console.log(auth.id);
 
     const [socketID, setSocketId] = useState("");
     const [shop, setShop] = useState();
@@ -30,8 +31,6 @@ const Shop = ({ auth }) => {
 
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams();
-
-
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -67,14 +66,14 @@ const Shop = ({ auth }) => {
 
             const shopId = searchParams.get("shopid");
             const shopRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-shop/${shopId}`);
-            const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/ids/${auth.id}`);
+            const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/ids/${auth?.id}`);
             // console.log(shopId, shopRes);
             let joinedQs = joinedQsRes.data.joinedQs;
             let counters = shopRes.data.shop.shop.counters;
             setShop(shopRes.data.shop);
             for (let queue of joinedQs) {
                 for (let counter of counters) {
-                    if (queue.queue == counter.queue._id) {
+                    if (queue.queue == counter.queue?._id) {
                         setAlreadyJoinedQ(queue.queue);
                         return
                     }
@@ -177,13 +176,13 @@ const Shop = ({ auth }) => {
         }
     }
 
-    // console.log(shop);
+    console.log(shop);
 
     return (
         <div className="shop">
             {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleJoinQueue} />}
             <h1>Shop</h1>
-            <ShopImage shopName={shop?.shop?.shopName} ownerName={`${shop?.firstName} ${shop?.lastName}`} address={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop_img || shop?.shop?.shopImg}`} />
+            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop_img || shop?.shop?.shopImg}`} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
                 {shop && shop.shop.counters.map((counter) => {
@@ -191,7 +190,7 @@ const Shop = ({ auth }) => {
                     console.log(alreadyJoinedQ, text, counter.queue?.isOpen)
                     let isDisabled = (alreadyJoinedQ && text == "Join") || !counter.queue?.isOpen ? true : false;
                     let type = text == "Join" ? "btn" : "danger";
-                    socket.emit("join-room", counter.queue._id);
+                    socket.emit("join-room", counter.queue?._id);
                     return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue?.queueCount} isOpen={counter.queue?.isOpen} btn={{ text, isDisabled, type, onClickHandler: () => handleCounterAction(text, counter.counterNo) }} />
                 })}
             </div>
