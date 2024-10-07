@@ -285,7 +285,7 @@ export const removeTicketController = async (req, res) => {
         let updateQuery
 
         if (isLastTicket) {
-            updateQuery = { firstTicket: 101, lastTicket: 100, queueCount: 0, cancelledTickets: [] }
+            updateQuery = { firstTicket: 100, lastTicket: 100, queueCount: 0, cancelledTickets: [] }
         }
         else {
             updateQuery = { firstTicket: ticket, $inc: { queueCount: -1 } }

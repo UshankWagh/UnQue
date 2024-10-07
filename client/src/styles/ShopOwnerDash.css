@@ -10,3 +10,59 @@
 .shop-owner-dash .add-btn {
     text-align: right;
 }
+
+
+.employees {
+    padding: 3rem;
+    font-size: 1rem;
+}
+
+.queues-head {
+    margin: 3rem 0 1rem;
+}
+
+/* shop table */
+
+.view-shop-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9em;
+    background-color: var(--light);
+}
+
+/* delete */
+
+.queue-th {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 0 1rem; */
+    font-size: 1.2em;
+    background-color: var(--medium);
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-rad);
+    margin: 2rem 0 2rem;
+    box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.queue-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 0.9rem 1rem;
+    border-radius: var(--border-rad);
+    margin: 1rem 0;
+    box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.163);
+}
+
+.queue-box .queue-val,
+.queue-th .queue-head {
+    width: 20%;
+    border-right: 1px solid rgba(0, 0, 0, 0.25);
+    padding: 0 1rem;
+}
+
+.queue-box .queue-val:last-child,
+.queue-th .queue-head:last-child {
+    border-right: none;
+}

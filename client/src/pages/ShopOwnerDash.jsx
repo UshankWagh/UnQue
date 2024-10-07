@@ -6,6 +6,20 @@ import PopUp from '../components/PopUp.jsx'
 import '../styles/ShopOwnerDash.css'
 import axios from 'axios'
 import { io } from 'socket.io-client'
+import { Link } from 'react-router-dom';
+
+
+const TableRow = ({ avatar, firstName, lastName, email }) => {
+    return (
+        <div className="queue-box">
+            <div className="queue-val">{avatar}</div>
+            <div className="queue-val">{firstName}</div>
+            <div className="queue-val">{lastName}</div>
+            <div className="queue-val">{email}</div>
+            <div className="queue-val"><Link to={`/customer/shop`} className='btn view-shop-btn'>View Shop</Link></div>
+        </div>
+    )
+}
 
 const ShopOwnerDash = ({ auth }) => {
 
@@ -38,6 +52,8 @@ const ShopOwnerDash = ({ auth }) => {
 
             if (resp.data.success) {
                 const shop = resp.data.shop
+                console.log(shop.employees);
+
                 setShopName(shop.shopName)
                 setShopImg(shop.shopImg)
                 setShopCounters(shop.counters)
@@ -203,27 +219,26 @@ const ShopOwnerDash = ({ auth }) => {
                 </div>
             </div>
 
-            {/* <div className="employees-sec">
+            <div className="employees-sec">
                 <div className='sub-head'>Employees</div>
-                <div className='queues'>
-                    <h1>Queues</h1>
+                <div className='employees'>
                     <div className="queues-list">
                         <div className="sub-head queues-head">Currently joined Queues </div>
                         <div className="queue-th">
-                            <div className="queue-head">Shop Name</div>
-                            <div className="queue-head">Counter No.</div>
-                            <div className="queue-head">Ticket</div>
-                            <div className="queue-head">Your Position</div>
-                            <div className="queue-head">Queue Count</div>
+                            <div className="queue-head">Avatar</div>
+                            <div className="queue-head">First Name</div>
+                            <div className="queue-head">Last Name</div>
+                            <div className="queue-head">Email</div>
                             <div className="queue-head">Action</div>
                         </div>
-                        {joinedQs.map(({ shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets }) => {
-                        {joinedQs.length ? joinedQs.map((joinedQ) => {
-                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} />
-                }) : "No Queues Joined"}
+                        {shopEmployees.length ? shopEmployees.map((employee) => {
+                            const { _id, avatar, firstName, lastName, email } = employee;
+                            console.log(_id)
+                            return <TableRow key={_id} {...{ avatar, firstName, lastName, email }} />
+                        }) : "No Employees Found"}
                     </div>
                 </div>
-            </div> */}
+            </div>
 
 
         </div>

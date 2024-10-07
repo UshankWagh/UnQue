@@ -52,7 +52,6 @@ const ShopCounter = ({ auth }) => {
                 p.unshift(lastTicket)
                 return [...p]
             })
-            // setLastTicket(lTicket)
         });
 
         socket.on("cancelled-ticket", ({ _, queueCount, type, ticket }) => {
@@ -151,7 +150,7 @@ const ShopCounter = ({ auth }) => {
         });
         setQueueCount(p => p - 1)
 
-
+        // queueCount                        0                 > 0
         let reqBody = {
             queueId,
             ticket: !(queueCount - 1) ? queue[0] - 1 : queue[queue.length - 2],
