@@ -32,53 +32,9 @@ const Queues = ({ auth }) => {
         });
         socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
             console.log(queueId, queueCount, type, ticket);
-            // LEFT TO IMPLEMENT CANCELLED TICKET BELLOW \/
-            // joinedQs.map((joinedQ, ind) => {
-            //     console.log(joinedQ.queue._id, queueId, joinedQ.ticket, ticket);
-            //     if (joinedQ.queue._id == queueId && joinedQ.ticket == ticket) {
-            //         joinedQs.splice(ind, 1);
-            //     }
-            // })
-            // switch (type) {
-            //     case "f-ticket":
-            //         setJoinedQs(prvJQs => {
-            //             prvJQs.map(jQ => {
-            //                 if (jQ.queue._id == queueId) {
-            //                     jQ.queue.firstTicket = ticket
-            //                     jQ.queue.queueCount = queueCount
-            //                 }
-            //             })
-            //             return [...prvJQs]
-            //         })
-            //         break;
-
-            //     case "m-ticket":
-            //         setJoinedQs(prvJQs => {
-            //             prvJQs.map(jQ => {
-            //                 if (jQ.queue._id == queueId) {
-            //                     jQ.queue.cancelledTickets.push(ticket);
-            //                 }
-            //             })
-            //             return [...prvJQs]
-            //         })
-            //         break;
-
-            //     case "l-ticket":
-            //         setJoinedQs(prvJQs => {
-            //             prvJQs.map(jQ => {
-            //                 if (jQ.queue._id == queueId) {
-            //                     jQ.queue.lastTicket = ticket
-            //                     jQ.queue.queueCount = queueCount
-            //                 }
-            //             })
-            //             return [...prvJQs]
-            //         })
-            //         break;
-
-            //     default:
-            //         break;
-            // }
-
+            setJoinedQs(prvJQs => {
+                return handleCancelTicket(prvJQs, queueId, queueCount, type, ticket);
+            })
         });
 
         const getJoinedQs = async () => {
@@ -87,6 +43,55 @@ const Queues = ({ auth }) => {
         }
         getJoinedQs();
     }, []);
+
+    const handleCancelTicket = (joinedQs, queueId, queueCount, type, ticket) => {
+        joinedQs = joinedQs.filter(jQ => {
+            console.log("q idid", joinedQs, jQ.queue._id, queueId);
+
+            if (jQ.queue._id == queueId) {
+                console.log("jQ", jQ, queueCount, type, ticket);
+
+                if (jQ.ticket == ticket) {
+                    // joinedQs.splice(ind, 1);
+                    console.log("jqtk tk", jQ.ticket, ticket);
+                    cancelTicket(queueId);
+                }
+                else {
+                    switch (type) {
+                        case "f-ticket":
+                            jQ.queue.firstTicket = ticket + 1
+                            break;
+                        case "m-ticket":
+                            jQ.queue.cancelledTickets.push(ticket);
+                            break;
+                        case "l-ticket":
+                            jQ.queue.lastTicket = ticket - 1
+                            break;
+                        default:
+                            break;
+                    }
+                    console.log("aft upd", jQ);
+                    jQ.queue.queueCount = queueCount
+                    return jQ;
+                }
+            }
+            else {
+                return jQ;
+            }
+        });
+        console.log("jqs", joinedQs);
+
+        return joinedQs;
+    }
+
+    const cancelTicket = async (queueId) => {
+        const cancelTRes = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/customer/remove-ticket/`, {
+            queueId,
+            customerId: auth.id
+        });
+        console.log("ctkt", cancelTRes.data);
+
+    }
 
     const updateQueueCount = (queueId, queueCount) => {
         // update jqs[i].queue.queueCount of jqs[i].queue._id with queueCount
@@ -150,7 +155,7 @@ const Queues = ({ auth }) => {
                     const qPosition = getQPosition(firstTicket, ticket, cancelledTickets);
                     socket.emit("join-room", _id);
                     {/* console.log("pp", qPosition, firstTicket, joinedQ.queue.lastTicket, cancelledTickets) */ }
-                    return queueCount ? <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} /> : null
+                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} />
                 }) : "No Queues Joined"}
             </div>
         </div>

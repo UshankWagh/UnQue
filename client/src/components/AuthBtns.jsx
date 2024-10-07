@@ -19,7 +19,7 @@ const AuthBtns = ({ auth, handleLogout }) => {
                         <IoMdPower />
                         <span className="auth-text">Sign Out</span>
                     </div>
-                    <Link to={`/${{ ...auth }.role}/profile`} className="profile-logo">{{ ...auth }.name[0].toUpperCase()}</Link>
+                    <Link to={`/${{ ...auth }.role}/profile`} className="profile-logo">{{ ...auth }.name.split(" ")[0][0].toUpperCase() + { ...auth }.name.split(" ")[1][0].toUpperCase()}</Link>
                     {/* <Link to={`/${auth.role}/profile`} className="profile-logo">J</Link> */}
                 </>
                 : <>

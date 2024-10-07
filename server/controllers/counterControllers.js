@@ -161,7 +161,9 @@ export const JoinQueueController = async (req, res) => {
         if (queue.isOpen) {
             const customer = await Customer.findById(customerId);
             // console.log(queueId, customer.queues);
-
+            if (queue.queueCount == 0) {
+                queue.firstTicket += 1;
+            }
             queue.lastTicket += 1;
             queue.queueCount += 1;
             customer.queues.push({
@@ -214,11 +216,13 @@ export const cancelTicketController = async (req, res) => {
             let { firstTicket, lastTicket } = queue;
             let ticketType = ""
             const cancelTicket = joinedQ.ticket;
-            if (cancelTicket != firstTicket && cancelTicket != lastTicket) {
-                ticketType = "m-ticket";
-                queue.cancelledTickets.push(cancelTicket);
+            if (queue.queueCount == 1) {
+                ticketType = "s-ticket";
+                firstTicket = 100;
+                lastTicket = 100;
+                queue.cancelledTickets = []
             }
-            else if (cancelTicket == firstTicket) {
+            if (cancelTicket == firstTicket) {
                 ticketType = "f-ticket";
                 firstTicket += 1;
                 let i = 0;
@@ -241,6 +245,10 @@ export const cancelTicketController = async (req, res) => {
                     i -= 1
                 }
                 queue.lastTicket = lastTicket;
+            }
+            else {
+                ticketType = "m-ticket";
+                queue.cancelledTickets.push(cancelTicket);
             }
             queue.queueCount -= 1;
             customer.queues = customer.queues.filter(queue => queue.queue != queueId);
@@ -275,6 +283,19 @@ export const cancelTicketController = async (req, res) => {
     }
 }
 
+export const removeCustomerTicketController = async (req, res) => {
+    const { queueId, customerId } = req.body;
+    const customer = await Customer.findById(customerId);
+    console.log("pQs", customer.queues);
+    customer.queues = customer.queues.filter(queue => queue.queue != queueId);
+    console.log("icq", queueId, customerId, customer.queues);
+    customer.save();
+
+    res.status(200).send({
+        success: true,
+        message: "removed ticket",
+    });
+}
 
 export const removeTicketController = async (req, res) => {
 
@@ -285,7 +306,7 @@ export const removeTicketController = async (req, res) => {
         let updateQuery
 
         if (isLastTicket) {
-            updateQuery = { firstTicket: 101, lastTicket: 100, queueCount: 0, cancelledTickets: [] }
+            updateQuery = { firstTicket: 100, lastTicket: 100, queueCount: 0, cancelledTickets: [] }
         }
         else {
             updateQuery = { firstTicket: ticket, $inc: { queueCount: -1 } }

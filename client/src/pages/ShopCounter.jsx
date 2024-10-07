@@ -157,10 +157,14 @@ const ShopCounter = ({ auth }) => {
             ticket: !(queueCount - 1) ? queue[0] - 1 : queue[queue.length - 2],
             isLastTicket: !(queueCount - 1)
         }
+        // console.log("tk", queueId, queue.slice(-1)[0]);
         const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
 
         if (resp.data.success) {
-            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket: queue.slice(-1)[0] })
+            console.log("qt", queue, queue.slice(-1)[0], ticket);
+
+            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
+
         }
         else {
             alert(resp.data.message)

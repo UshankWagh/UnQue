@@ -41,9 +41,9 @@ io.on("connection", (socket) => {
         console.log(`${socket.id} joined room ${queueId}`);
     });
 
-    socket.on("join-queue", ({ queueCount, lastTicket, queueId }) => {
-        socket.to(queueId).emit("joined-queue", { queueId, queueCount, lastTicket });
-        console.log(queueId, queueCount, lastTicket);
+    socket.on("join-queue", ({ customerId, queueCount, lastTicket, queueId }) => {
+        socket.to(queueId).emit("joined-queue", { customerId, queueId, queueCount, lastTicket });
+        console.log(queueId, customerId, queueCount, lastTicket);
         console.log("user joined queue:", queueId);
     });
 

@@ -129,7 +129,8 @@ const Shop = ({ auth }) => {
         console.log("jqr", joinQRes.data);
 
         if (joinQRes.data.success) {
-            socket.emit("join-queue", { ...joinQRes.data.queue, queueId: counter.queue._id });
+            console.log("ai", auth.id);
+            socket.emit("join-queue", { ...joinQRes.data.queue, customerId: auth.id, queueId: counter.queue._id });
             navigate("/customer/queues");
         }
         // console.log("jqres", joinQRes, counter.queue._id);
@@ -140,7 +141,7 @@ const Shop = ({ auth }) => {
 
         const cancelTRes = await axios.post(`${import.meta.env.VITE_SERVER_URL}/counters/cancel-ticket`, {
             queueId: counter.queue._id,
-            customerId: "66b91038976f6aa9f7766492"
+            customerId: auth.id
         });
         console.log("ctkt", cancelTRes.data);
         if (cancelTRes.data.success) {
