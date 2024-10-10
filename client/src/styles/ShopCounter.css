@@ -3,7 +3,9 @@
     font-size: 1rem;
 }
 
-.shop-counter h1 {
+.shop-counter .head-l {
+    display: flex;
+    gap: 2rem;
     margin-bottom: 2rem;
 }
 

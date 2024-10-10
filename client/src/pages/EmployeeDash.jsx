@@ -117,7 +117,7 @@ const EmployeeDash = ({ auth }) => {
 
 
     const handleRedirect = (no) => {
-        navigate(`/employee/counter?shopId=${shopId}&counterNo=${no}`)
+        navigate(`/employee/counter?shopId=${shopId}&shopName=${shopName}&counterNo=${no}`)
     }
 
 

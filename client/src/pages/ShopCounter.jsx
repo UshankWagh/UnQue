@@ -4,6 +4,10 @@ import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios"
 
+
+// shopname     back button
+
+
 const Ticket = ({ ticket }) => {
     return (
         <div className="ticket">
@@ -17,11 +21,9 @@ const ShopCounter = ({ auth }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const shopId = searchParams.get("shopId")
     const counterNo = searchParams.get("counterNo")
+    const shopName = searchParams.get("shopName")
 
 
-    // const [firstTicket, setFirstTicket] = useState(null);
-    // const [lastTicket, setLastTicket] = useState(null);
-    // const [cancelledTickets, setCancelledTickets] = useState([]);
     const [queue, setQueue] = useState([]);
     const [queueId, setQueueId] = useState("");
     const [queueCount, setQueueCount] = useState(0);
@@ -45,11 +47,12 @@ const ShopCounter = ({ auth }) => {
             console.log("connected", socket.id);
         });
 
-        socket.on("joined-queue", ({ queueId, queueCount, lastTicket }) => {
+        socket.on("joined-queue", ({ queueId, queueCount, lastTicket, customerId }) => {
             console.log(queueCount, lastTicket);
             setQueueCount(queueCount)
             setQueue(p => {
-                p.unshift(lastTicket)
+                p.unshift({ customerId, ticket: lastTicket })
+                localStorage.setItem("queue", JSON.stringify(p))
                 return [...p]
             })
         });
@@ -60,7 +63,8 @@ const ShopCounter = ({ auth }) => {
             setQueueCount(queueCount)
 
             setQueue(p => {
-                p = p.filter(tk => tk != ticket)
+                p = p.filter(ticketObj => ticketObj.ticket != ticket)
+                localStorage.setItem("queue", JSON.stringify(p))
                 return [...p]
             });
 
@@ -101,9 +105,6 @@ const ShopCounter = ({ auth }) => {
             console.log(queue);
             setIsOpen(queue.isOpen);
             setQueueCount(queue.queueCount)
-            // setFirstTicket(queue.firstTicket)
-            // setLastTicket(queue.lastTicket)
-            // setCancelledTickets(queue.cancelledTickets)
             setQueueId(queue._id)
 
             socket.emit("join-room", queue._id);
@@ -117,8 +118,17 @@ const ShopCounter = ({ auth }) => {
 
     const createQueue = (firstTicket, lastTicket, cancelledTickets) => {
         let que = []
+        // let storedQueue = localStorage.getItem("queue")
+        // if (storedQueue?.length) return JSON.parse(storedQueue)
+
         if (firstTicket > 100) {
-            for (let ticket = lastTicket; ticket >= firstTicket; ticket--) if (!(cancelledTickets.includes(ticket))) que.push(ticket)
+            for (let ticket = lastTicket; ticket >= firstTicket; ticket--) {
+                if (!(cancelledTickets.includes(ticket))) {
+
+                    que.push({ customerId: "", ticket })
+                }
+            }
+            localStorage.setItem("queue", JSON.stringify(que))
         }
         return que
     }
@@ -141,13 +151,15 @@ const ShopCounter = ({ auth }) => {
     const handleRemoveTicket = async () => {
         console.log("r");
 
+        let updatedQueue = queue
         let ticket
+        ticket = updatedQueue.pop().ticket
 
-        setQueue(p => {
-            ticket = p.pop()
-            console.log(p);
-            return [...p]
-        });
+        localStorage.setItem("queue", JSON.stringify(updatedQueue))
+
+        console.log(updatedQueue, ticket);
+
+        setQueue(updatedQueue);
         setQueueCount(p => p - 1)
 
         // queueCount                        0                 > 0
@@ -156,20 +168,45 @@ const ShopCounter = ({ auth }) => {
             ticket: !(queueCount - 1) ? queue[0] - 1 : queue[queue.length - 2],
             isLastTicket: !(queueCount - 1)
         }
-        // console.log("tk", queueId, queue.slice(-1)[0]);
-        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
 
-        if (resp.data.success) {
+        const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
+
+        if (resp1.data.success) {
             console.log("qt", queue, queue.slice(-1)[0], ticket);
 
             socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
 
         }
         else {
-            alert(resp.data.message)
+            alert(resp1.data.message)
             setQueue(queue)
             setQueueCount(queueCount)
         }
+
+        notifyCustomers(updatedQueue);
+
+    }
+
+    const notifyCustomers = async () => {
+
+        let customers = [];
+
+        if (updatedQueue?.length >= 2) {
+
+            let customer = updatedQueue.slice(-2)[0]
+            customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
+
+            if (updatedQueue?.length >= 3) {
+
+                customer = updatedQueue.slice(-3)[0]
+                customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
+            }
+        }
+
+        console.log(customers);
+
+        const resp2 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/notify-customer`, { customers })
+
     }
 
     console.log(queue);
@@ -179,7 +216,10 @@ const ShopCounter = ({ auth }) => {
         <div className='shop-counter'>
 
             <div className="head">
-                <h1>Counter <span>{counterNo}</span></h1>
+                <div className="head-l">
+                    <span className="back-btn btn">{"<-"}</span>
+                    <h1>Counter <span>{counterNo}</span></h1>
+                </div>
                 <button className='btn' onClick={() => { handleOpenClose() }}>{isOpen ? "Close" : "Open"}</button>
             </div>
             <p className='queue-head'>Queue</p>
@@ -187,7 +227,7 @@ const ShopCounter = ({ auth }) => {
                 <div className="queue">
                     <div className="tickets">
                         {
-                            queue.map((ticket, index) => <Ticket ticket={ticket} key={index} />)
+                            queue.map((ticketObj, index) => <Ticket ticket={ticketObj.ticket} key={index} />)
                         }
                     </div>
                     <p className="que-count">{queueCount}</p>

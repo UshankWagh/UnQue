@@ -44,8 +44,8 @@ function App() {
       <Routes>
         <Route path='/login' element=<Login handleLogin={handleLogin} /> />
         <Route path='/register' element=<Register handleLogin={handleLogin} /> />
+        <Route path='/customer/search-shop' element=<SearchShop /> />
         {auth && <>
-          <Route path='/customer/search-shop' element=<SearchShop auth={auth} /> />
           <Route path='/customer/' element=<PrivateRoute role="customer" />>
             <Route path='shop' element=<Shop auth={auth} /> />
             <Route path='queues' element=<Queues auth={auth} /> />
