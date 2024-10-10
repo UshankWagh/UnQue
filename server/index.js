@@ -81,6 +81,6 @@ app.use("/profile", profileRoutes);
 
 
 
-server.listen(process.env.SERVER_PORT || 5500, () => {
-    console.log("server on port 5500");
+server.listen(process.env.SERVER_PORT || 5000, () => {
+    console.log("server on port 5000");
 });

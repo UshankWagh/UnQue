@@ -1,5 +1,5 @@
 import express from "express"
-import { addCounterController, getCounterQueueController, deleteCounterController, getJoinedQsController, JoinQueueController, cancelTicketController, removeTicketController, openCloseQueueController, removeCustomerTicketController } from "../controllers/counterControllers.js";
+import { addCounterController, getCounterQueueController, deleteCounterController, getJoinedQsController, JoinQueueController, cancelTicketController, removeTicketController, openCloseQueueController, removeCustomerTicketController, notifyCustomerController } from "../controllers/counterControllers.js";
 
 const router = express.Router()
 
@@ -19,6 +19,8 @@ router.post("/join-queue", JoinQueueController);
 router.post("/cancel-ticket", cancelTicketController);
 
 router.patch("/customer/remove-ticket", removeCustomerTicketController);
+
+router.post("/notify-customer", notifyCustomerController);
 
 // Queues
 

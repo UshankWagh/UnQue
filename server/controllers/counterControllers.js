@@ -1,6 +1,7 @@
 import ShopOwner from "../models/ShopOwnerModel.js";
 import Customer from "../models/CustomerModel.js";
 import Queue from "../models/QueueModel.js";
+import nodemailer from "nodemailer";
 
 // export const getShopCountersController = async (req, res) => {
 
@@ -358,6 +359,54 @@ export const openCloseQueueController = async (req, res) => {
         res.status(500).send({
             success: false,
             message: "error in get counter queue",
+            error
+        })
+    }
+}
+
+export const notifyCustomerController = async (req, res) => {
+    const { customers } = req.body;
+    // const customers = [
+    //     { id: '66b91038976f6aa9f7766492', shopName: 'Evergreen Grocery', counterNo: '1', ticket: 105 },
+    //     { id: '66b91172976f6aa9f7766493', shopName: 'Evergreen Grocery', counterNo: '1', ticket: 103 },
+    // ];
+    const customerIds = customers.map(customer => {
+        return customer.id;
+    })
+    try {
+        const customerData = await Customer.find({ _id: { $in: customerIds } }, { firstName: 1, lastName: 1, email: 1 });
+        // console.log("c", customerData);
+
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.NODEMAILER_EMAIL,
+                pass: process.env.NODEMAILER_PASSWORD,
+            },
+        });
+
+        for (let i = 0; i < customers.length; i++) {
+            const mailOptions = {
+                from: process.env.NODEMAILER_EMAIL,
+                to: customerData[i].email.emailId,
+                subject: `${customers[i].shopName} | You moved further in Queue`,
+                text: "Get ready to Order!",
+                html: `<h2>Hello ${customerData[i].firstName + ' ' + customerData[i].lastName},</h2><p>You have reached at position <b>${i + 2}</b> in the queue at Counter ${customers[i].counterNo} of ${customers[i].shopName}. Please reach the shop for you order.</p><h3>Your Ticket: ${customers[i].ticket}</h3><h3>Your Position: ${i + 2}</h3>`,
+            }
+            const info = await transporter.sendMail(mailOptions);
+        }
+
+        res.status(200).send({
+            success: true,
+            message: "Customers notified"
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "error in notify customer",
             error
         })
     }
