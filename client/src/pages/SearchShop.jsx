@@ -82,7 +82,7 @@ const SearchShop = () => {
             <div className="search-bar">
                 <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
                 <DropDown label="City" values={["-Select-", ...cities]} onSelect={getAreas} />
-                <div className="inp">
+                <div className="search-bar">
                     <label htmlFor="shop-name">Shop Name</label>
                     <input type="text" onChange={(e) => { }} placeholder='Enter Shop Name' name="shop-name" id="shop-name" />
                 </div>
