@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios"
 
-
 // shopname     back button
 
 // working customer id
@@ -40,6 +39,24 @@ const ShopCounter = ({ auth }) => {
         []
     );
 
+    const loadData = async () => {
+        const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-queue/${shopId}/${counterNo}`);
+        if (resp.data.success) {
+            const { queue } = resp.data;
+            console.log(queue);
+            setIsOpen(queue.isOpen);
+            setQueueCount(queue.queueCount)
+            setQueueId(queue._id)
+
+            socket.emit("join-room", queue._id);
+
+            setQueue(() => createQueue(queue.firstTicket, queue.lastTicket, queue.cancelledTickets));
+        }
+        else {
+            alert(resp.data.message)
+        }
+    }
+
     useEffect(() => {
         loadData()
 
@@ -63,6 +80,7 @@ const ShopCounter = ({ auth }) => {
 
             setQueueCount(queueCount)
 
+            // check review
             setQueue(p => {
                 p = p.filter(ticketObj => ticketObj.ticket != ticket)
                 // localStorage.setItem("queue", JSON.stringify(p))
@@ -100,28 +118,11 @@ const ShopCounter = ({ auth }) => {
     }, [])
 
 
-    const loadData = async () => {
-        const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-queue/${shopId}/${counterNo}`);
-        if (resp.data.success) {
-            const { queue } = resp.data;
-            console.log(queue);
-            setIsOpen(queue.isOpen);
-            setQueueCount(queue.queueCount)
-            setQueueId(queue._id)
-
-            socket.emit("join-room", queue._id);
-
-            setQueue(() => createQueue(queue.firstTicket, queue.lastTicket, queue.cancelledTickets));
-        }
-        else {
-            alert(resp.data.message)
-        }
-    }
 
     const createQueue = (firstTicket, lastTicket, cancelledTickets) => {
         let que = []
-        // let storedQueue = localStorage.getItem("queue")
-        // if (storedQueue?.length) return JSON.parse(storedQueue)
+        let storedQueue = localStorage.getItem("queue");
+        if (storedQueue?.length) return JSON.parse(storedQueue)
 
         if (firstTicket > 100) {
             for (let ticket = lastTicket; ticket >= firstTicket; ticket--) {
@@ -174,19 +175,19 @@ const ShopCounter = ({ auth }) => {
         console.log(reqBody);
 
 
-        const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
+        // const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
 
-        if (resp1.data.success) {
-            console.log("qt", queue, queue.slice(-1)[0], ticket);
+        // if (resp1.data.success) {
+        //     console.log("qt", queue, queue.slice(-1)[0], ticket);
 
-            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
+        //     socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
 
-        }
-        else {
-            alert(resp1.data.message)
-            setQueue(queue)
-            setQueueCount(queueCount)
-        }
+        // }
+        // else {
+        //     alert(resp1.data.message)
+        //     setQueue(queue)
+        //     setQueueCount(queueCount)
+        // }
 
         notifyCustomers(updatedQueue);
 
@@ -196,16 +197,14 @@ const ShopCounter = ({ auth }) => {
 
         let customers = [];
 
-        if (updatedQueue?.length >= 1) {
+        if (updatedQueue?.length >= 2) {
 
-            let customer = updatedQueue.slice(-1)[0]
-            customers.push({ id: "", shopName, counterNo, ticket: customer.ticket })
-            // customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
+            let customer = updatedQueue.slice(-2)[0]
+            customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
 
-            if (updatedQueue?.length >= 2) {
+            if (updatedQueue?.length >= 3) {
 
-                customer = updatedQueue.slice(-2)[0]
-                customers.push({ id: "", shopName, counterNo, ticket: customer.ticket })
+                customer = updatedQueue.slice(-3)[0]
                 customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
             }
         }
@@ -233,6 +232,12 @@ const ShopCounter = ({ auth }) => {
             <div className="shop-counter-container">
                 <div className="queue">
                     <div className="tickets">
+                        {/* <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} /> */}
                         {
                             queue.map((ticketObj, index) => <Ticket ticket={ticketObj.ticket} key={index} />)
                         }

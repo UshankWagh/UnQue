@@ -12,11 +12,31 @@ const SearchShop = () => {
     const [location, setLocation] = useState({});
     const [shops, setShops] = useState([]);
 
+    // To fetch State, city
+    var headers = new Headers();
+    headers.append("X-CSCAPI-KEY", "API_KEY");
+
+
     useEffect(() => {
         const getStates = async () => {
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-states`);
-            // console.log(response);
-            setStates(response.data.states);
+
+            var requestOptions = {
+                method: 'GET',
+                headers: headers,
+                redirect: 'follow'
+            };
+
+            const response = await fetch("https://api.countrystatecity.in/v1/countries/IN/states", requestOptions);
+
+            console.log(response);
+
+            // .then(response => response.text())
+            // .then(result => console.log(result))
+            // .catch(error => console.log('error', error));
+
+            // const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-states`);
+            // // console.log(response);
+            // setStates(response.data.states);
         }
         getStates();
     }, []);

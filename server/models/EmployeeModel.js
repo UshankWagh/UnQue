@@ -40,6 +40,10 @@ const EmployeeSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'shopowner',
         required: true
+    },
+    counterNo: {
+        type: Number,
+        required: true
     }
 });
 

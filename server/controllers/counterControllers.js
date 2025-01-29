@@ -329,7 +329,7 @@ export const removeTicketController = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             success: false,
-            message: "error in get counter queue",
+            message: "error in remove ticket controller",
             error
         })
     }

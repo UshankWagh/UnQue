@@ -7,11 +7,13 @@ export const getShopDetailsController = async (req, res) => {
 
     try {
 
-        let { role, id } = req.params
+        let { role, id } = req.params;
 
+        let counterNo; // Just for employee
         if (role == "employee") {
             const employee = await Employee.findById(id)
             id = employee.shopownerId
+            counterNo = employee.counterNo;
         }
 
         const shopOwner = await ShopOwner.findById(id).populate("shop.counters.queue shop.employees")
@@ -24,7 +26,8 @@ export const getShopDetailsController = async (req, res) => {
                 success: true,
                 shopId: shopOwner._id,
                 shopOwnerName: shopOwner.firstName + " " + shopOwner.lastName,
-                shop
+                shop,
+                counterNo
             })
         }
 
