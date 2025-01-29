@@ -14,7 +14,7 @@ const EmployeeDash = ({ auth }) => {
     const [shopAddress, setShopAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopImg, setShopImg] = useState("");
-    const [shopCounters, setShopCounters] = useState([]);
+    const [shopCounter, setShopCounter] = useState({});
     const [socketID, setSocketId] = useState("");
 
     const socket = useMemo(
@@ -35,14 +35,16 @@ const EmployeeDash = ({ auth }) => {
                 const shop = resp.data.shop
                 setShopName(shop.shopName)
                 setShopImg(shop.shopImg)
-                setShopCounters(shop.counters)
                 setShopId(resp.data.shopId)
                 setShopOwnerName(resp.data.shopOwnerName)
                 setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
+                setShopCounter(() => (shop.counters.find(counter => counter.counterNo == resp.data.counterNo)));
             }
         }
 
         loadData()
+
+        socket.emit("join-room", shopCounter?.queue?._id)
 
         socket.on("connect", () => {
             setSocketId(socket.id);
@@ -53,63 +55,54 @@ const EmployeeDash = ({ auth }) => {
         socket.on("counter-status-changed", ({ queueId, status }) => {
             console.log(`O / C ${status} ${queueId}`);
 
-            setShopCounters(p => {
-                for (let i = 0; i < p.length; i++) {
-                    if (p[i].queue._id == queueId) {
-                        p[i].queue.isOpen = status
-                    }
+            setShopCounter(p => {
+                if (p.queue._id == queueId) {
+                    p.queue.isOpen = status
                 }
-                return [...p]
+                return p;
             })
         });
 
         socket.on("joined-queue", ({ queueId, queueCount, lastTicket }) => {
             console.log(queueCount, lastTicket);
 
-            setShopCounters(p => {
-                for (let i = 0; i < p.length; i++) {
-                    if (p[i].queue._id == queueId) {
-                        p[i].queue.queueCount = queueCount
-                        p[i].queue.lastTicket = lastTicket
-                    }
+            setShopCounter(p => {
+                if (p.queue._id == queueId) {
+                    p.queue.queueCount = queueCount
+                    p.queue.lastTicket = lastTicket
                 }
-                return [...p]
+                return p;
             })
         });
 
         socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
             console.log(queueId, queueCount, type, ticket);
 
-            setShopCounters(p => {
-                for (let i = 0; i < p.length; i++) {
-                    if (p[i].queue._id == queueId) {
-                        p[i].queue.queueCount = queueCount
-                    }
+            setShopCounter(p => {
+                if (p.queue._id == queueId) {
+                    p.queue.queueCount = queueCount
                 }
-                return [...p]
+                return p;
             })
 
         });
 
         socket.on("added-or-deleted-counter", ({ type, counter }) => {
 
-            switch (type) {
-                case "add":
-                    setShopCounters(p => {
-                        p.push(counter)
-                        return [...p]
-                    })
-                    break;
+            if (counter.counterNo == shopCounter?.counterNo) {
 
-                case "delete":
-                    setShopCounters(p => {
-                        p = p.filter(c => c.counterNo != counter.counterNo)
-                        return [...p]
-                    })
-                    break;
+                switch (type) {
+                    case "add":
+                        setShopCounter(counter);
+                        break;
 
-                default:
-                    break;
+                    case "delete":
+                        setShopCounter({});
+                        break;
+
+                    default:
+                        break;
+                }
             }
         })
 
@@ -130,12 +123,14 @@ const EmployeeDash = ({ auth }) => {
             <ShopImage shopName={shopName} shop_img={shop_img} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
-                {
+                {/* {
                     shopCounters.map((counter, index) => {
                         socket.emit("join-room", counter.queue._id);
                         return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} isOpen={counter.queue.isOpen} btn={{ text: "View", type: "btn", isDisabled: false, onClickHandler: () => handleRedirect(counter.counterNo) }} key={index} />
                     })
-                }
+                } */}
+
+                <Counter no={shopCounter?.counterNo} queueCount={shopCounter?.queue?.queueCount} isOpen={shopCounter?.queue?.isOpen} btn={{ text: "View", type: "btn", isDisabled: false, onClickHandler: () => handleRedirect(shopCounter?.counterNo) }} />
             </div>
         </div>
     )

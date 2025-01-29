@@ -4,9 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios"
 
-
 // shopname     back button
 
+// working customer id
 
 const Ticket = ({ ticket }) => {
     return (
@@ -39,6 +39,24 @@ const ShopCounter = ({ auth }) => {
         []
     );
 
+    const loadData = async () => {
+        const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-queue/${shopId}/${counterNo}`);
+        if (resp.data.success) {
+            const { queue } = resp.data;
+            console.log(queue);
+            setIsOpen(queue.isOpen);
+            setQueueCount(queue.queueCount)
+            setQueueId(queue._id)
+
+            socket.emit("join-room", queue._id);
+
+            setQueue(() => createQueue(queue.firstTicket, queue.lastTicket, queue.cancelledTickets));
+        }
+        else {
+            alert(resp.data.message)
+        }
+    }
+
     useEffect(() => {
         loadData()
 
@@ -48,7 +66,7 @@ const ShopCounter = ({ auth }) => {
         });
 
         socket.on("joined-queue", ({ queueId, queueCount, lastTicket, customerId }) => {
-            console.log(queueCount, lastTicket);
+            console.log(customerId, queueCount, lastTicket);
             setQueueCount(queueCount)
             setQueue(p => {
                 p.unshift({ customerId, ticket: lastTicket })
@@ -98,28 +116,10 @@ const ShopCounter = ({ auth }) => {
     }, [])
 
 
-    const loadData = async () => {
-        const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-queue/${shopId}/${counterNo}`);
-        if (resp.data.success) {
-            const { queue } = resp.data;
-            console.log(queue);
-            setIsOpen(queue.isOpen);
-            setQueueCount(queue.queueCount)
-            setQueueId(queue._id)
-
-            socket.emit("join-room", queue._id);
-
-            setQueue(() => createQueue(queue.firstTicket, queue.lastTicket, queue.cancelledTickets));
-        }
-        else {
-            alert(resp.data.message)
-        }
-    }
-
     const createQueue = (firstTicket, lastTicket, cancelledTickets) => {
         let que = []
-        // let storedQueue = localStorage.getItem("queue")
-        // if (storedQueue?.length) return JSON.parse(storedQueue)
+        let storedQueue = localStorage.getItem("queue");
+        if (storedQueue?.length) return JSON.parse(storedQueue)
 
         if (firstTicket > 100) {
             for (let ticket = lastTicket; ticket >= firstTicket; ticket--) {
@@ -165,29 +165,32 @@ const ShopCounter = ({ auth }) => {
         // queueCount                        0                 > 0
         let reqBody = {
             queueId,
-            ticket: !(queueCount - 1) ? queue[0] - 1 : queue[queue.length - 2],
+            ticket: !(queueCount - 1) ? queue[0].ticket - 1 : queue.slice(-2)[0].ticket,
             isLastTicket: !(queueCount - 1)
         }
 
-        const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
+        console.log(reqBody);
 
-        if (resp1.data.success) {
-            console.log("qt", queue, queue.slice(-1)[0], ticket);
 
-            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
+        // const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
 
-        }
-        else {
-            alert(resp1.data.message)
-            setQueue(queue)
-            setQueueCount(queueCount)
-        }
+        // if (resp1.data.success) {
+        //     console.log("qt", queue, queue.slice(-1)[0], ticket);
+
+        //     socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
+
+        // }
+        // else {
+        //     alert(resp1.data.message)
+        //     setQueue(queue)
+        //     setQueueCount(queueCount)
+        // }
 
         notifyCustomers(updatedQueue);
 
     }
 
-    const notifyCustomers = async () => {
+    const notifyCustomers = async (updatedQueue) => {
 
         let customers = [];
 
@@ -205,7 +208,7 @@ const ShopCounter = ({ auth }) => {
 
         console.log(customers);
 
-        const resp2 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/notify-customer`, { customers })
+        const resp2 = await axios.post(`${import.meta.env.VITE_SERVER_URL}/counters/notify-customer`, { customers })
 
     }
 
@@ -217,7 +220,7 @@ const ShopCounter = ({ auth }) => {
 
             <div className="head">
                 <div className="head-l">
-                    <span className="back-btn btn">{"<-"}</span>
+                    {/* <span className="back-btn btn">{"<-"}</span> */}
                     <h1>Counter <span>{counterNo}</span></h1>
                 </div>
                 <button className='btn' onClick={() => { handleOpenClose() }}>{isOpen ? "Close" : "Open"}</button>
@@ -226,6 +229,12 @@ const ShopCounter = ({ auth }) => {
             <div className="shop-counter-container">
                 <div className="queue">
                     <div className="tickets">
+                        {/* <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} />
+                        <Ticket ticket={102} key={"index"} /> */}
                         {
                             queue.map((ticketObj, index) => <Ticket ticket={ticketObj.ticket} key={index} />)
                         }

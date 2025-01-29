@@ -12,14 +12,15 @@ import { Link } from 'react-router-dom';
 // que Count 0 delete
 
 
-const TableRow = ({ avatar, firstName, lastName, email }) => {
+const TableRow = ({ avatar, firstName, lastName, email, counterNo }) => {
     return (
         <div className="queue-box">
-            <div className="queue-val">{avatar}</div>
+            {/* <div className="queue-val">{avatar}</div>  */}
             <div className="queue-val">{firstName}</div>
             <div className="queue-val">{lastName}</div>
             <div className="queue-val">{email}</div>
-            <div className="queue-val"><Link to={`/customer/shop`} className='btn view-shop-btn'>View Shop</Link></div>
+            <div className="queue-val">{counterNo}</div>
+            <div className="queue-val"><button className='btn ' onClick={() => confirmation("add")}>Edit</button>&nbsp;<button className='btn ' onClick={() => confirmation("add")}>Delete</button></div>
         </div>
     )
 }
@@ -224,23 +225,29 @@ const ShopOwnerDash = ({ auth }) => {
 
             <div className="employees-sec">
                 <div className='sub-head'>Employees</div>
-                <div className='employees'>
-                    <div className="queues-list">
-                        <div className="sub-head queues-head">Currently joined Queues </div>
-                        <div className="queue-th">
-                            <div className="queue-head">Avatar</div>
-                            <div className="queue-head">First Name</div>
-                            <div className="queue-head">Last Name</div>
-                            <div className="queue-head">Email</div>
-                            <div className="queue-head">Action</div>
-                        </div>
-                        {shopEmployees.length ? shopEmployees.map((employee) => {
-                            const { _id, avatar, firstName, lastName, email } = employee;
-                            console.log(_id)
-                            return <TableRow key={_id} {...{ avatar, firstName, lastName, email }} />
-                        }) : "No Employees Found"}
-                    </div>
+                <div className="add-btn">
+                    <button className='btn' onClick={() => confirmation("add")} >Add Employee</button>
                 </div>
+                <div className="queues-list">
+                    {/* <div className="sub-head queues-head">Currently joined Queues </div> */}
+                    <div className="queue-th">
+                        {/* <div className="queue-head"><FaShop /> Shop Name</div> */}
+                        {/* <div className="queue-head">Avatar</div> */}
+                        <div className="queue-head">First Name</div>
+                        <div className="queue-head">Last Name</div>
+                        <div className="queue-head">Email</div>
+                        <div className="queue-head">Counter No.</div>
+                        <div className="queue-head">Action</div>
+                    </div>
+                    {/* {joinedQs.map(({ shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets }) => { */}
+                    {shopEmployees.length ?
+                        shopEmployees.map((employee) => {
+                            const { _id, avatar, firstName, lastName, email, counterNo } = employee;
+                            console.log(_id)
+                            return <TableRow key={_id} {...{ avatar, firstName, lastName, email, counterNo }} />
+                        }) : "No Employees Found"}
+                </div>
+
             </div>
 
 
