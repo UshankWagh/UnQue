@@ -213,13 +213,13 @@ const ShopOwnerDash = ({ auth }) => {
                     {
                         shopCounters?.map((counter, index) => {
                             socket.emit("join-room", counter.queue._id);
-                            return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} isOpen={counter.queue.isOpen} btn={{ text: "Delete", type: "danger", isDisabled: counter.queue.isOpen, onClickHandler: () => { return counter.queue.queueCount ? alert("You cannot Delete, the Queue is'nt Empty") : confirmation("delete", counter.counterNo) } }} key={index} />
+                            return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} minWaitTime={counter.queue.minWaitTime} isOpen={counter.queue.isOpen} btn={{ text: "Delete", type: "danger", isDisabled: counter.queue.isOpen, onClickHandler: () => { return counter.queue.queueCount ? alert("You cannot Delete, the Queue is'nt Empty") : confirmation("delete", counter.counterNo) } }} key={index} />
                         })
                     }
                 </div>
             </div>
 
-            <div className="employees-sec">
+            {/* <div className="employees-sec">
                 <div className='sub-head'>Employees</div>
                 <div className='employees'>
                     <div className="queues-list">
@@ -238,7 +238,7 @@ const ShopOwnerDash = ({ auth }) => {
                         }) : "No Employees Found"}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
 
         </div>

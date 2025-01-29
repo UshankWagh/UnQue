@@ -1,5 +1,7 @@
 import React from 'react'
 import '../styles/ShopImage.css'
+import { FaLocationDot } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
 
 const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img }) => {
     return (
@@ -19,8 +21,12 @@ const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img }) => {
                 <div className='name'>
                     {shopName}<br />
                     <div className="oth-dets">
-                        {shopAddress}<br />
-                        {shopOwnerName}
+                        <div className="oth">
+                            <FaUser /> {shopOwnerName}
+                        </div>
+                        <div className="oth">
+                            <FaLocationDot /> {shopAddress}<br />
+                        </div>
                     </div>
                 </div>
             </div>

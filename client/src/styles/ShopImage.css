@@ -22,16 +22,22 @@
     border-radius: 0 0 4rem 0;
     background-color: rgba(0, 0, 0, 0.559);
     width: fit-content;
-    font-size: 1.5em;
+    font-size: 2em;
 }
 
 .shop-dets .shop-desc .oth-dets {
-    margin-top: 15px;
-    font-size: 0.6em;
-    color: rgb(163, 163, 163);
+    margin-top: 1.5rem;
+    font-size: 0.45em;
+    color: rgba(255, 255, 255, 0.703);
 }
 
 .shop-dets img {
     width: 100%;
     filter: brightness(70%);
+}
+
+.oth-dets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }

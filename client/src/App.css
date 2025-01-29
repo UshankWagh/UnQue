@@ -22,6 +22,10 @@ body {
     background-color: var(--light);
 }
 
+.txt {
+    opacity: 0.6;
+}
+
 .loader {
     display: flex;
     align-items: center;
@@ -128,6 +132,8 @@ body {
 
 .nav-link {
     padding: 0.7rem 1rem;
+    display: flex;
+    gap: 1rem;
 }
 
 .nav-link:hover {
@@ -194,7 +200,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.3);
-    z-index: 2;
+    z-index: 10;
 }
 
 .popup {
@@ -274,7 +280,8 @@ body {
     border-radius: var(--border-rad);
     /* width: fit-content; */
     /* height: auto; */
-    width: 30vw;
+    width: 32vw;
+    min-width: 21rem;
 }
 
 .register .auth-container {
@@ -357,6 +364,7 @@ body {
 .contact-input {
     display: flex;
     /* align-items: center; */
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 

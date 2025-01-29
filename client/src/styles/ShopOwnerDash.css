@@ -31,7 +31,7 @@
 
 /* delete */
 
-.queue-th {
+.shop-owner-dash .queue-th {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -44,7 +44,7 @@
     box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.1);
 }
 
-.queue-box {
+.shop-owner-dash .queue-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -55,14 +55,14 @@
     box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.163);
 }
 
-.queue-box .queue-val,
-.queue-th .queue-head {
+.shop-owner-dash .queue-box .queue-val,
+.shop-owner-dash .queue-th .queue-head {
     width: 20%;
     border-right: 1px solid rgba(0, 0, 0, 0.25);
     padding: 0 1rem;
 }
 
-.queue-box .queue-val:last-child,
-.queue-th .queue-head:last-child {
+.shop-owner-dash .queue-box .queue-val:last-child,
+.shop-owner-dash .queue-th .queue-head:last-child {
     border-right: none;
 }

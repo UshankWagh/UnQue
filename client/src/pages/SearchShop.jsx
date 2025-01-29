@@ -43,6 +43,7 @@ const SearchShop = () => {
     }
 
     const getShops = async () => {
+        // e.preventDefault();
         console.log("lc", location);
 
         if (location.state && location.city && location.area) {
@@ -59,24 +60,33 @@ const SearchShop = () => {
     return (
         <div className='search-shop'>
             <h1>Search Shop</h1>
-            <div className="search-bar">
-                <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
-                <DropDown label="City" values={["-Select-", ...cities]} onSelect={getAreas} />
-                <DropDown label="Area" values={["-Select-", ...areas]} onSelect={(area) => {
-                    setLocation(prvLoc => {
-                        prvLoc.area = area;
-                        return { ...prvLoc };
-                    });
-                }} />
-                <button className='btn search-btn' onClick={getShops}>Search</button>
+            <div className="search-tab">
+                <div className="txt">Select the location of shop you are looking for.</div>
+                <div className="search-bar">
+                    <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
+                    <DropDown label="City" values={["-Select-", ...cities]} onSelect={getAreas} />
+                    <DropDown label="Area" values={["-Select-", ...areas]} onSelect={(area) => {
+                        setLocation(prvLoc => {
+                            prvLoc.area = area;
+                            return { ...prvLoc };
+                        });
+                    }} />
+                    <button className='btn search-btn' type='submit' onClick={getShops}>Search</button>
+                </div>
             </div>
             <div className="shops">
                 <div className="shops-head">Shops</div>
                 <div className="shop-list">
                     {/* <ShopCard /> */}
-                    {shops.length > 0 ? shops.map((shop) => {
-                        return <ShopCard key={shop._id} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
-                    }) : "No Shops"}
+                    {shops.length > 0 ? shops.map((shop, ind) => {
+                        return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
+                    }) : "No Shops Found !!"}
+                    {shops.length > 0 ? shops.map((shop, ind) => {
+                        return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
+                    }) : "No Shops Found !!"}
+                    {shops.length > 0 ? shops.map((shop, ind) => {
+                        return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
+                    }) : "No Shops Found !!"}
                 </div>
             </div>
         </div>

@@ -3,6 +3,14 @@ import { io } from "socket.io-client";
 import '../styles/Queues.css'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { FaShop } from "react-icons/fa6";
+import { MdCountertops } from "react-icons/md";
+import { IoTicket } from "react-icons/io5";
+import { MdPersonPin } from "react-icons/md";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { RiShapesFill } from "react-icons/ri";
+import { FaArrowRight } from "react-icons/fa";
+import { IoIosTime } from "react-icons/io";
 
 const Queues = ({ auth }) => {
 
@@ -120,15 +128,16 @@ const Queues = ({ auth }) => {
         return qPos;
     }
 
-    const QueueBox = ({ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }) => {
+    const QueueBox = ({ shopName, counterNo, ticket, minWaitTime, queueCount, shopownerId, qPosition }) => {
         return (
             <div className="queue-box">
                 <div className="queue-val">{shopName}</div>
-                <div className="queue-val">{counterNo}</div>
-                <div className="queue-val">{ticket}</div>
-                <div className="queue-val">{qPosition}</div>
-                <div className="queue-val">{queueCount}</div>
-                <div className="queue-val"><Link to={`/customer/shop?shopid=${shopownerId}`} className='btn view-shop-btn'>View Shop</Link></div>
+                <div className="queue-val">0{counterNo}</div>
+                <div className="queue-val">#{ticket}</div>
+                <div className="queue-val">{minWaitTime ? ((queueCount - 1) * minWaitTime) + "mins" : "-"} </div>
+                <div className="queue-val">@ {qPosition}</div>
+                <div className="queue-val">{queueCount} Customer(s)</div>
+                <div className="queue-val"><Link to={`/customer/shop?shopid=${shopownerId}`} className='btn view-shop-btn'>View Shop <FaArrowRight /></Link></div>
             </div>
         )
     }
@@ -140,22 +149,23 @@ const Queues = ({ auth }) => {
             <div className="queues-list">
                 <div className="sub-head queues-head">Currently joined Queues </div>
                 <div className="queue-th">
-                    <div className="queue-head">Shop Name</div>
-                    <div className="queue-head">Counter No.</div>
-                    <div className="queue-head">Ticket</div>
-                    <div className="queue-head">Your Position</div>
-                    <div className="queue-head">Queue Count</div>
-                    <div className="queue-head">Action</div>
+                    <div className="queue-head"><FaShop /> Shop Name</div>
+                    <div className="queue-head"><MdCountertops /> Counter No.</div>
+                    <div className="queue-head"><IoTicket /> Your Ticket</div>
+                    <div className="queue-head"><IoIosTime /> Your Turn in</div>
+                    <div className="queue-head"><MdPersonPin /> Your Position</div>
+                    <div className="queue-head"><FaPeopleGroup /> Customer(s)</div>
+                    <div className="queue-head"><RiShapesFill /> Action</div>
                 </div>
                 {/* {joinedQs.map(({ shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets }) => { */}
                 {joinedQs.length ? joinedQs.map((joinedQ) => {
-                    const { shopName, counterNo, queueCount, shopownerId, _id, firstTicket, cancelledTickets } = joinedQ.queue;
+                    const { shopName, counterNo, queueCount, minWaitTime, shopownerId, _id, firstTicket, cancelledTickets } = joinedQ.queue;
                     const { ticket } = joinedQ;
                     {/* console.log("jq", joinedQ.queue, shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets); */ }
                     const qPosition = getQPosition(firstTicket, ticket, cancelledTickets);
                     socket.emit("join-room", _id);
                     {/* console.log("pp", qPosition, firstTicket, joinedQ.queue.lastTicket, cancelledTickets) */ }
-                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, shopownerId, qPosition }} />
+                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, minWaitTime, shopownerId, qPosition }} />
                 }) : "No Queues Joined"}
             </div>
         </div>

@@ -157,7 +157,7 @@ export const JoinQueueController = async (req, res) => {
 
     try {
         const queue = await Queue.findById(queueId);
-        // console.log("q", queue);
+        console.log("q", queue);
 
         if (queue.isOpen) {
             const customer = await Customer.findById(customerId);
@@ -370,12 +370,13 @@ export const notifyCustomerController = async (req, res) => {
     //     { id: '66b91038976f6aa9f7766492', shopName: 'Evergreen Grocery', counterNo: '1', ticket: 105 },
     //     { id: '66b91172976f6aa9f7766493', shopName: 'Evergreen Grocery', counterNo: '1', ticket: 103 },
     // ];
-    const customerIds = customers.map(customer => {
-        return customer.id;
-    })
+    // const customerIds = customers.map(customer => {
+    //     return customer.id;
+    // });
+    const toEmails = [process.env.SENDER_EMAIL_1, process.env.SENDER_EMAIL_2];
     try {
-        const customerData = await Customer.find({ _id: { $in: customerIds } }, { firstName: 1, lastName: 1, email: 1 });
-        // console.log("c", customerData);
+        // const customerData = await Customer.find({ _id: { $in: customerIds } }, { firstName: 1, lastName: 1, email: 1 });
+        console.log("c", customers);
 
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -388,13 +389,21 @@ export const notifyCustomerController = async (req, res) => {
         });
 
         for (let i = 0; i < customers.length; i++) {
+            // const mailOptions = {
+            //     from: process.env.NODEMAILER_EMAIL,
+            //     to: toEmails[i],
+            //     subject: `${customers[i].shopName} | You moved further in Queue`,
+            //     text: "Get ready to Order!",
+            //     html: `<h2>Hello ${customerData[i].firstName + ' ' + customerData[i].lastName},</h2><p>You have reached at position <b>${i + 2}</b> in the queue at Counter ${customers[i].counterNo} of ${customers[i].shopName}. Please reach the shop for you order.</p><h3>Your Ticket: ${customers[i].ticket}</h3><h3>Your Position: ${i + 2}</h3>`,
+            // }
             const mailOptions = {
                 from: process.env.NODEMAILER_EMAIL,
-                to: customerData[i].email.emailId,
+                to: toEmails[i],
                 subject: `${customers[i].shopName} | You moved further in Queue`,
                 text: "Get ready to Order!",
-                html: `<h2>Hello ${customerData[i].firstName + ' ' + customerData[i].lastName},</h2><p>You have reached at position <b>${i + 2}</b> in the queue at Counter ${customers[i].counterNo} of ${customers[i].shopName}. Please reach the shop for you order.</p><h3>Your Ticket: ${customers[i].ticket}</h3><h3>Your Position: ${i + 2}</h3>`,
+                html: `<h2>Hello from UnQue,</h2><p>You have reached at position <b>${i + 1}</b> in the queue at Counter no. ${customers[i].counterNo} of <b>${customers[i].shopName}</b>. Please reach the shop for you order.</p><h3>Your Ticket: #${customers[i].ticket}</h3><h3>Your Position: @ ${i + 1}</h3>`,
             }
+            console.log("mOp", mailOptions);
             const info = await transporter.sendMail(mailOptions);
         }
 
