@@ -4,6 +4,8 @@ import "../styles/SearchShop.css"
 import ShopCard from '../components/ShopCard'
 import axios from 'axios'
 
+// state city API   pending > API key
+
 const SearchShop = () => {
 
     const [states, setStates] = useState([]);
