@@ -24,13 +24,13 @@ const Counter = ({ no, queueCount, minWaitTime, isOpen, btn }) => {
                 </div>
                 <div className="q-count">
                     <FaPeopleGroup />
-                    <p>Queue count :</p>
+                    <p>Customer(s) :</p>
                     <span>{queueCount}</span>
                 </div>
                 <div className="q-count">
                     <IoIosTime />
                     <p>Minimum Wait :</p>
-                    <span>{minWaitTime ? queueCount * minWaitTime : "-"}</span>
+                    <span>{minWaitTime || "-"}</span>
                 </div>
             </div>
             <button disabled={btn.isDisabled} className={`btn ${btn.type} ${btn.isDisabled && "btn-disabled"}`} onClick={() => btn.onClickHandler()} >{btn.text}</button>

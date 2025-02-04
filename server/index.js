@@ -62,6 +62,11 @@ io.on("connection", (socket) => {
         socket.to(queueId).emit("added-or-deleted-counter", { type, counter })
     });
 
+    socket.on("update-wait-time", ({ queueId, minWaitTime }) => {
+        console.log(`mWT ${minWaitTime}`);
+        socket.to(queueId).emit("wait-time-updated", { queueId, minWaitTime });
+    });
+
 });
 
 // routes

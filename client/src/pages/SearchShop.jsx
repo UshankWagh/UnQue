@@ -26,9 +26,9 @@ const SearchShop = () => {
                 redirect: 'follow'
             };
 
-            const response = await fetch("https://api.countrystatecity.in/v1/countries/IN/states", requestOptions);
+            // const response = await fetch("https://api.countrystatecity.in/v1/countries/IN/states", requestOptions);
 
-            console.log(response);
+            // console.log(response);
 
             // .then(response => response.text())
             // .then(result => console.log(result))

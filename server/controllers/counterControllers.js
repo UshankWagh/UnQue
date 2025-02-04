@@ -420,3 +420,32 @@ export const notifyCustomerController = async (req, res) => {
         })
     }
 }
+
+export const updateWaitTimeController = async (req, res) => {
+
+    const { queueId, minWaitTime } = req.body;
+
+    try {
+
+        const queue = await Queue.findByIdAndUpdate(queueId, { minWaitTime });
+
+        if (queue) {
+            return res.status(200).send({
+                success: true,
+                message: "wait time updated"
+            });
+        }
+
+        res.status(200).send({
+            success: false,
+            message: "No Queue found"
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "error in update wait time",
+            error
+        })
+    }
+}
