@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SlLogin } from "react-icons/sl";
-import { IoMdPower } from "react-icons/io";
 import { SlNote } from "react-icons/sl";
+import { IoMdPower } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom'
 
 const AuthBtns = ({ auth, handleLogout }) => {

@@ -95,8 +95,12 @@ const Register = ({ handleLogin }) => {
                         </div>
                         <div className="inp">
                             <label htmlFor="counters">Counters</label>
-                            <input type="number" onChange={(e) => updData("counters", e.target.value)} placeholder='Enter Counter No.' name="counters" id="counters" />
+                            <input type="number" onChange={(e) => updData("counters", e.target.value)} placeholder='Enter number Counters' name="counters" id="counters" />
                         </div>
+                        {/* <div className="inp">
+                            <label htmlFor="wait-time">Minimum Wait Time</label>
+                            <input type="number" onChange={(e) => updData("minWaitTime", e.target.value)} placeholder='Enter Minimum Wait time in Minutes' name="wait-time" id="wait-time" />
+                        </div> */}
                     </>}
 
                     {/* common */}

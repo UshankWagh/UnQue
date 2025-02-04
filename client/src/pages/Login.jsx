@@ -56,7 +56,7 @@ const Login = ({ handleLogin }) => {
 
         if (loginRes.data.success) {
             if (loginRes.data.auth.role == "customer") {
-                navigate("/customer/search-shop");
+                navigate("/search-shop");
             }
             else if (loginRes.data.auth.role == "shopowner") {
                 navigate("/shopowner/shop-owner-dash");

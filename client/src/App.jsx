@@ -44,7 +44,7 @@ function App() {
       <Routes>
         <Route path='/login' element=<Login handleLogin={handleLogin} /> />
         <Route path='/register' element=<Register handleLogin={handleLogin} /> />
-        <Route path='/customer/search-shop' element=<SearchShop /> />
+        <Route path='/search-shop' element=<SearchShop /> />
         {auth && <>
           <Route path='/customer/' element=<PrivateRoute role="customer" />>
             <Route path='shop' element=<Shop auth={auth} /> />
@@ -60,8 +60,9 @@ function App() {
             <Route path='shop-owner-dash' element=<ShopOwnerDash auth={auth} /> />
             <Route path='profile' element=<Profile auth={auth} /> />
           </Route>
-          <Route path='*' element=<Loader title="404 Error" msg={"Page Not Found"} redirectURL="/login" redirectText="Go to Sign In?" /> />
         </>}
+        {/* <Route path='*' element=<Loader title="404 Error" msg={"Page Not Found"} redirectURL="/login" redirectText="Go to Sign In?" /> /> */}
+        <Route path='*' element=<Loader title="Unauthorized Access / 404" msg={"You don't have Access to this Page!! OR There's no such page"} redirectURL="/login" redirectText="Go to Sign In?" /> />
       </Routes>
     </Router>
   )

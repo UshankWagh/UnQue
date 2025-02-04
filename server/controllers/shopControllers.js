@@ -96,15 +96,17 @@ export const getCitiesController = async (req, res) => {
 
 export const getShopsController = async (req, res) => {
     try {
-        const { state, city, area } = req.params;
-        const shopsRes = await ShopOwner.find({ "shop.state": state, "shop.city": city, "shop.area": area }, { firstName: 1, lastName: 1, "shop.shopName": 1, "shop.shopImg": 1, "shop.address": 1 });
-        // console.log(shopsRes);
+        console.log(req);
 
-        res.status(200).send({
-            status: true,
-            message: "Shops found",
-            shops: shopsRes
-        });
+        // const { state, city, area } = req.params;
+        // const shopsRes = await ShopOwner.find({ "shop.state": state, "shop.city": city, "shop.area": area }, { firstName: 1, lastName: 1, "shop.shopName": 1, "shop.shopImg": 1, "shop.address": 1 });
+        // // console.log(shopsRes);
+
+        // res.status(200).send({
+        //     status: true,
+        //     message: "Shops found",
+        //     shops: shopsRes
+        // });
     } catch (error) {
         console.log(error);
         res.status(500).send({

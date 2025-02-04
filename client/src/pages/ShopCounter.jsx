@@ -80,9 +80,11 @@ const ShopCounter = ({ auth }) => {
 
             setQueueCount(queueCount)
 
+            // check review
             setQueue(p => {
                 p = p.filter(ticketObj => ticketObj.ticket != ticket)
-                localStorage.setItem("queue", JSON.stringify(p))
+                // localStorage.setItem("queue", JSON.stringify(p))
+                notifyCustomers(p);
                 return [...p]
             });
 
@@ -114,6 +116,7 @@ const ShopCounter = ({ auth }) => {
         });
 
     }, [])
+
 
 
     const createQueue = (firstTicket, lastTicket, cancelledTickets) => {

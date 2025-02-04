@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 import PopUp from '../components/PopUp'
 import '../styles/Shop.css';
-import shop_img from '../assets/images/shop_img.png'
+import shop_img1 from '../assets/images/shop_img.png'
+import shop_img2 from '../assets/images/shop_img2.jpg'
 import Counter from '../components/Counter'
 import ShopImage from '../components/ShopImage'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -183,8 +184,9 @@ const Shop = ({ auth }) => {
         <div className="shop">
             {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleJoinQueue} />}
             <h1>Shop</h1>
-            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop_img || shop?.shop?.shopImg}`} />
+            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop?.shop?.shopName == "Evergreen Grocery" ? shop_img1 : shop_img2}`} />
             <div className='sub-head'>Counters</div>
+            <div className="txt">Select the shop counter you want to join!</div>
             <div className="counters">
                 {shop && shop.shop.counters.map((counter) => {
                     let text = counter.queue?._id == alreadyJoinedQ ? "Cancel" : "Join";
@@ -192,7 +194,7 @@ const Shop = ({ auth }) => {
                     let isDisabled = (alreadyJoinedQ && text == "Join") || !counter.queue?.isOpen ? true : false;
                     let type = text == "Join" ? "btn" : "danger";
                     socket.emit("join-room", counter.queue?._id);
-                    return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue?.queueCount} isOpen={counter.queue?.isOpen} btn={{ text, isDisabled, type, onClickHandler: () => handleCounterAction(text, counter.counterNo) }} />
+                    return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue?.queueCount} minWaitTime={counter.queue?.minWaitTime} isOpen={counter.queue?.isOpen} btn={{ text, isDisabled, type, onClickHandler: () => handleCounterAction(text, counter.counterNo) }} />
                 })}
             </div>
         </div>

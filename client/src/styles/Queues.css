@@ -17,12 +17,16 @@
 
 /* delete */
 
+.queues-list {
+    overflow: auto;
+}
+
 .queue-th {
     display: flex;
     align-items: center;
     justify-content: space-between;
     /* padding: 0 1rem; */
-    font-size: 1.2em;
+    font-size: 1.1rem;
     background-color: var(--medium);
     padding: 0.8rem 1rem;
     border-radius: var(--border-rad);
@@ -41,11 +45,26 @@
     box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.163);
 }
 
+.queue-th,
+.queue-box {
+    min-width: 60rem;
+}
+
 .queue-box .queue-val,
 .queue-th .queue-head {
-    width: 20%;
+    width: 20vw;
     border-right: 1px solid rgba(0, 0, 0, 0.25);
     padding: 0 1rem;
+}
+
+.queue-box .queue-val {
+    font-size: 0.9em;
+}
+
+.queue-box .queue-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .queue-box .queue-val:last-child,

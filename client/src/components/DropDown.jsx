@@ -6,7 +6,7 @@ const DropDown = ({ label, values, onSelect }) => {
             <label htmlFor="selc">{label}</label>
             <select id='selc' onChange={(e) => { onSelect && onSelect(e.target.value) }}>
                 {values?.map(val => {
-                    return <option key={val._id || val} value={val._id || val}>{val.name || val}</option>
+                    return <option key={val._id || val.id || val} value={val._id || val.iso2 || val}>{val.name || val}</option>
                 })}
             </select>
         </div>

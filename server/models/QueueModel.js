@@ -23,6 +23,10 @@ const QueueSchema = new Schema({
         type: Number,
         default: 0,
     },
+    minWaitTime: {
+        type: Number,
+        required: true
+    },
     firstTicket: {
         type: Number,
         default: 0,
