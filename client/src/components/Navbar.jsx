@@ -1,4 +1,6 @@
 import unqLogo from '../assets/images/unq_logo.png';
+import efqLogo1 from '../assets/images/efq_1.png';
+import efqLogo2 from '../assets/images/efq2.png';
 import { Link } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
@@ -14,9 +16,9 @@ const Navbar = ({ auth }) => {
     return (
         <nav className='navbar'>
             <div className="unq-logo">
-                <img src={unqLogo} alt="" />
+                <img src={efqLogo1} alt="" />
                 <div className='logo-text'>
-                    <div className="logo-name">EffiQ</div>
+                    {/* <div className="logo-name">EffiQ</div> */}
                     <div className="tagline">"Skip the Queue with <br /> EffiQ"</div>
                 </div>
                 <div className="nav-links">

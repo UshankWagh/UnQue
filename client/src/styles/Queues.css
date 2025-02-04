@@ -7,6 +7,11 @@
     margin: 3rem 0 1rem;
 }
 
+.que-head-shopname,
+.queue-box .queue-val.que-val-shopname {
+    min-width: 20%;
+}
+
 /* shop table */
 
 .view-shop-btn {
@@ -26,7 +31,7 @@
     align-items: center;
     justify-content: space-between;
     /* padding: 0 1rem; */
-    font-size: 1.1rem;
+    font-size: 1rem;
     background-color: var(--medium);
     padding: 0.8rem 1rem;
     border-radius: var(--border-rad);
@@ -48,6 +53,7 @@
 .queue-th,
 .queue-box {
     min-width: 60rem;
+    font-size: 1rem;
 }
 
 .queue-box .queue-val,

@@ -7,6 +7,7 @@ import '../styles/ShopOwnerDash.css'
 import axios from 'axios'
 import { io } from 'socket.io-client'
 import { Link } from 'react-router-dom';
+import UpdateWaitTime from '../components/UpdateWaitTime.jsx';
 
 
 // que Count 0 delete
@@ -112,6 +113,19 @@ const ShopOwnerDash = ({ auth }) => {
 
         });
 
+        socket.on("wait-time-updated", ({ queueId, minWaitTime }) => {
+            console.log(`q m ${queueId} ${minWaitTime}`);
+            setShopCounters((prvCounters) => {
+                prvCounters.map((counter, ind) => {
+                    if (counter.queue?._id == queueId) {
+                        prvCounters[ind].queue.minWaitTime = minWaitTime;
+                    }
+                    return;
+                })
+                return [...prvCounters];
+            });
+        });
+
         loadData()
     }, [])
 
@@ -202,6 +216,8 @@ const ShopOwnerDash = ({ auth }) => {
     }
 
     console.log(shopOwnerName, shopAddress);
+    console.log("sc", shopCounters);
+
 
     return (
         <div className='shop-owner-dash'>
@@ -217,11 +233,13 @@ const ShopOwnerDash = ({ auth }) => {
                     {
                         shopCounters?.map((counter, index) => {
                             socket.emit("join-room", counter.queue._id);
-                            return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} isOpen={counter.queue.isOpen} btn={{ text: "Delete", type: "danger", isDisabled: counter.queue.isOpen, onClickHandler: () => { return counter.queue.queueCount ? alert("You cannot Delete, the Queue is'nt Empty") : confirmation("delete", counter.counterNo) } }} key={index} />
+                            return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} minWaitTime={counter.queue.minWaitTime} isOpen={counter.queue.isOpen} btn={{ text: "Delete", type: "danger", isDisabled: counter.queue.isOpen, onClickHandler: () => { return counter.queue.queueCount ? alert("You cannot Delete, the Queue is'nt Empty") : confirmation("delete", counter.counterNo) } }} key={index} />
                         })
                     }
                 </div>
             </div>
+
+            {shopCounters && <UpdateWaitTime shopCounters={shopCounters} />}
 
             <div className="employees-sec">
                 <div className='sub-head'>Employees</div>

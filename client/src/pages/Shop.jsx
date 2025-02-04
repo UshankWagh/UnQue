@@ -62,6 +62,18 @@ const Shop = ({ auth }) => {
                 return { ...prvShop };
             });
         });
+        socket.on("wait-time-updated", ({ queueId, minWaitTime }) => {
+            console.log(`q m ${queueId} ${minWaitTime}`);
+            setShop((prvShop) => {
+                prvShop.shop.counters.map((counter, ind) => {
+                    if (counter.queue?._id == queueId) {
+                        prvShop.shop.counters[ind].queue.minWaitTime = minWaitTime;
+                    }
+                    return;
+                })
+                return { ...prvShop };
+            });
+        });
 
         const getShop = async () => {
 
@@ -193,8 +205,9 @@ const Shop = ({ auth }) => {
                     console.log(alreadyJoinedQ, text, counter.queue?.isOpen)
                     let isDisabled = (alreadyJoinedQ && text == "Join") || !counter.queue?.isOpen ? true : false;
                     let type = text == "Join" ? "btn" : "danger";
+                    let totalWaitTime = counter.queue?.minWaitTime * counter.queue?.queueCount;
                     socket.emit("join-room", counter.queue?._id);
-                    return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue?.queueCount} minWaitTime={counter.queue?.minWaitTime} isOpen={counter.queue?.isOpen} btn={{ text, isDisabled, type, onClickHandler: () => handleCounterAction(text, counter.counterNo) }} />
+                    return <Counter key={counter.counterNo} no={counter.counterNo} queueCount={counter.queue?.queueCount} minWaitTime={totalWaitTime} isOpen={counter.queue?.isOpen} btn={{ text, isDisabled, type, onClickHandler: () => handleCounterAction(text, counter.counterNo) }} />
                 })}
             </div>
         </div>

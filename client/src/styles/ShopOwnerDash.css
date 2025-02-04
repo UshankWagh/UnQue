@@ -21,18 +21,18 @@
     overflow: auto;
 }
 
-.queue-th {
+/* .queue-th {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    /* padding: 0 1rem; */
-    font-size: 1.1rem;
+    justify-content: space-between; */
+/* padding: 0 1rem; */
+/* font-size: 1.1rem;
     background-color: var(--medium);
     padding: 0.8rem 1rem;
     border-radius: var(--border-rad);
     margin: 2rem 0 2rem;
     box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .queue-box {
     display: flex;
@@ -70,4 +70,39 @@
 .queue-box .queue-val:last-child,
 .queue-th .queue-head:last-child {
     border-right: none;
+}
+
+/* UpdateWaitTime Styling */
+
+.update-wait-time {
+    padding: 2rem 0;
+    margin: 1rem 0 2rem;
+}
+
+.update-wait-time .head-text {
+    font-size: 1.5em;
+    margin-bottom: 3rem;
+}
+
+.wait-time-inps {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.wait-time-inps .time-inp label {
+    margin-bottom: 1rem;
+}
+
+.wait-time-inps button {
+    margin-top: 2rem;
+}
+
+.update-wait-time .txt {
+    margin-bottom: 1rem;
+}
+
+.wait-time-inps input,
+.wait-time-inps select {
+    border: none !important;
 }

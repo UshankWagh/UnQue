@@ -44,6 +44,17 @@ const Queues = ({ auth }) => {
                 return handleCancelTicket(prvJQs, queueId, queueCount, type, ticket);
             })
         });
+        socket.on("wait-time-updated", ({ queueId, minWaitTime }) => {
+            console.log(`q m ${queueId} ${minWaitTime}`);
+            setJoinedQs((prvJQs) => {
+                prvJQs.map((jQ, ind) => {
+                    if (jQ.queue._id == queueId) {
+                        prvJQs[ind].queue.minWaitTime = minWaitTime;
+                    }
+                });
+                return [...prvJQs];
+            })
+        });
 
         const getJoinedQs = async () => {
             const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/all/${auth.id}`);
@@ -131,7 +142,7 @@ const Queues = ({ auth }) => {
     const QueueBox = ({ shopName, counterNo, ticket, minWaitTime, queueCount, shopownerId, qPosition }) => {
         return (
             <div className="queue-box">
-                <div className="queue-val">{shopName}</div>
+                <div className="queue-val que-val-shopname">{shopName}</div>
                 <div className="queue-val">0{counterNo}</div>
                 <div className="queue-val">#{ticket}</div>
                 <div className="queue-val">{minWaitTime ? ((queueCount - 1) * minWaitTime) + "mins" : "-"} </div>
@@ -149,7 +160,7 @@ const Queues = ({ auth }) => {
             <div className="queues-list">
                 <div className="sub-head queues-head">Currently joined Queues </div>
                 <div className="queue-th">
-                    <div className="queue-head"><FaShop /> Shop Name</div>
+                    <div className="queue-head que-head-shopname"><FaShop /> Shop Name</div>
                     <div className="queue-head"><MdCountertops /> Counter No.</div>
                     <div className="queue-head"><IoTicket /> Your Ticket</div>
                     <div className="queue-head"><IoIosTime /> Your Turn in</div>

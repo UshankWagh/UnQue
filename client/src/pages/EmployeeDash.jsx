@@ -82,7 +82,7 @@ const EmployeeDash = ({ auth }) => {
                 if (p.queue._id == queueId) {
                     p.queue.queueCount = queueCount
                 }
-                return p;
+                return { ...p };
             })
 
         });
@@ -105,6 +105,16 @@ const EmployeeDash = ({ auth }) => {
                 }
             }
         })
+
+        socket.on("wait-time-updated", ({ queueId, minWaitTime }) => {
+            console.log(`q m ${queueId} ${minWaitTime}`);
+            setShopCounter((prvCounter) => {
+                if (prvCounter.queue._id == queueId) {
+                    prvCounter.queue.minWaitTime = minWaitTime;
+                }
+                return { ...prvCounter };
+            });
+        });
 
     }, [])
 
@@ -130,7 +140,7 @@ const EmployeeDash = ({ auth }) => {
                     })
                 } */}
 
-                <Counter no={shopCounter?.counterNo} queueCount={shopCounter?.queue?.queueCount} isOpen={shopCounter?.queue?.isOpen} btn={{ text: "View", type: "btn", isDisabled: false, onClickHandler: () => handleRedirect(shopCounter?.counterNo) }} />
+                <Counter no={shopCounter?.counterNo} queueCount={shopCounter?.queue?.queueCount} minWaitTime={shopCounter?.queue?.minWaitTime} isOpen={shopCounter?.queue?.isOpen} btn={{ text: "View", type: "btn", isDisabled: false, onClickHandler: () => handleRedirect(shopCounter?.counterNo) }} />
             </div>
         </div>
     )
