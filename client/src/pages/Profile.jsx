@@ -6,6 +6,7 @@ import { MdEditOff } from "react-icons/md";
 import shop_img from '../assets/images/shop_img.png'
 import DropDown from '../components/DropDown';
 import axios from "axios"
+import Loading from '../components/Loading';
 
 /*
 Notify me
@@ -38,9 +39,11 @@ const Profile = ({ auth }) => {
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
     const [areas, setAreas] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
+            setIsLoading(true);
             const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/profile/get-details/${auth?.role}/${auth?.id}`)
 
             if (resp.data.success) {
@@ -49,6 +52,7 @@ const Profile = ({ auth }) => {
             else {
                 alert(resp.data.message)
             }
+            setIsLoading(false);
         }
 
         loadData()
@@ -141,6 +145,7 @@ const Profile = ({ auth }) => {
                 <div className="profile-right">
                     <div className="profile-dets">
                         <p className="head">Personal Details</p>
+                        {isLoading && <Loading />}
                         <div className='edit-btn' onClick={() => { setEditable(!editable) }}>
                             {
                                 editable ? <MdEditOff /> : <MdModeEdit />

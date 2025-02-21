@@ -30,7 +30,8 @@ const Counter = ({ no, queueCount, minWaitTime, isOpen, btn }) => {
                 <div className="q-count">
                     <IoIosTime />
                     <p>Minimum Wait :</p>
-                    <span>{minWaitTime || "-"}</span>
+                    {/* {console.log("mwt", minWaitTime)} */}
+                    <span>{minWaitTime >= 0 ? minWaitTime : "-"}</span>
                 </div>
             </div>
             <button disabled={btn.isDisabled} className={`btn ${btn.type} ${btn.isDisabled && "btn-disabled"}`} onClick={() => btn.onClickHandler()} >{btn.text}</button>

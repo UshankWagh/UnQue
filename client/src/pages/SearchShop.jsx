@@ -3,6 +3,7 @@ import DropDown from '../components/DropDown'
 import "../styles/SearchShop.css"
 import ShopCard from '../components/ShopCard'
 import axios from 'axios'
+import Loading from '../components/Loading'
 
 // state city API   pending > API key
 // WE9Pd0ljaW9pR2kyTGs5S2hZZE9ZdFhCc3JhOFFaMnFEN244Z3JQaA==
@@ -14,6 +15,8 @@ const SearchShop = () => {
     const [shopKeyword, setshopKeyword] = useState("");
     const [location, setLocation] = useState({});
     const [shops, setShops] = useState([]);
+    const [alertMsg, setAlertMsg] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     // To fetch State, city
 
@@ -102,9 +105,10 @@ const SearchShop = () => {
     }
 
     const getShops = async () => {
-
+        setIsLoading(true);
         if (location.state && location.city && shopKeyword) {
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/get-shops`, {
+            setAlertMsg("");
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/shops/get-shops`, {
                 state: location.state,
                 city: location.city,
                 shopKeyword
@@ -113,8 +117,9 @@ const SearchShop = () => {
             setShops(response.data.shops);
         }
         else {
-            console.log("Select all fields State, City, Shop Keyword");
+            setAlertMsg("Please select all fields State, City, Shop Keyword");
         }
+        setIsLoading(false);
 
 
         // if (location.state && location.city && location.area) {
@@ -166,20 +171,22 @@ const SearchShop = () => {
                 }} /> */}
                 <button className='btn search-btn' onClick={getShops}>Search</button>
             </div>
+            <div className="alert-msg">{alertMsg}</div>
             <div className="shops">
                 <div className="shops-head">Shops</div>
-                <div className="shop-list">
-                    {/* <ShopCard /> */}
-                    {shops.length > 0 ? shops.map((shop, ind) => {
-                        return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
-                    }) : "No Shops Found !!"}
-                    {/* {shops.length > 0 ? shops.map((shop, ind) => {
+                {isLoading ? <Loading /> :
+                    <div className="shop-list">
+                        {/* <ShopCard /> */}
+                        {shops.length > 0 ? shops.map((shop, ind) => {
+                            return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
+                        }) : "No Shops Found !!"}
+                        {/* {shops.length > 0 ? shops.map((shop, ind) => {
                         return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
                     }) : "No Shops Found !!"}
                     {shops.length > 0 ? shops.map((shop, ind) => {
                         return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
                     }) : "No Shops Found !!"} */}
-                </div>
+                    </div>}
             </div>
         </div>
     )

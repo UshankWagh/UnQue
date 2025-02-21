@@ -11,6 +11,7 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { RiShapesFill } from "react-icons/ri";
 import { FaArrowRight } from "react-icons/fa";
 import { IoIosTime } from "react-icons/io";
+import Loading from '../components/Loading';
 
 const Queues = ({ auth }) => {
 
@@ -24,6 +25,7 @@ const Queues = ({ auth }) => {
 
     const [socketID, setSocketId] = useState("");
     const [joinedQs, setJoinedQs] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -57,8 +59,10 @@ const Queues = ({ auth }) => {
         });
 
         const getJoinedQs = async () => {
+            setIsLoading(true);
             const joinedQsRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-joined-qs/all/${auth.id}`);
             setJoinedQs(joinedQsRes.data.joinedQs);
+            setIsLoading(false);
         }
         getJoinedQs();
     }, []);
@@ -169,15 +173,18 @@ const Queues = ({ auth }) => {
                     <div className="queue-head"><RiShapesFill /> Action</div>
                 </div>
                 {/* {joinedQs.map(({ shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets }) => { */}
-                {joinedQs.length ? joinedQs.map((joinedQ) => {
-                    const { shopName, counterNo, queueCount, minWaitTime, shopownerId, _id, firstTicket, cancelledTickets } = joinedQ.queue;
-                    const { ticket } = joinedQ;
-                    {/* console.log("jq", joinedQ.queue, shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets); */ }
-                    const qPosition = getQPosition(firstTicket, ticket, cancelledTickets);
-                    socket.emit("join-room", _id);
-                    {/* console.log("pp", qPosition, firstTicket, joinedQ.queue.lastTicket, cancelledTickets) */ }
-                    return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, minWaitTime, shopownerId, qPosition }} />
-                }) : "No Queues Joined"}
+                {isLoading ? <Loading /> :
+                    <div className="">
+                        {joinedQs.length ? joinedQs.map((joinedQ) => {
+                            const { shopName, counterNo, queueCount, minWaitTime, shopownerId, _id, firstTicket, cancelledTickets } = joinedQ.queue;
+                            const { ticket } = joinedQ;
+                            {/* console.log("jq", joinedQ.queue, shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets); */ }
+                            const qPosition = getQPosition(firstTicket, ticket, cancelledTickets);
+                            socket.emit("join-room", _id);
+                            {/* console.log("pp", qPosition, firstTicket, joinedQ.queue.lastTicket, cancelledTickets) */ }
+                            return <QueueBox key={_id} {...{ shopName, counterNo, ticket, queueCount, minWaitTime, shopownerId, qPosition }} />
+                        }) : "No Queues Joined"}
+                    </div>}
             </div>
         </div>
     )
