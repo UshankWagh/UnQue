@@ -13,6 +13,7 @@ import { RiEdit2Fill } from "react-icons/ri";
 import { MdDelete } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 
+import Loading from '../components/Loading.jsx';
 
 
 // que Count 0 delete
@@ -36,6 +37,7 @@ const TableRow = ({ avatar, firstName, lastName, email, counterNo }) => {
 
 const ShopOwnerDash = ({ auth }) => {
 
+    const [isLoading, setIsLoading] = useState(false);
     const [shopOwnerName, setShopOwnerName] = useState("");
     const [shopAddress, setShopAddress] = useState("");
     const [shopName, setShopName] = useState("");
@@ -61,6 +63,7 @@ const ShopOwnerDash = ({ auth }) => {
         console.log(auth);
 
         const loadData = async () => {
+            setIsLoading(true);
             const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/shops/shop-dets/shopowner/${auth.id}`);
 
             if (resp.data.success) {
@@ -74,6 +77,7 @@ const ShopOwnerDash = ({ auth }) => {
                 setShopOwnerName(resp.data.shopOwnerName)
                 setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
             }
+            setIsLoading(false);
         }
 
         socket.on('connect', () => {
@@ -237,14 +241,15 @@ const ShopOwnerDash = ({ auth }) => {
                 <div className="add-btn-c">
                     <button className='btn' onClick={() => confirmation("add")} >Add Counter</button>
                 </div>
-                <div className="counters">
-                    {
-                        shopCounters?.map((counter, index) => {
-                            socket.emit("join-room", counter.queue._id);
-                            return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} minWaitTime={counter.queue.minWaitTime} isOpen={counter.queue.isOpen} btn={{ text: "Delete", type: "danger", isDisabled: counter.queue.isOpen, onClickHandler: () => { return counter.queue.queueCount ? alert("You cannot Delete, the Queue is'nt Empty") : confirmation("delete", counter.counterNo) } }} key={index} />
-                        })
-                    }
-                </div>
+                {isLoading ? <Loading /> :
+                    <div className="counters">
+                        {
+                            shopCounters?.map((counter, index) => {
+                                socket.emit("join-room", counter.queue._id);
+                                return <Counter no={counter.counterNo} queueCount={counter.queue.queueCount} minWaitTime={counter.queue.minWaitTime} isOpen={counter.queue.isOpen} btn={{ text: "Delete", type: "danger", isDisabled: counter.queue.isOpen, onClickHandler: () => { return counter.queue.queueCount ? alert("You cannot Delete, the Queue is'nt Empty") : confirmation("delete", counter.counterNo) } }} key={index} />
+                            })
+                        }
+                    </div>}
             </div>
 
             {shopCounters && <UpdateWaitTime shopCounters={shopCounters} />}

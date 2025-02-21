@@ -73,6 +73,11 @@
     /* padding: 0.5rem; */
 }
 
+.alert-msg {
+    color: red;
+    font-size: 0.9em;
+}
+
 /* shop card */
 
 .shop-card {

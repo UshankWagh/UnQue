@@ -13,7 +13,7 @@ const ShopCard = ({ ownerName, shopName, shopImg, ind, address, id, state, city,
         <div className='shop-card'>
             <div className="shop-image">
                 {/* <img src={shopImg.length ? shopImg : shop} alt="" /> */}
-                <img src={shopImages[ind]} alt="" />
+                <img src={shopName == "Evergreen Grocery" ? shopImages[0] : shopImages[1]} alt="" />
             </div>
             <div className="shop-card-body">
                 <div className="shop-name">

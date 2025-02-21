@@ -96,7 +96,25 @@ export const getCitiesController = async (req, res) => {
 
 export const getShopsController = async (req, res) => {
     try {
-        console.log(req);
+        const { state, city, shopKeyword } = req.body;
+        const stateRegex = new RegExp(state, "i");
+        const cityRegex = new RegExp(city, "i");
+        const shopRegex = new RegExp(shopKeyword, "i");
+
+
+        // Query to fetch shops based on state, city, and partial match of shop name
+        const shops = await ShopOwner.find({
+            'shop.state': { $regex: stateRegex },
+            'shop.city': { $regex: cityRegex },
+            'shop.shopName': { $regex: shopRegex }, // Case-insensitive search
+        });
+
+        console.log(shops);
+        res.status(200).send({
+            status: true,
+            message: "Shops found",
+            shops
+        });
 
         // const { state, city, area } = req.params;
         // const shopsRes = await ShopOwner.find({ "shop.state": state, "shop.city": city, "shop.area": area }, { firstName: 1, lastName: 1, "shop.shopName": 1, "shop.shopImg": 1, "shop.address": 1 });
