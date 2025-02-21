@@ -19,18 +19,18 @@ const Counter = ({ no, queueCount, minWaitTime, isOpen, btn }) => {
         <div className="counter">
             <div className="dets">
                 <div className="counter-head">
-                    <div className="counter-no">Counter No.: 0{no}</div>
+                    <div className="counter-no">0{no}</div>
                     <div className={`open-close ${isOpen ? "open" : "closed"}`}>{isOpen ? "Open" : "Closed"}</div>
                 </div>
-                <div className="q-count">
+                <div className="counter-field">
                     <FaPeopleGroup />
-                    <p>Customer(s) :</p>
-                    <span>{queueCount}</span>
+                    <p className='field-name'>Customer(s) </p>:
+                    <p className='field-data'>{queueCount}</p>
                 </div>
-                <div className="q-count">
+                <div className="counter-field">
                     <IoIosTime />
-                    <p>Minimum Wait :</p>
-                    <span>{minWaitTime || "-"}</span>
+                    <p className='field-name'>Minimum Wait </p>:
+                    <p className='field-data'>{minWaitTime + "m" || "-"}</p>
                 </div>
             </div>
             <button disabled={btn.isDisabled} className={`btn ${btn.type} ${btn.isDisabled && "btn-disabled"}`} onClick={() => btn.onClickHandler()} >{btn.text}</button>

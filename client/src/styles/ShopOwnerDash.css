@@ -7,8 +7,18 @@
     margin-bottom: 2rem;
 }
 
-.shop-owner-dash .add-btn {
-    text-align: right;
+.shop-owner-dash .add-btn-c {
+    display: flex;
+    justify-content: end;
+}
+
+.shop-owner-dash .add-btn-c .add-btn {
+    padding-top: 11px;
+    padding-bottom: 12px;
+    font-size: 1.5em;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
 }
 
 
@@ -34,7 +44,7 @@
     box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.1);
 } */
 
-.queue-box {
+.shop-owner-dash .queue-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -45,30 +55,34 @@
     box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.163);
 }
 
-.queue-th,
-.queue-box {
+.shop-owner-dash .queue-th,
+.shop-owner-dash .queue-box {
     min-width: 60rem;
 }
 
-.queue-box .queue-val,
-.queue-th .queue-head {
+.shop-owner-dash .queue-box .queue-val,
+.shop-owner-dash .queue-th .queue-head {
     width: 20vw;
     border-right: 1px solid rgba(0, 0, 0, 0.25);
     padding: 0 1rem;
 }
 
-.queue-box .queue-val {
+.shop-owner-dash .queue-box .queue-val {
+    scrollbar-width: none;
+    min-width: 14vw;
     font-size: 0.9em;
+    overflow: auto;
+    /* text-align: center; */
 }
 
-.queue-box .queue-head {
+.shop-owner-dash .queue-box .queue-head {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.queue-box .queue-val:last-child,
-.queue-th .queue-head:last-child {
+.shop-owner-dash .queue-box .queue-val:last-child,
+.shop-owner-dash .queue-th .queue-head:last-child {
     border-right: none;
 }
 

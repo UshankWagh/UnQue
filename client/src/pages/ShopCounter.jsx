@@ -2,7 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import '../styles/ShopCounter.css'
 import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
-import axios from "axios"
+import axios from "axios";
+import PopUp from '../components/PopUp.jsx';
+
 
 // shopname     back button
 
@@ -28,6 +30,12 @@ const ShopCounter = ({ auth }) => {
     const [queueId, setQueueId] = useState("");
     const [queueCount, setQueueCount] = useState(0);
     const [isOpen, setIsOpen] = useState(true);
+    const [popupDets, setPopupDets] = useState({
+        title: "",
+        desc: "",
+        isOpen: false,
+        counterNo: 0
+    });
 
     const [socketID, setSocketId] = useState("");
 
@@ -83,7 +91,7 @@ const ShopCounter = ({ auth }) => {
             // check review
             setQueue(p => {
                 p = p.filter(ticketObj => ticketObj.ticket != ticket)
-                // localStorage.setItem("queue", JSON.stringify(p))
+                localStorage.setItem("queue", JSON.stringify(p))
                 notifyCustomers(p);
                 return [...p]
             });
@@ -136,18 +144,27 @@ const ShopCounter = ({ auth }) => {
         return que
     }
 
-    const handleOpenClose = async () => {
-        setIsOpen(!isOpen)
+    const handleOpenClose = async (confirm) => {
+        if (confirm) {
+            setIsOpen(!isOpen)
 
-        const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/open-close-queue`, { queueId, isOpen: !isOpen })
+            const resp = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/open-close-queue`, { queueId, isOpen: !isOpen })
 
-        if (resp.data.success) {
-            socket.emit("change-counter-status", { queueId, status: !isOpen })
+            if (resp.data.success) {
+                socket.emit("change-counter-status", { queueId, status: !isOpen })
+            }
+            else {
+                alert(resp.data.message)
+                setIsOpen(isOpen)
+            }
         }
-        else {
-            alert(resp.data.message)
-            setIsOpen(isOpen)
-        }
+
+        setPopupDets({
+            title: "",
+            desc: "",
+            isOpen: false,
+            counterNo: 0
+        });
 
     }
 
@@ -164,6 +181,8 @@ const ShopCounter = ({ auth }) => {
 
         setQueue(updatedQueue);
         setQueueCount(p => p - 1)
+
+        socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: ticketType, ticket: ticket });
 
         // queueCount                        0                 > 0
         let reqBody = {
@@ -215,18 +234,30 @@ const ShopCounter = ({ auth }) => {
 
     }
 
+    const confirmation = (action, newStatus) => {
+
+        if (action == "open-close-counter") {
+            setPopupDets({
+                isOpen: true,
+                action,
+                title: `${newStatus} Counter?`,
+                desc: `Are you sure you want to ${newStatus} the Counter`
+            });
+        }
+    }
+
     console.log(queue);
 
 
     return (
         <div className='shop-counter'>
-
+            {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleOpenClose} />}
             <div className="head">
                 <div className="head-l">
                     {/* <span className="back-btn btn">{"<-"}</span> */}
                     <h1>Counter <span>{counterNo}</span></h1>
                 </div>
-                <button className='btn' onClick={() => { handleOpenClose() }}>{isOpen ? "Close" : "Open"}</button>
+                <button className='btn' onClick={() => { confirmation("open-close-counter", isOpen ? "Close" : "Open") }}>{isOpen ? "Close" : "Open"}</button>
             </div>
             <p className='queue-head'>Queue</p>
             <div className="shop-counter-container">

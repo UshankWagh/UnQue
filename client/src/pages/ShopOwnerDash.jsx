@@ -8,6 +8,11 @@ import axios from 'axios'
 import { io } from 'socket.io-client'
 import { Link } from 'react-router-dom';
 import UpdateWaitTime from '../components/UpdateWaitTime.jsx';
+import { MdEdit } from "react-icons/md";
+import { RiEdit2Fill } from "react-icons/ri";
+import { MdDelete } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
+
 
 
 // que Count 0 delete
@@ -21,7 +26,10 @@ const TableRow = ({ avatar, firstName, lastName, email, counterNo }) => {
             <div className="queue-val">{lastName}</div>
             <div className="queue-val">{email}</div>
             <div className="queue-val">{counterNo}</div>
-            <div className="queue-val"><button className='btn ' onClick={() => confirmation("add")}>Edit</button>&nbsp;<button className='btn ' onClick={() => confirmation("add")}>Delete</button></div>
+            <div className="queue-val">
+                <button className='btn' style={{ backgroundColor: "var(--medium)" }} onClick={() => confirmation("add")}><RiEdit2Fill /></button>&nbsp;
+                <button className='btn' style={{ backgroundColor: "var(--danger)" }} onClick={() => confirmation("add")}><MdDelete /></button>
+            </div>
         </div>
     )
 }
@@ -226,7 +234,7 @@ const ShopOwnerDash = ({ auth }) => {
             <ShopImage shop_img={shop_img} shopName={shopName} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
             <div className="counters-sec">
                 <div className='sub-head'>Counters</div>
-                <div className="add-btn">
+                <div className="add-btn-c">
                     <button className='btn' onClick={() => confirmation("add")} >Add Counter</button>
                 </div>
                 <div className="counters">
@@ -243,8 +251,8 @@ const ShopOwnerDash = ({ auth }) => {
 
             <div className="employees-sec">
                 <div className='sub-head'>Employees</div>
-                <div className="add-btn">
-                    <button className='btn' onClick={() => confirmation("add")} >Add Employee</button>
+                <div className="add-btn-c">
+                    <button className='btn add-btn' onClick={() => confirmation("add")} ><IoMdAdd /></button>
                 </div>
                 <div className="queues-list">
                     {/* <div className="sub-head queues-head">Currently joined Queues </div> */}

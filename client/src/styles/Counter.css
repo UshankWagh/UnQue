@@ -17,25 +17,27 @@
 }
 
 .counter .counter-head {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     /* remove this */
     gap: 1rem;
     height: fit-content;
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: space-between;
 }
 
 .counter .counter-no {
     /* padding: 0.5rem; */
-    padding: 0.4rem 1.3rem;
+    padding: 0.7rem 1rem;
     width: fit-content;
     /* update this to center */
     text-align: left;
     /* update this to 1.2 */
-    font-size: 1em;
+    font-size: 1.3em;
+    font-weight: bold;
     background-color: rgb(244, 244, 244);
     border-radius: var(--border-rad);
+    border: 5px solid rgb(235, 234, 234);
 }
 
 .counter .open-close {
@@ -55,16 +57,27 @@
     background-color: rgb(255, 203, 203);
 }
 
-.q-count {
-    margin: 1.5rem 0.6rem 1rem;
+.counter-field {
+    margin: 1rem 0.6rem 1rem;
     font-size: 1em;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 1rem;
 }
 
-.q-count span {
-    font-size: 1em;
+.counter-field svg {
+    min-width: 1rem;
+}
+
+.counter-field .field-name {
+    width: 6.8rem;
+    font-size: 15px;
+}
+
+.counter-field .field-data {
+    width: 100%;
+    text-align: right;
 }
 
 .counter button {
