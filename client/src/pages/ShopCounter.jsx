@@ -208,9 +208,9 @@ const ShopCounter = ({ auth }) => {
         const resp1 = await axios.post(`${import.meta.env.VITE_SERVER_URL}/counters/cancel-ticket`, reqBody)
 
         if (resp1.data.success) {
-            console.log("qt", queue, queue.slice(-1)[0], ticket);
+            console.log("qt", queue, queue.slice(-1)[0], ticket.ticket);
 
-            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket })
+            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket: ticket.ticket });
 
         }
         else {

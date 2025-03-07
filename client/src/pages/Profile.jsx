@@ -196,12 +196,12 @@ const Profile = ({ auth }) => {
                             </>
                             :
                             <>
-                                {/* {!(auth.role == "shopowner") && */}
-                                <div className="inp">
-                                    <label htmlFor="phoneNo">PhoneNo</label>
-                                    <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter Phone Number' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" required />
-                                </div>
-                                {/* } */}
+                                {!(auth.role == "employee") &&
+                                    <div className="inp">
+                                        <label htmlFor="phoneNo">PhoneNo</label>
+                                        <input type="number" value={profileDets.phone} onChange={(e) => updateDets("phoneNo", e.target.value)} placeholder='Enter Phone Number' className={editable ? "" : "restrict-edit"} disabled={!editable} name="phoneNo" id="phoneNo" required />
+                                    </div>
+                                }
                                 <div className="inp">
                                     <label htmlFor="email">Email</label>
                                     <input type="email" value={profileDets.email} onChange={(e) => updateDets("email", e.target.value)} placeholder='Enter Email' className={editable ? "" : "restrict-edit"} disabled={!editable} name="email" id="email" required />
@@ -226,7 +226,7 @@ const Profile = ({ auth }) => {
                         </>
                         }
                         {
-                            editable ?
+                            editable && !(auth.role == "employee") ?
                                 <>
 
                                     <div className="group-input">
@@ -248,7 +248,7 @@ const Profile = ({ auth }) => {
                                         Update
                                     </button>
                                 </>
-                                :
+                                : !(auth.role == "employee") &&
                                 <div className="group-input">
                                     <div className="inp">
                                         <label htmlFor="state">State</label>

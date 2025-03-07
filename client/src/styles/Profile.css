@@ -31,7 +31,7 @@
 .basic-dets .profile-img img {
     margin-bottom: 2rem;
     border-radius: 100%;
-    border: 5px solid rgb(159, 159, 159);
+    border: 5px solid var(--medium);
     width: 6rem;
     height: 6rem;
 }

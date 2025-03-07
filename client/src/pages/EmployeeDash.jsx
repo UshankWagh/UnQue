@@ -44,6 +44,8 @@ const EmployeeDash = ({ auth }) => {
 
         loadData()
 
+        console.log(shopCounter?.queue?._id);
+
         socket.emit("join-room", shopCounter?.queue?._id)
 
         socket.on("connect", () => {
@@ -67,10 +69,10 @@ const EmployeeDash = ({ auth }) => {
             console.log(queueCount, lastTicket);
 
             setShopCounter(p => {
-                if (p.queue._id == queueId) {
-                    p.queue.queueCount = queueCount
-                    p.queue.lastTicket = lastTicket
-                }
+                // if (p.queue._id == queueId) {
+                p.queue.queueCount = queueCount
+                p.queue.lastTicket = lastTicket
+                // }
                 return p;
             })
         });
