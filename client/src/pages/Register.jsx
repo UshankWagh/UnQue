@@ -10,38 +10,65 @@ const Register = ({ handleLogin }) => {
     });
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
-    const [areas, setAreas] = useState([]);
 
     const navigate = useNavigate()
 
     useEffect(() => {
         const getStates = async () => {
-            const response = await axios.get("http://localhost:5000/shops/get-states");
-            setStates(response.data.states);
+            // console.log("stt", stateIsLoading);
+
+            // setStateIsLoading(true);
+
+            var headers = new Headers();
+            headers.set("X-CSCAPI-KEY", import.meta.env.VITE_COUNTRY_STATE_CITY_API_KEY);
+
+            var requestOptions = {
+                method: 'GET',
+                headers: headers,
+                redirect: 'follow'
+            };
+
+            fetch("https://api.countrystatecity.in/v1/countries/IN/states", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    setStates(JSON.parse(result));
+                    // setStateIsLoading(false);
+                })
+                .catch(error => console.log('error', error));
+
         }
         getStates();
     }, []);
 
-    const getCities = async (stateId) => {
-        if (stateId != "-Select-") {
-            const response = await axios.get(`http://localhost:5000/shops/get-cities/${stateId}`);
-            updData("state", response.data.state)
-            setCities(response.data.cities);
-        }
-        else {
-            setCities([])
-        }
-    }
+    const getCities = async (stateCode) => {
 
-    const getAreas = async (cityId) => {
-        if (cityId != "-Select-") {
-            const city = cities.filter((city) => city._id == cityId)[0];
-            updData("city", city.name)
-            setAreas(city.areas);
-        }
-        else {
-            setAreas([])
-        }
+        var headers = new Headers();
+        headers.append("X-CSCAPI-KEY", import.meta.env.VITE_COUNTRY_STATE_CITY_API_KEY);
+
+        var requestOptions = {
+            method: 'GET',
+            headers: headers,
+            redirect: 'follow'
+        };
+
+        fetch(`https://api.countrystatecity.in/v1/countries/IN/states/${stateCode}/cities`, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+
+                const state = states.find(st => st.iso2 == stateCode);
+
+                // setLocation(prvLoc => {
+                //     prvLoc.state = state.name;
+                //     return { ...prvLoc };
+                // });
+                updData("state", state.name);
+
+                setCities(() => {
+                    // return JSON.parse(result);
+                    return JSON.parse(result).map((city, idx) => ({ "_id": city.id, "name": city.name }));
+                });
+            })
+            .catch(error => console.log('error', error));
     }
 
     function updData(field, value) {
@@ -109,12 +136,15 @@ const Register = ({ handleLogin }) => {
                             <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
                         </div>
                         <div className="inp">
-                            <DropDown label="City" values={["-Select-", ...cities]} onSelect={getAreas} />
-                        </div>
-                        <div className="inp">
-                            <DropDown label="Area" values={["-Select-", ...areas]} onSelect={(area) => {
-                                updData("area", area);
+                            <DropDown label="City" values={["-Select-", ...cities]} onSelect={(cityId) => {
+                                const city = cities.find(ct => ct._id == cityId);
+                                updData("city", city.name);
                             }} />
+                        </div>
+
+                        <div className="inp">
+                            <label htmlFor="area">Area: </label>
+                            <input type="text" onChange={(e) => updData("area", e.target.value)} placeholder='Enter Your Area' name="area" id="area" />
                         </div>
                     </div>
                     <div className="inp">

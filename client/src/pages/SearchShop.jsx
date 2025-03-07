@@ -4,11 +4,8 @@ import "../styles/SearchShop.css"
 import ShopCard from '../components/ShopCard'
 import axios from 'axios'
 import Loading from '../components/Loading'
-import shop_img2 from '../assets/images/shop_img2.jpg'
+import shop_img2 from '../assets/images/home_queue.png'
 import { CgMouse } from "react-icons/cg";
-
-// state city API   pending > API key
-// WE9Pd0ljaW9pR2kyTGs5S2hZZE9ZdFhCc3JhOFFaMnFEN244Z3JQaA==
 
 const SearchShop = () => {
 
@@ -162,7 +159,7 @@ const SearchShop = () => {
                     <div className="sec-text">
                         Your one stop solution for Escaping the <br /> Long wait times at Shops
                     </div>
-                    <button className='btn search-btn home-cta'>Save Time <CgMouse /></button>
+                    <a className='btn search-btn home-cta' href="#search">Save Time <CgMouse /></a>
                 </div>
                 <div className="home-img">
                     <img src={shop_img2} alt="" />
@@ -175,7 +172,7 @@ const SearchShop = () => {
         <div className='search-shop'>
             <h1>Search Shop</h1>
             <HomeImage shopName="shopName" shopOwnerName="ownerName" shopAddress="Address" shop_img={shop_img2} hideDesc={true} />
-            <div className="shops-head search">Search</div>
+            <div className="shops-head search" id='search'>Search</div>
             <div className="srch-br helper-txt">Select shop location and search for desired shop</div>
             {stateIsLoading ? <Loading /> :
                 <div className="search-bar">

@@ -191,7 +191,7 @@
 
 .home-desc .home-cta {
     margin-top: 2rem;
-    /* background-color: #fff; */
+    display: block;
 }
 
 .home-img img {

@@ -82,11 +82,11 @@ const ShopCounter = ({ auth }) => {
             console.log("connected", socket.id);
         });
 
-        socket.on("joined-queue", ({ queueId, queueCount, lastTicket, customerName }) => {
-            console.log(customerName, queueCount, lastTicket);
+        socket.on("joined-queue", ({ queueId, queueCount, lastTicket, customerId, customerName }) => {
+            console.log(customerId, customerName, queueCount, lastTicket);
             setQueueCount(queueCount)
             setQueue(p => {
-                p.unshift({ customerName, ticket: lastTicket })
+                p.unshift({ customerId, customerName, ticket: lastTicket })
                 localStorage.setItem("queue", JSON.stringify(p))
                 return [...p]
             })
@@ -181,12 +181,13 @@ const ShopCounter = ({ auth }) => {
         console.log("r");
 
         let updatedQueue = queue
-        let ticket
-        ticket = updatedQueue.pop().ticket
+        let ticket = updatedQueue.pop()
+        let ticketNo = ticket.ticket;
+
 
         localStorage.setItem("queue", JSON.stringify(updatedQueue))
 
-        console.log(updatedQueue, ticket);
+        console.log(updatedQueue, ticket, ticketNo);
 
         setQueue(updatedQueue);
         setQueueCount(p => p - 1)
@@ -197,18 +198,19 @@ const ShopCounter = ({ auth }) => {
         let reqBody = {
             queueId,
             ticket: !(queueCount - 1) ? queue[0]?.ticket - 1 : queue.slice(-2)[0].ticket,
-            isLastTicket: !(queueCount - 1)
+            isLastTicket: !(queueCount - 1),
+            customerId: ticket.customerId
         }
 
         console.log(reqBody);
 
 
-        const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
+        const resp1 = await axios.post(`${import.meta.env.VITE_SERVER_URL}/counters/cancel-ticket`, reqBody)
 
         if (resp1.data.success) {
-            console.log("qt", queue, queue.slice(-1)[0], ticket);
+            console.log("qt", queue, queue.slice(-1)[0], ticket.ticket);
 
-            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket })
+            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket: ticket.ticket });
 
         }
         else {

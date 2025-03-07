@@ -40,10 +40,13 @@ const Shop = ({ auth }) => {
         });
         socket.on("joined-queue", ({ queueId, queueCount }) => {
             console.log("someone joined ", queueId, "qi qc", queueCount);
+            if (queueId == alreadyJoinedQ) setAlreadyJoinedQ(0);
             updateQueueCount(queueId, queueCount);
         });
         socket.on("cancelled-ticket", ({ queueId, queueCount }) => {
             console.log("on canceled ticket", queueId, queueCount);
+            console.log(alreadyJoinedQ, queueId == alreadyJoinedQ);
+            if (queueId == alreadyJoinedQ) setAlreadyJoinedQ("");
             updateQueueCount(queueId, queueCount);
         });
         socket.on("counter-status-changed", ({ queueId, status }) => {
@@ -96,10 +99,9 @@ const Shop = ({ auth }) => {
         getShop();
     }, []);
 
-    // console.log("auth", auth);
+    console.log("ajq", alreadyJoinedQ);
 
     const updateQueueCount = (queueId, queueCount) => {
-        if (queueId == alreadyJoinedQ) setAlreadyJoinedQ(0);
         setShop((prvShop) => {
             prvShop.shop.counters.map((counter, ind) => {
                 // console.log("qids", counter.queue._id, queueId);
@@ -118,6 +120,9 @@ const Shop = ({ auth }) => {
         const counter = shop.shop.counters.filter(counter => counter.counterNo == popupDets.counterNo)[0];
         if (confirmed && popupDets.action == "Join") {
             joinQueue(counter);
+            console.log(alreadyJoinedQ, "cqid", counter.queue._id);
+
+            setAlreadyJoinedQ(counter.queue._id);
             console.log("joined queue");
         }
         else if (confirmed && popupDets.action == "Cancel") {
@@ -143,9 +148,9 @@ const Shop = ({ auth }) => {
         console.log("jqr", joinQRes.data);
 
         if (joinQRes.data.success) {
-            console.log("ai", auth.name);
+            console.log("ai", auth.name, auth.id);
             let customerName = auth.name;
-            socket.emit("join-queue", { ...joinQRes.data.queue, customerName, queueId: counter.queue._id });
+            socket.emit("join-queue", { ...joinQRes.data.queue, customerId: auth.id, customerName, queueId: counter.queue._id });
             navigate("/customer/queues");
         }
         // console.log("jqres", joinQRes, counter.queue._id);

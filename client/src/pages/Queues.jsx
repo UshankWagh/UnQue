@@ -36,10 +36,10 @@ const Queues = ({ auth }) => {
             console.log("someone joined ", queueId, "qi qc", queueCount);
             updateQueueCount(queueId, queueCount);
         });
-        socket.on("cancelled-ticket", ({ queueId, queueCount }) => {
-            console.log("on canceled ticket", queueId, queueCount);
-            updateQueueCount(queueId, queueCount);
-        });
+        // socket.on("cancelled-ticket", ({ queueId, queueCount }) => {
+        //     console.log("on canceled ticket", queueId, queueCount);
+        //     updateQueueCount(queueId, queueCount);
+        // });
         socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
             console.log(queueId, queueCount, type, ticket);
             setJoinedQs(prvJQs => {
@@ -114,6 +114,14 @@ const Queues = ({ auth }) => {
         });
         console.log("ctkt", cancelTRes.data);
 
+        setJoinedQs(prvJQs => {
+            prvJQs.map((jQ, ind) => {
+                if (jQ.queue._id == queueId) {
+                    prvJQs[ind].queue.cancelledTickets.unshift(cancelTRes.cancelledTicket);
+                }
+            });
+            return [...prvJQs];
+        })
     }
 
     const updateQueueCount = (queueId, queueCount) => {
@@ -149,7 +157,7 @@ const Queues = ({ auth }) => {
                 <div className="queue-val que-val-shopname">{shopName}</div>
                 <div className="queue-val">0{counterNo}</div>
                 <div className="queue-val">#{ticket}</div>
-                <div className="queue-val">{minWaitTime ? ((queueCount - 1) * minWaitTime) + "mins" : "-"} </div>
+                <div className="queue-val">{minWaitTime ? ((qPosition - 1) * minWaitTime) + "mins" : "-"} </div>
                 <div className="queue-val">@ {qPosition}</div>
                 <div className="queue-val">{queueCount} Customer(s)</div>
                 <div className="queue-val"><Link to={`/customer/shop?shopid=${shopownerId}`} className='btn view-shop-btn'>View Shop <FaArrowRight /></Link></div>
