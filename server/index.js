@@ -41,9 +41,9 @@ io.on("connection", (socket) => {
         console.log(`${socket.id} joined room ${queueId}`);
     });
 
-    socket.on("join-queue", ({ customerName, queueCount, lastTicket, queueId }) => {
-        socket.to(queueId).emit("joined-queue", { customerName, queueId, queueCount, lastTicket });
-        console.log(queueId, customerName, queueCount, lastTicket);
+    socket.on("join-queue", ({ customerId, customerName, queueCount, lastTicket, queueId }) => {
+        socket.to(queueId).emit("joined-queue", { customerId, customerName, queueId, queueCount, lastTicket });
+        console.log(queueId, customerName, customerId, queueCount, lastTicket);
         console.log("user joined queue:", queueId);
     });
 
@@ -52,9 +52,9 @@ io.on("connection", (socket) => {
         socket.to(queueId).emit("counter-status-changed", { queueId, status })
     });
 
-    socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
-        console.log("cancel ticket", queueId, type, ticket);
-        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
+    socket.on("cancel-ticket", ({ queueId, queueCount, ticket }) => {
+        console.log("cancel ticket", queueId, ticket);
+        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, ticket })
     });
 
     socket.on("add-or-delete-counter", ({ queueId, type, counter }) => {

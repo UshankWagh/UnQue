@@ -6,9 +6,6 @@ import axios from 'axios'
 import Loading from '../components/Loading'
 import shop_img2 from '../assets/images/shop_img2.jpg'
 
-// state city API   pending > API key
-// WE9Pd0ljaW9pR2kyTGs5S2hZZE9ZdFhCc3JhOFFaMnFEN244Z3JQaA==
-
 const SearchShop = () => {
 
     const [states, setStates] = useState([]);

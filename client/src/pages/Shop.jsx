@@ -99,6 +99,7 @@ const Shop = ({ auth }) => {
     // console.log("auth", auth);
 
     const updateQueueCount = (queueId, queueCount) => {
+        if (queueId == alreadyJoinedQ) setAlreadyJoinedQ(0);
         setShop((prvShop) => {
             prvShop.shop.counters.map((counter, ind) => {
                 // console.log("qids", counter.queue._id, queueId);
@@ -142,9 +143,9 @@ const Shop = ({ auth }) => {
         console.log("jqr", joinQRes.data);
 
         if (joinQRes.data.success) {
-            console.log("ai", auth.name);
+            console.log("ai", auth.name, auth.id);
             let customerName = auth.name;
-            socket.emit("join-queue", { ...joinQRes.data.queue, customerName, queueId: counter.queue._id });
+            socket.emit("join-queue", { ...joinQRes.data.queue, customerId: auth.id, customerName, queueId: counter.queue._id });
             navigate("/customer/queues");
         }
         // console.log("jqres", joinQRes, counter.queue._id);

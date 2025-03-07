@@ -111,8 +111,8 @@ const ShopOwnerDash = ({ auth }) => {
             })
         });
 
-        socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
-            console.log(queueId, queueCount, type, ticket);
+        socket.on("cancelled-ticket", ({ queueId, queueCount, ticket }) => {
+            console.log(queueId, queueCount, ticket);
 
             setShopCounters(p => {
                 for (let i = 0; i < p.length; i++) {

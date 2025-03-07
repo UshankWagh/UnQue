@@ -47,50 +47,50 @@ export const getShopDetailsController = async (req, res) => {
 
 }
 
-export const getStatesController = async (req, res) => {
-    try {
-        const resp = await State.find({});
-        // console.log(resp);
+// export const getStatesController = async (req, res) => {
+//     try {
+//         const resp = await State.find({});
+//         // console.log(resp);
 
-        res.status(200).send({
-            status: true,
-            message: "States found",
-            states: resp
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            status: true,
-            message: "error in getting States",
-            error
-        });
-    }
-}
+//         res.status(200).send({
+//             status: true,
+//             message: "States found",
+//             states: resp
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({
+//             status: true,
+//             message: "error in getting States",
+//             error
+//         });
+//     }
+// }
 
-export const getCitiesController = async (req, res) => {
-    try {
-        const { stateid } = req.params;
-        const resState = await State.findOne({ _id: stateid });
-        // console.log(stateid, resState);
+// export const getCitiesController = async (req, res) => {
+//     try {
+//         const { stateid } = req.params;
+//         const resState = await State.findOne({ _id: stateid });
+//         // console.log(stateid, resState);
 
-        const resCities = await City.find({ _id: { $in: resState.cities } })
-        // console.log(resCities);
+//         const resCities = await City.find({ _id: { $in: resState.cities } })
+//         // console.log(resCities);
 
-        res.status(200).send({
-            status: true,
-            message: "City found",
-            state: resState.name,
-            cities: resCities
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            status: true,
-            message: "error in getting City",
-            error
-        });
-    }
-}
+//         res.status(200).send({
+//             status: true,
+//             message: "City found",
+//             state: resState.name,
+//             cities: resCities
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({
+//             status: true,
+//             message: "error in getting City",
+//             error
+//         });
+//     }
+// }
 
 export const getShopsController = async (req, res) => {
     try {
