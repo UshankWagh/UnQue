@@ -14,6 +14,7 @@ const EmployeeDash = ({ auth }) => {
     const [shopAddress, setShopAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopImg, setShopImg] = useState("");
+    const [ratings, setRatings] = useState(0);
     const [shopCounter, setShopCounter] = useState({});
     const [socketID, setSocketId] = useState("");
 
@@ -36,6 +37,7 @@ const EmployeeDash = ({ auth }) => {
                 setShopName(shop.shopName)
                 setShopImg(shop.shopImg)
                 setShopId(resp.data.shopId)
+                setRatings(shop.ratings)
                 setShopOwnerName(resp.data.shopOwnerName)
                 setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
                 setShopCounter(() => (shop.counters.find(counter => counter.counterNo == resp.data.counterNo)));
@@ -130,7 +132,7 @@ const EmployeeDash = ({ auth }) => {
             <h1>Employee Dashboard</h1>
 
             {/* Image is static */}
-            <ShopImage shopName={shopName} shop_img={shop_img} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
+            <ShopImage shopName={shopName} ratings={ratings} shop_img={shop_img} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
                 {/* {

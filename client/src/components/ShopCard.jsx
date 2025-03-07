@@ -8,8 +8,10 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { RiUser3Fill } from "react-icons/ri";
 import Ratings from './Ratings';
 
-const ShopCard = ({ ownerName, shopName, shopImg, ind, address, id, state, city, area }) => {
+const ShopCard = ({ ownerName, shopName, shopImg, ind, address, ratings, id, state, city, area }) => {
     const shopImages = [shop1, shop2];
+    console.log(ratings);
+
     return (
         <div className='shop-card'>
             <div className="shop-image">
@@ -23,7 +25,7 @@ const ShopCard = ({ ownerName, shopName, shopImg, ind, address, id, state, city,
                     </div> */}
                     <div className="shp-text s-name">{shopName}</div>
                 </div>
-                <Ratings starsCount={3} hideTitle={true} />
+                <Ratings starsCount={ratings} hideTitle={true} />
                 <hr></hr>
                 <div className="shop-address">
                     <div className="shp-logo">

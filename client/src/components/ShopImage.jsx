@@ -4,7 +4,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import Ratings from './Ratings';
 
-const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img }) => {
+const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img, ratings }) => {
     return (
 
 
@@ -29,7 +29,7 @@ const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img }) => {
                             <FaLocationDot /> {shopAddress}<br />
                         </div>
                         <div className="oth">
-                            <Ratings starsCount={3} />
+                            <Ratings starsCount={ratings} />
                         </div>
                     </div>
                 </div>

@@ -42,6 +42,7 @@ const ShopOwnerDash = ({ auth }) => {
     const [shopAddress, setShopAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopImg, setShopImg] = useState("");
+    const [ratings, setRatings] = useState(0);
     const [shopCounters, setShopCounters] = useState([]);
     const [shopEmployees, setShopEmployees] = useState([]);
     const [popupDets, setPopupDets] = useState({
@@ -74,6 +75,7 @@ const ShopOwnerDash = ({ auth }) => {
                 setShopImg(shop.shopImg)
                 setShopCounters(shop.counters)
                 setShopEmployees(shop.employees)
+                setRatings(shop.ratings)
                 setShopOwnerName(resp.data.shopOwnerName)
                 setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
             }
@@ -227,7 +229,7 @@ const ShopOwnerDash = ({ auth }) => {
         });
     }
 
-    console.log(shopOwnerName, shopAddress);
+    console.log(shopOwnerName, shopAddress, ratings);
     console.log("sc", shopCounters);
 
 
@@ -235,7 +237,7 @@ const ShopOwnerDash = ({ auth }) => {
         <div className='shop-owner-dash'>
             {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleConfirmation} />}
             <h1>Shop Owner Dashboard</h1>
-            <ShopImage shop_img={shop_img} shopName={shopName} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
+            <ShopImage shop_img={shop_img} shopName={shopName} shopAddress={shopAddress} shopOwnerName={shopOwnerName} ratings={ratings} />
             <div className="counters-sec">
                 <div className='sub-head'>Counters</div>
                 <div className="add-btn-c">

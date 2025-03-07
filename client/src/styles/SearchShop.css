@@ -104,7 +104,7 @@
 .shop-image {
     overflow: hidden;
     border-radius: var(--border-rad);
-    height: 6rem;
+    height: 7rem;
 }
 
 .shop-image img {
@@ -173,20 +173,25 @@
 
 .home-desc {
     font-family: 'Courier New' !important;
-    padding: 4rem;
+    padding: 3rem 4rem;
     color: white;
     position: absolute;
-    font-size: 3rem;
     z-index: 10;
 }
 
 .main-text {
+    font-size: 3rem;
     font-weight: bold;
 }
 
 .home-desc .sec-text {
     font-size: 1.3rem;
     margin-top: 2rem;
+}
+
+.home-desc .home-cta {
+    margin-top: 2rem;
+    /* background-color: #fff; */
 }
 
 .home-img img {

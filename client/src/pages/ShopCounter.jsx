@@ -191,31 +191,31 @@ const ShopCounter = ({ auth }) => {
         setQueue(updatedQueue);
         setQueueCount(p => p - 1)
 
-        socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: ticketType, ticket: ticket });
+        // socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket: ticket });
 
         // queueCount                        0                 > 0
         let reqBody = {
             queueId,
-            ticket: !(queueCount - 1) ? queue[0].ticket - 1 : queue.slice(-2)[0].ticket,
+            ticket: !(queueCount - 1) ? queue[0]?.ticket - 1 : queue.slice(-2)[0].ticket,
             isLastTicket: !(queueCount - 1)
         }
 
         console.log(reqBody);
 
 
-        // const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
+        const resp1 = await axios.patch(`${import.meta.env.VITE_SERVER_URL}/counters/queue/remove-ticket`, reqBody)
 
-        // if (resp1.data.success) {
-        //     console.log("qt", queue, queue.slice(-1)[0], ticket);
+        if (resp1.data.success) {
+            console.log("qt", queue, queue.slice(-1)[0], ticket);
 
-        //     socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, type: "f-ticket", ticket })
+            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket })
 
-        // }
-        // else {
-        //     alert(resp1.data.message)
-        //     setQueue(queue)
-        //     setQueueCount(queueCount)
-        // }
+        }
+        else {
+            alert(resp1.data.message)
+            setQueue(queue)
+            setQueueCount(queueCount)
+        }
 
         notifyCustomers(updatedQueue);
 

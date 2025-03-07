@@ -53,6 +53,11 @@ const ShopOwnerSchema = new Schema({
             type: String,
             required: true
         },
+        ratings: {
+            type: Number,
+            required: true,
+            default: 0
+        },
         counters: [
             {
                 counterNo: {

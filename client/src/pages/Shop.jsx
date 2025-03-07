@@ -99,6 +99,7 @@ const Shop = ({ auth }) => {
     // console.log("auth", auth);
 
     const updateQueueCount = (queueId, queueCount) => {
+        if (queueId == alreadyJoinedQ) setAlreadyJoinedQ(0);
         setShop((prvShop) => {
             prvShop.shop.counters.map((counter, ind) => {
                 // console.log("qids", counter.queue._id, queueId);
@@ -197,7 +198,7 @@ const Shop = ({ auth }) => {
         <div className="shop">
             {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleJoinQueue} />}
             <h1>Shop</h1>
-            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop?.shop?.shopName == "Evergreen Grocery" ? shop_img1 : shop_img2}`} />
+            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} ratings={shop?.shop?.ratings} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop?.shop?.shopName == "Evergreen Grocery" ? shop_img1 : shop_img2}`} />
             <div className='sub-head'>Counters</div>
             <div className="txt">Select the shop counter you want to join!</div>
             <div className="counters">

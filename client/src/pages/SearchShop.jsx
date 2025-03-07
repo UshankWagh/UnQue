@@ -5,6 +5,7 @@ import ShopCard from '../components/ShopCard'
 import axios from 'axios'
 import Loading from '../components/Loading'
 import shop_img2 from '../assets/images/shop_img2.jpg'
+import { CgMouse } from "react-icons/cg";
 
 // state city API   pending > API key
 // WE9Pd0ljaW9pR2kyTGs5S2hZZE9ZdFhCc3JhOFFaMnFEN244Z3JQaA==
@@ -159,8 +160,9 @@ const SearchShop = () => {
                         Welcome to EFFIQ
                     </div>
                     <div className="sec-text">
-                        The solution for Escaping the <br /> Long wait times at Shops
+                        Your one stop solution for Escaping the <br /> Long wait times at Shops
                     </div>
+                    <button className='btn search-btn home-cta'>Save Time <CgMouse /></button>
                 </div>
                 <div className="home-img">
                     <img src={shop_img2} alt="" />
@@ -205,12 +207,6 @@ const SearchShop = () => {
                 {shopIsLoading ? <Loading /> :
                     <div className="shop-list">
                         {/* <ShopCard /> */}
-                        {shops.length > 0 ? shops.map((shop, ind) => {
-                            return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
-                        }) : "No Shops Found !!"}
-                        {shops.length > 0 ? shops.map((shop, ind) => {
-                            return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
-                        }) : "No Shops Found !!"}
                         {shops.length > 0 ? shops.map((shop, ind) => {
                             return <ShopCard key={shop._id} ind={ind} ownerName={`${shop.firstName} ${shop.lastName}`} id={shop._id} {...shop.shop} />
                         }) : "No Shops Found !!"}
