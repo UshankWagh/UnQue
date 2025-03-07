@@ -35,9 +35,14 @@
     /* update this to 1.2 */
     font-size: 1.3em;
     font-weight: bold;
-    background-color: rgb(244, 244, 244);
+    background-color: rgb(245, 245, 245);
     border-radius: var(--border-rad);
-    border: 5px solid rgb(235, 234, 234);
+    border: 3px solid rgb(235, 234, 234);
+}
+
+.counter .counter-no span {
+    font-size: 0.9rem;
+    color: gray;
 }
 
 .counter .open-close {

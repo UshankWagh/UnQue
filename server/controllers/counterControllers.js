@@ -68,7 +68,8 @@ export const addCounterController = async (req, res) => {
             queueCount: 0,
             firstTicket: 100,
             lastTicket: 100,
-            cancelledTickets: []
+            cancelledTickets: [],
+            minWaitTime: 0,
         });
 
         await newQueue.save()

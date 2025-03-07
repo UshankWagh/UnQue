@@ -16,7 +16,7 @@ import Profile from './pages/Profile';
 import ShopCounter from './pages/ShopCounter';
 import AuthBtns from './components/AuthBtns';
 import PrivateRoute from './components/PrivateRoute';
-import Loader from './components/Loader';
+import Loader from './components/Loader.jsx';
 import { useEffect, useState } from 'react';
 
 function App() {

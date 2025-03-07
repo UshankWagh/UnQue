@@ -19,7 +19,7 @@ const Counter = ({ no, queueCount, minWaitTime, isOpen, btn }) => {
         <div className="counter">
             <div className="dets">
                 <div className="counter-head">
-                    <div className="counter-no">0{no}</div>
+                    <div className="counter-no"><span>No. </span>0{no}</div>
                     <div className={`open-close ${isOpen ? "open" : "closed"}`}>{isOpen ? "Open" : "Closed"}</div>
                 </div>
                 <div className="counter-field">

@@ -4,17 +4,26 @@ import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
 import PopUp from '../components/PopUp.jsx';
+// import ticket_image from "../assets/images/ticket-image.jpg"
+// import { BsTicketPerforated } from "react-icons/bs";
 
 
 // shopname     back button
 
 // working customer id
 
-const Ticket = ({ ticket }) => {
+const Ticket = ({ ticket, customerName }) => {
+    console.log(customerName);
     return (
-        <div className="ticket">
-            {ticket}
-        </div>
+        <>
+            <div className="ticket-container">
+                <div className="ticket">
+                    {ticket}
+                </div>
+                {customerName}
+                {/* <BsTicketPerforated /> */}
+            </div>
+        </>
     )
 }
 
@@ -73,11 +82,11 @@ const ShopCounter = ({ auth }) => {
             console.log("connected", socket.id);
         });
 
-        socket.on("joined-queue", ({ queueId, queueCount, lastTicket, customerId }) => {
-            console.log(customerId, queueCount, lastTicket);
+        socket.on("joined-queue", ({ queueId, queueCount, lastTicket, customerName }) => {
+            console.log(customerName, queueCount, lastTicket);
             setQueueCount(queueCount)
             setQueue(p => {
-                p.unshift({ customerId, ticket: lastTicket })
+                p.unshift({ customerName, ticket: lastTicket })
                 localStorage.setItem("queue", JSON.stringify(p))
                 return [...p]
             })
@@ -255,7 +264,7 @@ const ShopCounter = ({ auth }) => {
             <div className="head">
                 <div className="head-l">
                     {/* <span className="back-btn btn">{"<-"}</span> */}
-                    <h1>Counter <span>{counterNo}</span></h1>
+                    <h1>Counter <span>0{counterNo}</span></h1>
                 </div>
                 <button className='btn' onClick={() => { confirmation("open-close-counter", isOpen ? "Close" : "Open") }}>{isOpen ? "Close" : "Open"}</button>
             </div>
@@ -263,14 +272,8 @@ const ShopCounter = ({ auth }) => {
             <div className="shop-counter-container">
                 <div className="queue">
                     <div className="tickets">
-                        {/* <Ticket ticket={102} key={"index"} />
-                        <Ticket ticket={102} key={"index"} />
-                        <Ticket ticket={102} key={"index"} />
-                        <Ticket ticket={102} key={"index"} />
-                        <Ticket ticket={102} key={"index"} />
-                        <Ticket ticket={102} key={"index"} /> */}
                         {
-                            queue.map((ticketObj, index) => <Ticket ticket={ticketObj.ticket} key={index} />)
+                            queue.map((ticketObj, index) => <Ticket ticket={ticketObj.ticket} customerName={ticketObj.customerName} key={index} />)
                         }
                     </div>
                     <p className="que-count">{queueCount}</p>

@@ -142,8 +142,9 @@ const Shop = ({ auth }) => {
         console.log("jqr", joinQRes.data);
 
         if (joinQRes.data.success) {
-            console.log("ai", auth.id);
-            socket.emit("join-queue", { ...joinQRes.data.queue, customerId: auth.id, queueId: counter.queue._id });
+            console.log("ai", auth.name);
+            let customerName = auth.name;
+            socket.emit("join-queue", { ...joinQRes.data.queue, customerName, queueId: counter.queue._id });
             navigate("/customer/queues");
         }
         // console.log("jqres", joinQRes, counter.queue._id);
