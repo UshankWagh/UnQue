@@ -1,7 +1,5 @@
 import ShopOwner from "../models/ShopOwnerModel.js"
 import Employee from "../models/EmployeeModel.js"
-import State from "../models/StateModel.js";
-import City from "../models/CityModel.js";
 
 export const getShopDetailsController = async (req, res) => {
 
