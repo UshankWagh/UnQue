@@ -66,7 +66,8 @@ const UpdateWaitTime = ({ shopCounters }) => {
         else {
             alert(resp.data.message);
         }
-
+        setQueueId("");
+        setMinWaitTime(0);
     }
 
     return (
@@ -79,7 +80,7 @@ const UpdateWaitTime = ({ shopCounters }) => {
                 </div>
                 <div className="inp time-inp">
                     <label htmlFor="counter">Minimum Wait Time:</label>
-                    <input type="number" name="counter" id="counter" value={minWaitTime || 0} onChange={(e) => updateWaitTime(e.target.value)} placeholder='Wait Time (Minutes)' />
+                    <input type="number" name="counter" id="counter" value={minWaitTime} onChange={(e) => updateWaitTime(e.target.value)} placeholder='Wait Time (Minutes)' />
                 </div>
                 <div className="inp">
                     <button className='btn update-btn' type='submit' onClick={onSubmit}>Update</button>

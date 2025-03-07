@@ -26,6 +26,11 @@ body {
     opacity: 0.6;
 }
 
+.helper-txt {
+    opacity: 0.6;
+    margin: 1rem 0;
+}
+
 .loader {
     display: flex;
     align-items: center;
@@ -388,4 +393,18 @@ body {
 
 .inp.checkbox-inp label {
     width: 70%;
+}
+
+/* Ratings */
+
+.ratings .stars .star {
+    margin: 0 0.1em;
+}
+
+.ratings .star-y {
+    color: rgb(255, 204, 0);
+}
+
+.ratings-title svg {
+    font-size: 1.3em;
 }
