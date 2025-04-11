@@ -13,9 +13,9 @@ const Ratings = ({ hideTitle, starsCount }) => {
         <div className='ratings'>
             {!hideTitle && <span className='ratings-title'><IoMdThumbsUp /> Ratings : </span>}
             <span className="stars">
-                {stars.map(star => {
-                    if (star) return <span className="star star-y"><FaStar /></span>
-                    return <span className="star star-w"><FaStar /></span>
+                {stars.map((star, ind) => {
+                    if (star) return <span className="star star-y" key={ind}><FaStar /></span>
+                    return <span className="star star-w" key={ind}><FaStar /></span>
                 })}
             </span>
         </div>

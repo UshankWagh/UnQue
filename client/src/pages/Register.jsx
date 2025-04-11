@@ -78,29 +78,33 @@ const Register = ({ handleLogin }) => {
         })
     }
 
-    async function handleSubmit() {
+    async function handleSubmit(e) {
+        e.preventDefault();
         const registerRes = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/sign-up`, { ...registerDets });
         if (registerRes.data.success) {
             // localStorage.setItem("auth", JSON.stringify(registerRes.data.auth));
             handleLogin(registerRes.data.auth);
-            navigate("/customer/search-shop");
+            // navigate("/customer/search-shop");
             if (registerRes.data.auth.role == "customer") {
-                navigate("/customer/search-shop");
+                navigate("/search-shop");
             }
             else if (registerRes.data.auth.role == "shopowner") {
                 navigate("/shopowner/shop-owner-dash");
             }
         }
         else {
-            alert("Error:", registerRes.data.message);
+            console.log(registerRes.data.message);
+            alert("Error: ", registerRes.data.message);
         }
     }
+
+    console.log(registerDets);
 
     return (
         <div className='auth register'>
             <div className="auth-container">
                 <h1>Register as {registerDets.role[0].toUpperCase() + registerDets.role.slice(1)}</h1>
-                <div className="auth-form">
+                <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
                     <div className="inp">
                         <DropDown label="User" onSelect={(val) => { setRegisterDets({}); updData("role", val) }} values={["customer", "shopowner"]} />
                     </div>
@@ -175,13 +179,13 @@ const Register = ({ handleLogin }) => {
                             <input type="checkbox" onChange={(e) => updData("emailNotify", e.target.checked)} name="email-notify" id="phone-notify" />
                         </div>
                     </div>
-                    <button className="auth-submit btn" onClick={handleSubmit}>
+                    <button className="auth-submit btn" type="submit">
                         Register
                     </button>
                     <div className="log-reg-text">
                         Already have an account? <Link to="/login">Login here</Link>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     )

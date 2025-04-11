@@ -256,8 +256,10 @@ export const cancelTicketController = async (req, res) => {
             customer.queues = customer.queues.filter(queue => queue.queue != queueId);
             console.log(queue, customer);
 
-            queue.save();
-            customer.save();
+            const queueRes = await Queue.findOneAndUpdate(queueId, { ...queue });
+            const customerRes = await Customer.findOneAndUpdate(customerId, { ...customer });
+            // queue.save();
+            // customer.save();
 
             res.status(200).send({
                 ticketType,
@@ -402,7 +404,7 @@ export const notifyCustomerController = async (req, res) => {
                 to: toEmails[i],
                 subject: `${customers[i].shopName} | You moved further in Queue`,
                 text: "Get ready to Order!",
-                html: `<h2>Hello from UnQue,</h2><p>You have reached at position <b>${i + 1}</b> in the queue at Counter no. ${customers[i].counterNo} of <b>${customers[i].shopName}</b>. Please reach the shop for you order.</p><h3>Your Ticket: #${customers[i].ticket}</h3><h3>Your Position: @ ${i + 1}</h3>`,
+                html: `<h2>Hello from UnQue,</h2><p>You have reached at position <b>${customers[i].position}</b> in the queue at Counter no. ${customers[i].counterNo} of <b>${customers[i].shopName}</b>. Please reach the shop for you order.</p><h3>Your Ticket: #${customers[i].ticket}</h3><h3>Your Position: @ ${customers[i].position}</h3>`,
             }
             console.log("mOp", mailOptions);
             const info = await transporter.sendMail(mailOptions);

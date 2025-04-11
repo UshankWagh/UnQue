@@ -203,7 +203,7 @@ const Shop = ({ auth }) => {
         <div className="shop">
             {popupDets.isOpen > 0 && <PopUp title={popupDets.title} desc={popupDets.desc} confirmation={handleJoinQueue} />}
             <h1>Shop</h1>
-            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} ratings={shop?.shop?.ratings} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shop_img={`${shop?.shop?.shopName == "Evergreen Grocery" ? shop_img1 : shop_img2}`} />
+            <ShopImage shopName={shop?.shop?.shopName} shopOwnerName={`${shop?.firstName} ${shop?.lastName}`} ratings={shop?.shop?.ratings} shopAddress={`${shop?.shop?.area}, ${shop?.shop?.city}, ${shop?.shop?.state}.`} shopImg={shop?.shop?.shopImg || shop_img1} />
             <div className='sub-head'>Counters</div>
             <div className="txt">Select the shop counter you want to join!</div>
             <div className="counters">

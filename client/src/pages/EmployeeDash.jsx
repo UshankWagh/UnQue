@@ -15,6 +15,7 @@ const EmployeeDash = ({ auth }) => {
     const [shopName, setShopName] = useState("");
     const [shopImg, setShopImg] = useState("");
     const [shopCounter, setShopCounter] = useState({});
+    const [ratings, setRatings] = useState(0);
     const [socketID, setSocketId] = useState("");
 
     const socket = useMemo(
@@ -35,6 +36,7 @@ const EmployeeDash = ({ auth }) => {
                 const shop = resp.data.shop
                 setShopName(shop.shopName)
                 setShopImg(shop.shopImg)
+                setRatings(shop.ratings)
                 setShopId(resp.data.shopId)
                 setShopOwnerName(resp.data.shopOwnerName)
                 setShopAddress(shop.state + ", " + shop.city + ", " + shop.area + ".")
@@ -132,7 +134,7 @@ const EmployeeDash = ({ auth }) => {
             <h1>Employee Dashboard</h1>
 
             {/* Image is static */}
-            <ShopImage shopName={shopName} shop_img={shop_img} shopAddress={shopAddress} shopOwnerName={shopOwnerName} />
+            <ShopImage shopName={shopName} shopImg={shopImg} shopAddress={shopAddress} shopOwnerName={shopOwnerName} ratings={ratings} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
                 {/* {
