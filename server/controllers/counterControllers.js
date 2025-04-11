@@ -256,8 +256,8 @@ export const cancelTicketController = async (req, res) => {
             customer.queues = customer.queues.filter(queue => queue.queue != queueId);
             console.log(queue, customer);
 
-            const queueRes = await Queue.findOneAndUpdate(queueId, { ...queue });
-            const customerRes = await Customer.findOneAndUpdate(customerId, { ...customer });
+            const queueRes = await Queue.findOneAndUpdate({ _id: queueId }, { ...queue });
+            const customerRes = await Customer.findOneAndUpdate({ _id: customerId }, { ...customer });
             // queue.save();
             // customer.save();
 

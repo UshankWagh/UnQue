@@ -215,9 +215,13 @@ const Profile = ({ auth }) => {
                         {auth?.role == "shopowner" && <>
                             <div className="inp">
                                 <label htmlFor="shop-img">Shop Image</label>
-                                <div className="dets-img inp">
-                                    <img src={profileDets.shop?.shopImg || shop_img} alt="" />
-                                </div>
+                                {editable ?
+                                    <input type="text" value={profileDets.shop?.shopImg} onChange={(e) => updateDets("shopName", e.target.value)} placeholder='Enter Shop Name' className={editable ? "" : "restrict-edit"} disabled={!editable} name="shop-name" id="shop-name" required />
+                                    :
+                                    <div className="dets-img inp">
+                                        <img src={profileDets.shop?.shopImg || shop_img} alt="" />
+                                    </div>
+                                }
                             </div>
                             <div className="inp">
                                 <label htmlFor="shop-name">Shop Name</label>

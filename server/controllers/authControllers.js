@@ -61,6 +61,7 @@ export const registerUser = async (req, res) => {
                 firstName,
                 lastName,
                 username,
+                email,
                 shop: {
                     shopName,
                     state,
