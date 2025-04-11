@@ -19,21 +19,21 @@ import Loading from '../components/Loading.jsx';
 // que Count 0 delete
 
 
-const TableRow = ({ avatar, firstName, lastName, email, counterNo }) => {
-    return (
-        <div className="queue-box">
-            {/* <div className="queue-val">{avatar}</div>  */}
-            <div className="queue-val">{firstName}</div>
-            <div className="queue-val">{lastName}</div>
-            <div className="queue-val">{email}</div>
-            <div className="queue-val">{counterNo}</div>
-            <div className="queue-val">
-                <button className='btn' style={{ backgroundColor: "var(--medium)" }} onClick={() => confirmation("add")}><RiEdit2Fill /></button>&nbsp;
-                <button className='btn' style={{ backgroundColor: "var(--danger)" }} onClick={() => confirmation("add")}><MdDelete /></button>
-            </div>
-        </div>
-    )
-}
+// const TableRow = ({ avatar, firstName, lastName, email, counterNo }) => {
+//     return (
+//         <div className="queue-box">
+//             {/* <div className="queue-val">{avatar}</div>  */}
+//             <div className="queue-val">{firstName}</div>
+//             <div className="queue-val">{lastName}</div>
+//             <div className="queue-val">{email}</div>
+//             <div className="queue-val">{counterNo}</div>
+//             <div className="queue-val">
+//                 <button className='btn' style={{ backgroundColor: "var(--medium)" }} onClick={() => confirmation("add")}><RiEdit2Fill /></button>&nbsp;
+//                 <button className='btn' style={{ backgroundColor: "var(--danger)" }} onClick={() => confirmation("add")}><MdDelete /></button>
+//             </div>
+//         </div>
+//     )
+// }
 
 const ShopOwnerDash = ({ auth }) => {
 
@@ -256,23 +256,19 @@ const ShopOwnerDash = ({ auth }) => {
 
             {shopCounters && <UpdateWaitTime shopCounters={shopCounters} />}
 
-            <div className="employees-sec">
+            {/* <div className="employees-sec">
                 <div className='sub-head'>Employees</div>
                 <div className="add-btn-c">
                     <button className='btn add-btn' onClick={() => confirmation("add")} ><IoMdAdd /></button>
                 </div>
                 <div className="queues-list">
-                    {/* <div className="sub-head queues-head">Currently joined Queues </div> */}
                     <div className="queue-th">
-                        {/* <div className="queue-head"><FaShop /> Shop Name</div> */}
-                        {/* <div className="queue-head">Avatar</div> */}
                         <div className="queue-head">First Name</div>
                         <div className="queue-head">Last Name</div>
                         <div className="queue-head">Email</div>
                         <div className="queue-head">Counter No.</div>
                         <div className="queue-head">Action</div>
                     </div>
-                    {/* {joinedQs.map(({ shopName, counterNo, ticket, queueCount, shopownerId, _id, firstTicket, cancelledTickets }) => { */}
                     {shopEmployees.length ?
                         shopEmployees.map((employee) => {
                             const { _id, avatar, firstName, lastName, email, counterNo } = employee;
@@ -281,7 +277,7 @@ const ShopOwnerDash = ({ auth }) => {
                         }) : "No Employees Found"}
                 </div>
 
-            </div>
+            </div> */}
 
 
         </div>

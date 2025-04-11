@@ -56,6 +56,23 @@ const ShopCounter = ({ auth }) => {
         []
     );
 
+    const createQueue = (firstTicket, lastTicket, cancelledTickets, queueCount) => {
+        let que = []
+        let storedQueue = JSON.parse(localStorage.getItem("queue"));
+        if (storedQueue?.length == queueCount) return storedQueue;
+
+        if (firstTicket > 100) {
+            for (let ticket = lastTicket; ticket >= firstTicket; ticket--) {
+                if (!(cancelledTickets.includes(ticket))) {
+
+                    que.push({ customerId: "", ticket })
+                }
+            }
+            localStorage.setItem("queue", JSON.stringify(que))
+        }
+        return que
+    }
+
     const loadData = async () => {
         const resp = await axios.get(`${import.meta.env.VITE_SERVER_URL}/counters/get-queue/${shopId}/${counterNo}`);
         if (resp.data.success) {
@@ -67,7 +84,7 @@ const ShopCounter = ({ auth }) => {
 
             socket.emit("join-room", queue._id);
 
-            setQueue(() => createQueue(queue.firstTicket, queue.lastTicket, queue.cancelledTickets));
+            setQueue(() => createQueue(queue.firstTicket, queue.lastTicket, queue.cancelledTickets, queue.queueCount));
         }
         else {
             alert(resp.data.message)
@@ -133,25 +150,6 @@ const ShopCounter = ({ auth }) => {
         });
 
     }, [])
-
-
-
-    const createQueue = (firstTicket, lastTicket, cancelledTickets) => {
-        let que = []
-        let storedQueue = localStorage.getItem("queue");
-        if (storedQueue?.length) return JSON.parse(storedQueue)
-
-        if (firstTicket > 100) {
-            for (let ticket = lastTicket; ticket >= firstTicket; ticket--) {
-                if (!(cancelledTickets.includes(ticket))) {
-
-                    que.push({ customerId: "", ticket })
-                }
-            }
-            localStorage.setItem("queue", JSON.stringify(que))
-        }
-        return que
-    }
 
     const handleOpenClose = async (confirm) => {
         if (confirm) {
