@@ -101,6 +101,7 @@
 
 .shop-card {
     width: 23%;
+    min-width: 15rem;
     padding: 1rem;
     /* max-width: 21%;
     width: auto; */

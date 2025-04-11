@@ -47,26 +47,27 @@ export const registerUser = async (req, res) => {
             }
         }
         else if (role == "shopowner") {
-            const { shopName, counters } = req.body;
-            isEmptyField = !firstName || !lastName || !shopName || !counters || !state || !city || !area || !email || !username || !password;
+            const { shopName } = req.body;
+            isEmptyField = !firstName || !lastName || !shopName || !state || !city || !area || !email || !username || !password;
             exists = await ShopOwner.findOne({ username });
-            let countersArr = [];
-            for (let i = 1; i < counters; i++) {
-                countersArr.push({
-                    counterNo: i,
-                    queId: ""
-                });
-            }
+            // let countersArr = [];
+            // for (let i = 1; i < counters; i++) {
+            //     countersArr.push({
+            //         counterNo: i,
+            //         queId: ""
+            //     });
+            // }
             shopOwnerDets = {
                 firstName,
                 lastName,
                 username,
+                email,
                 shop: {
                     shopName,
                     state,
                     city,
                     area,
-                    counters: countersArr
+                    // counters: countersArr
                 }
             }
         }

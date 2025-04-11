@@ -15,14 +15,23 @@ const Login = ({ handleLogin }) => {
     const navigate = useNavigate();
 
     function fillLoginDetails(role) {
+        // priyapatel
+        // anotherSecurePassword456
+
+        // amitsingh
+        // robertPassword789
+
+        // anjaligupta
+        // emilySecure1234
+
         let username = "";
         let password = "";
         if (role == "customer") {
-            username = "johndoe"
+            username = "rohansharma"
             password = "securePassword123"
         }
         else if (role == "shopowner") {
-            username = "davidgreen"
+            username = "arjunmehta"
             password = "hashedpassword654"
         }
         else if (role == "employee") {

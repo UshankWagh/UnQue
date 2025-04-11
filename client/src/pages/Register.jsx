@@ -124,10 +124,10 @@ const Register = ({ handleLogin }) => {
                             <label htmlFor="shop-name">Shop Name</label>
                             <input type="text" onChange={(e) => updData("shopName", e.target.value)} placeholder='Enter Shop Name' name="shop-name" id="shop-name" />
                         </div>
-                        <div className="inp">
+                        {/* <div className="inp">
                             <label htmlFor="counters">Counters</label>
                             <input type="number" onChange={(e) => updData("counters", e.target.value)} placeholder='Enter number Counters' name="counters" id="counters" />
-                        </div>
+                        </div> */}
                         {/* <div className="inp">
                             <label htmlFor="wait-time">Minimum Wait Time</label>
                             <input type="number" onChange={(e) => updData("minWaitTime", e.target.value)} placeholder='Enter Minimum Wait time in Minutes' name="wait-time" id="wait-time" />
