@@ -210,7 +210,7 @@ const ShopCounter = ({ auth }) => {
         if (resp1.data.success) {
             console.log("qt", queue, queue.slice(-1)[0], ticket.ticket);
 
-            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket: ticket.ticket });
+            socket.emit("cancel-ticket", { queueId, queueCount: queueCount - 1, ticket: ticket.ticket, type: resp1.data.ticketType });
 
         }
         else {
@@ -230,12 +230,12 @@ const ShopCounter = ({ auth }) => {
         if (updatedQueue?.length >= 2) {
 
             let customer = updatedQueue.slice(-2)[0]
-            customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
+            customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket, position: 2 })
 
             if (updatedQueue?.length >= 3) {
 
                 customer = updatedQueue.slice(-3)[0]
-                customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket })
+                customers.push({ id: customer.customerId, shopName, counterNo, ticket: customer.ticket, position: 3 })
             }
         }
 

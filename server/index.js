@@ -52,9 +52,9 @@ io.on("connection", (socket) => {
         socket.to(queueId).emit("counter-status-changed", { queueId, status })
     });
 
-    socket.on("cancel-ticket", ({ queueId, queueCount, ticket }) => {
-        console.log("cancel ticket", queueId, ticket);
-        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, ticket })
+    socket.on("cancel-ticket", ({ queueId, queueCount, type, ticket }) => {
+        console.log("cancel ticket", queueId, type, ticket);
+        socket.to(queueId).emit("cancelled-ticket", { queueId, queueCount, type, ticket })
     });
 
     socket.on("add-or-delete-counter", ({ queueId, type, counter }) => {

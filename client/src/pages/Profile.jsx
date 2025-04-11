@@ -216,7 +216,7 @@ const Profile = ({ auth }) => {
                             <div className="inp">
                                 <label htmlFor="shop-img">Shop Image</label>
                                 <div className="dets-img inp">
-                                    <img src={shop_img} alt="" />
+                                    <img src={profileDets.shop?.shopImg || shop_img} alt="" />
                                 </div>
                             </div>
                             <div className="inp">

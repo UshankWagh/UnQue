@@ -108,7 +108,8 @@ const SearchShop = () => {
             .catch(error => console.log('error', error));
     }
 
-    const getShops = async () => {
+    const getShops = async (e) => {
+        e.preventDefault();
         setShopIsLoading(true);
         if (location.state && location.city && shopKeyword) {
             setAlertMsg("");
@@ -157,13 +158,13 @@ const SearchShop = () => {
                         Welcome to EFFIQ
                     </div>
                     <div className="sec-text">
-                        Your one stop solution for Escaping the <br /> Long wait times at Shops
+                        One stop solution for Escaping <br /> Long wait times at Shops
                     </div>
                     <a className='btn search-btn home-cta' href="#search">Save Time <CgMouse /></a>
                 </div>
-                <div className="home-img">
+                {/* <div className="home-img">
                     <img src={shop_img2} alt="" />
-                </div>
+                </div> */}
             </div>
         )
     }
@@ -175,28 +176,30 @@ const SearchShop = () => {
             <div className="shops-head search" id='search'>Search</div>
             <div className="srch-br helper-txt">Select shop location and search for desired shop</div>
             {stateIsLoading ? <Loading /> :
-                <div className="search-bar">
-                    <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
-                    <DropDown label="City" values={["-Select-", ...cities]} onSelect={(cityId) => {
-                        setLocation(prvLoc => {
-                            const city = cities.find(ct => ct._id == cityId);
-                            prvLoc.city = city.name;
-                            return { ...prvLoc };
-                        });
-                    }} />
-                    <div className="search-inp">
-                        <label htmlFor="shop-name">Shop Name / Keyword</label>
-                        <input type="text" value={shopKeyword} onChange={(e) => { setshopKeyword(e.target.value) }} placeholder='Keyword of Shop' name="shop-name" id="shop-name" />
-                    </div>
+                <form action='' onSubmit={(e) => getShops(e)}>
+                    <div className="search-bar">
+                        <DropDown label="State" values={["-Select-", ...states]} onSelect={getCities} />
+                        <DropDown label="City" values={["-Select-", ...cities]} onSelect={(cityId) => {
+                            setLocation(prvLoc => {
+                                const city = cities.find(ct => ct._id == cityId);
+                                prvLoc.city = city.name;
+                                return { ...prvLoc };
+                            });
+                        }} />
+                        <div className="search-inp">
+                            <label htmlFor="shop-name">Shop Name / Keyword</label>
+                            <input type="text" value={shopKeyword} onChange={(e) => { setshopKeyword(e.target.value) }} placeholder='Keyword of Shop' name="shop-name" id="shop-name" />
+                        </div>
 
-                    {/* <DropDown label="Area" values={["-Select-", ...areas]} onSelect={(area) => {
+                        {/* <DropDown label="Area" values={["-Select-", ...areas]} onSelect={(area) => {
                     setLocation(prvLoc => {
                         prvLoc.area = area;
                         return { ...prvLoc };
                     });
                 }} /> */}
-                    <button className='btn search-btn' onClick={getShops}>Search</button>
-                </div>}
+                        <button type='submit' className='btn search-btn' >Search</button>
+                    </div>
+                </form>}
             <div className="alert-msg">{alertMsg}</div>
             <div className="shops">
                 <div className="shops-head">Shops</div>

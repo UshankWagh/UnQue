@@ -9,14 +9,14 @@ import { RiUser3Fill } from "react-icons/ri";
 import Ratings from './Ratings';
 
 const ShopCard = ({ ownerName, shopName, shopImg, ind, address, ratings, id, state, city, area }) => {
-    const shopImages = [shop1, shop2];
+    // const shopImages = [shop1, shop2];
     console.log(ratings);
 
     return (
         <div className='shop-card'>
             <div className="shop-image">
                 {/* <img src={shopImg.length ? shopImg : shop} alt="" /> */}
-                <img src={shopName == "Evergreen Grocery" ? shopImages[0] : shopImages[1]} alt="" />
+                <img src={shopImg || shop1} alt="" />
             </div>
             <div className="shop-card-body">
                 <div className="shop-name">

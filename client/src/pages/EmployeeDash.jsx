@@ -134,7 +134,7 @@ const EmployeeDash = ({ auth }) => {
             <h1>Employee Dashboard</h1>
 
             {/* Image is static */}
-            <ShopImage shopName={shopName} shop_img={shop_img} shopAddress={shopAddress} shopOwnerName={shopOwnerName} ratings={ratings} />
+            <ShopImage shopName={shopName} shopImg={shopImg} shopAddress={shopAddress} shopOwnerName={shopOwnerName} ratings={ratings} />
             <div className='sub-head'>Counters</div>
             <div className="counters">
                 {/* {

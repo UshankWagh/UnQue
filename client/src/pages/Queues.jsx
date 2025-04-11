@@ -43,8 +43,8 @@ const Queues = ({ auth }) => {
         socket.on("cancelled-ticket", ({ queueId, queueCount, type, ticket }) => {
             console.log(queueId, queueCount, type, ticket);
             setJoinedQs(prvJQs => {
-                return handleCancelTicket(prvJQs, queueId, queueCount, type, ticket);
-            })
+                return [...handleCancelTicket(prvJQs, queueId, queueCount, type, ticket)];
+            });
         });
         socket.on("wait-time-updated", ({ queueId, minWaitTime }) => {
             console.log(`q m ${queueId} ${minWaitTime}`);

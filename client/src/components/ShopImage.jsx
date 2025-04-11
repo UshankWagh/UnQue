@@ -4,11 +4,11 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import Ratings from './Ratings';
 
-const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img, ratings }) => {
+const ShopImage = ({ shopName, shopOwnerName, shopAddress, shopImg, ratings }) => {
     return (
 
 
-        <div className="shop-dets">
+        <div className="shop-dets" style={{ backgroundImage: `url(${shopImg})` }}>
             {/* 
             
             
@@ -34,7 +34,7 @@ const ShopImage = ({ shopName, shopOwnerName, shopAddress, shop_img, ratings }) 
                     </div>
                 </div>
             </div>
-            <img src={shop_img} alt="" />
+            {/* <img src={shopImg} alt="" /> */}
         </div>
     )
 }
