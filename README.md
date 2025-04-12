@@ -1,2 +1,2 @@
-# UnQue
-"Skip the Queue with UnQue". A Queue Avoidance System for your shop and customers.
+# EffiQ
+"One stop solution for Escaping Long wait times at Shops"
